@@ -1,0 +1,14 @@
+spring.application.name=appapigateway
+
+#configServer properties must place here
+spring.cloud.config.name=${spring.application.name}
+spring.cloud.config.profile=dev
+#spring.cloud.config.profile=test
+#spring.cloud.config.label=config
+spring.cloud.config.label=trunk
+spring.cloud.etcd.discovery.ttl=60
+#spring.cloud.etcd.discovery.heartbeatInterval=5000
+spring.cloud.config.uri=http://${config.host:172.30.142.164}:${config.port:8888}
+spring.profiles.active=${profiles.active:dev}
+#false:not load remote properties
+##spring.cloud.config.enabled=false

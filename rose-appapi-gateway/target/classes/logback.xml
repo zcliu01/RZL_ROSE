@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+	<!-- <property name="LOG_HOME" value="D:/logs" /> -->
+	<property name="LOG_HOME" value="/var/log" />
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{50}:%line - %msg%n</pattern>
+            <charset>UTF-8</charset> 
+        </encoder>
+    </appender>
+ 
+    <appender name="ROLLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.home:-${LOG_HOME}}/zrt-api-gateway-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{50}:%line - %msg%n</pattern>
+            <charset>UTF-8</charset> 
+        </encoder>
+    </appender>
+    
+    <!-- <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<encoder>  
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %class{50}:%L - %msg%n</pattern>
+			<charset>UTF-8</charset> 
+		</encoder>  
+   		<file>${catalina.home:-${LOG_HOME}}/zrt-api-gateway.log</file>
+   		<append>true</append>
+    </appender> -->
+
+    <!-- <logger name="com.hzcard.gateway" level="DEBUG" addtivity="true" /> -->
+	<logger name="com.zrt" level="ERROR" addtivity="true" />
+	
+	<root level="ERROR">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ROLLFILE" />
+	</root>
+
+	<!-- <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource
+			class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+			<dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+				<driverClass>com.mysql.jdbc.Driver</driverClass>
+				<url>jdbc:mysql://127.0.0.1:3306/databaseName</url>
+				<user>root</user>
+				<password>root</password>
+			</dataSource>
+		</connectionSource>
+	</appender> -->
+	
+</configuration> 
