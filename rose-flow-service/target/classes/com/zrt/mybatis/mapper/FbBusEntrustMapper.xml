@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FbBusEntrustMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FbBusEntrust" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="fb_id" property="fbId" jdbcType="VARCHAR" />
+    <result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+    <result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+    <result column="ent_emp_id" property="entEmpId" jdbcType="VARCHAR" />
+    <result column="ent_emp_name" property="entEmpName" jdbcType="VARCHAR" />
+    <result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+    <result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+    <result column="begin_date_time" property="beginDateTime" jdbcType="CHAR" />
+    <result column="end_date_time" property="endDateTime" jdbcType="CHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="ent_enabled" property="entEnabled" jdbcType="CHAR" />
+    <result column="fb_code" property="fbCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, fb_id, check_emp_id, check_emp_name, ent_emp_id, ent_emp_name, inst_tag, inst_tag_name, 
+    begin_date_time, end_date_time, create_date_time, ent_enabled, fb_code
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FbBusEntrustExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fb_bus_entrust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from fb_bus_entrust
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fb_bus_entrust
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FbBusEntrustExample" >
+    delete from fb_bus_entrust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FbBusEntrust" >
+    insert into fb_bus_entrust (id, fb_id, check_emp_id, 
+      check_emp_name, ent_emp_id, ent_emp_name, 
+      inst_tag, inst_tag_name, begin_date_time, 
+      end_date_time, create_date_time, ent_enabled, 
+      fb_code)
+    values (#{id,jdbcType=VARCHAR}, #{fbId,jdbcType=VARCHAR}, #{checkEmpId,jdbcType=VARCHAR}, 
+      #{checkEmpName,jdbcType=VARCHAR}, #{entEmpId,jdbcType=VARCHAR}, #{entEmpName,jdbcType=VARCHAR}, 
+      #{instTag,jdbcType=VARCHAR}, #{instTagName,jdbcType=VARCHAR}, #{beginDateTime,jdbcType=CHAR}, 
+      #{endDateTime,jdbcType=CHAR}, #{createDateTime,jdbcType=CHAR}, #{entEnabled,jdbcType=CHAR}, 
+      #{fbCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FbBusEntrust" >
+    insert into fb_bus_entrust
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fbId != null" >
+        fb_id,
+      </if>
+      <if test="checkEmpId != null" >
+        check_emp_id,
+      </if>
+      <if test="checkEmpName != null" >
+        check_emp_name,
+      </if>
+      <if test="entEmpId != null" >
+        ent_emp_id,
+      </if>
+      <if test="entEmpName != null" >
+        ent_emp_name,
+      </if>
+      <if test="instTag != null" >
+        inst_tag,
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name,
+      </if>
+      <if test="beginDateTime != null" >
+        begin_date_time,
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="entEnabled != null" >
+        ent_enabled,
+      </if>
+      <if test="fbCode != null" >
+        fb_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="fbId != null" >
+        #{fbId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpId != null" >
+        #{checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpName != null" >
+        #{checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="entEmpId != null" >
+        #{entEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="entEmpName != null" >
+        #{entEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="instTag != null" >
+        #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDateTime != null" >
+        #{beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="entEnabled != null" >
+        #{entEnabled,jdbcType=CHAR},
+      </if>
+      <if test="fbCode != null" >
+        #{fbCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FbBusEntrustExample" resultType="java.lang.Integer" >
+    select count(*) from fb_bus_entrust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fb_bus_entrust
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fbId != null" >
+        fb_id = #{record.fbId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkEmpId != null" >
+        check_emp_id = #{record.checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkEmpName != null" >
+        check_emp_name = #{record.checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entEmpId != null" >
+        ent_emp_id = #{record.entEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entEmpName != null" >
+        ent_emp_name = #{record.entEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instTag != null" >
+        inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instTagName != null" >
+        inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.beginDateTime != null" >
+        begin_date_time = #{record.beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.endDateTime != null" >
+        end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.entEnabled != null" >
+        ent_enabled = #{record.entEnabled,jdbcType=CHAR},
+      </if>
+      <if test="record.fbCode != null" >
+        fb_code = #{record.fbCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fb_bus_entrust
+    set id = #{record.id,jdbcType=VARCHAR},
+      fb_id = #{record.fbId,jdbcType=VARCHAR},
+      check_emp_id = #{record.checkEmpId,jdbcType=VARCHAR},
+      check_emp_name = #{record.checkEmpName,jdbcType=VARCHAR},
+      ent_emp_id = #{record.entEmpId,jdbcType=VARCHAR},
+      ent_emp_name = #{record.entEmpName,jdbcType=VARCHAR},
+      inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      begin_date_time = #{record.beginDateTime,jdbcType=CHAR},
+      end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      ent_enabled = #{record.entEnabled,jdbcType=CHAR},
+      fb_code = #{record.fbCode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FbBusEntrust" >
+    update fb_bus_entrust
+    <set >
+      <if test="fbId != null" >
+        fb_id = #{fbId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpId != null" >
+        check_emp_id = #{checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpName != null" >
+        check_emp_name = #{checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="entEmpId != null" >
+        ent_emp_id = #{entEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="entEmpName != null" >
+        ent_emp_name = #{entEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="instTag != null" >
+        inst_tag = #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDateTime != null" >
+        begin_date_time = #{beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time = #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="entEnabled != null" >
+        ent_enabled = #{entEnabled,jdbcType=CHAR},
+      </if>
+      <if test="fbCode != null" >
+        fb_code = #{fbCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FbBusEntrust" >
+    update fb_bus_entrust
+    set fb_id = #{fbId,jdbcType=VARCHAR},
+      check_emp_id = #{checkEmpId,jdbcType=VARCHAR},
+      check_emp_name = #{checkEmpName,jdbcType=VARCHAR},
+      ent_emp_id = #{entEmpId,jdbcType=VARCHAR},
+      ent_emp_name = #{entEmpName,jdbcType=VARCHAR},
+      inst_tag = #{instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      begin_date_time = #{beginDateTime,jdbcType=CHAR},
+      end_date_time = #{endDateTime,jdbcType=CHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      ent_enabled = #{entEnabled,jdbcType=CHAR},
+      fb_code = #{fbCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

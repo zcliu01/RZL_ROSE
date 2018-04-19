@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.infor.mapper.inforrecord.InforrecordMapper">
+	<resultMap id="inforSendListResultMap" type="com.zrt.infor.domain.InforOutbox" >
+		<id column="pio_out_id" property="outId" jdbcType="INTEGER" />
+		<result column="pio_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+		<result column="pio_infor_no" property="inforNo" jdbcType="VARCHAR" />
+		<result column="pio_sender_id" property="senderId" jdbcType="VARCHAR" />
+		<result column="pio_sender_name" property="senderName" jdbcType="VARCHAR" />
+		<result column="pio_org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="pio_org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="pio_send_status" property="sendStatus" jdbcType="CHAR" />
+		<result column="pio_trans_type" property="transType" jdbcType="CHAR" />
+		<result column="pio_is_show" property="isShow" jdbcType="CHAR" />
+		<result column="pio_create_date_time" property="createDateTime" jdbcType="CHAR" />
+		<result column="pio_send_date_time" property="sendDateTime" jdbcType="CHAR" />
+		<result column="pio_update_date_time" property="updateDateTime" jdbcType="CHAR" />
+		<association property="inforRecord" javaType="com.zrt.infor.domain.InforRecord">
+			<id column="pir_infor_id" property="inforId" jdbcType="VARCHAR" />
+			<result column="pir_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+			<result column="pir_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pir_parent_no" property="parentNo" jdbcType="VARCHAR" />
+			<result column="pir_infor_code" property="inforCode" jdbcType="VARCHAR" />
+			<result column="pir_title" property="title" jdbcType="VARCHAR" />
+			<result column="pir_content" property="content" jdbcType="VARCHAR" />
+			<result column="pir_category" property="category" jdbcType="VARCHAR" />
+			<result column="pir_type" property="type" jdbcType="VARCHAR" />
+			<result column="pir_create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+			<result column="pir_create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+			<result column="pir_create_date_time" property="createDateTime" jdbcType="CHAR" />
+			<result column="pir_update_emp_id" property="updateEmpId" jdbcType="VARCHAR" />
+			<result column="pir_update_emp_name" property="updateEmpName" jdbcType="VARCHAR" />
+			<result column="pir_update_date_time" property="updateDateTime" jdbcType="CHAR" />
+			<result column="pir_infor_version" property="inforVersion" jdbcType="CHAR" />
+		</association>
+		<collection property="inboxList" ofType="com.zrt.infor.domain.InforInbox">
+			<id column="pii_in_id" property="inId" jdbcType="INTEGER" />
+			<result column="pii_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+			<result column="pii_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pii_out_id" property="outId" jdbcType="INTEGER" />
+			<result column="pii_receiver_id" property="receiverId" jdbcType="VARCHAR" />
+			<result column="pii_receiver_name" property="receiverName" jdbcType="VARCHAR" />
+			<result column="pii_emp_order" property="empOrder" jdbcType="INTEGER" />
+			<result column="pii_receiver_type" property="receiverType" jdbcType="CHAR" />
+			<result column="pii_org_id" property="orgId" jdbcType="VARCHAR" />
+			<result column="pii_org_name" property="orgName" jdbcType="VARCHAR" />
+			<result column="pii_deal_status" property="dealStatus" jdbcType="VARCHAR" />
+			<result column="pii_is_show" property="isShow" jdbcType="CHAR" />
+		</collection>
+		<collection property="accessoryList"  ofType="com.zrt.infor.domain.InforAccessory">
+			<id column="pia_acc_id" property="accId" jdbcType="VARCHAR" />
+			<result column="pia_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pia_acc_address" property="accAddress" jdbcType="VARCHAR" />
+			<result column="pia_acc_name" property="accName" jdbcType="CHAR" />
+			<result column="pia_acc_type" property="accType" jdbcType="VARCHAR" />
+			<result column="pia_node_id" property="nodeId" jdbcType="VARCHAR" />
+			<result column="pia_file_order" property="fileOrder" jdbcType="INTEGER" />
+		</collection>
+		<collection property="relevanceList"  ofType="com.zrt.infor.domain.InforRelevance">
+			<id column="pr_rel_infor_id" property="relInforId" jdbcType="VARCHAR" />
+			<result column="pr_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pr_rel_id" property="relId" jdbcType="VARCHAR" />
+			<result column="pr_rel_name" property="relName" jdbcType="VARCHAR" />
+			<result column="pr_rel_type" property="relType" jdbcType="CHAR" />
+		</collection>
+	</resultMap>
+
+	<select id="inforDetailList" resultMap="inforSendListResultMap">
+        SELECT pio.infor_no AS pio_infor_no,pio.sender_name AS pio_sender_name,pio.sender_id as pio_sender_id,pir.title AS pir_title,pir.content AS pir_content,pir.category as pir_category,pii.receiver_name AS pii_receiver_name,pii.receiver_id as pii_receiver_id, pio.org_name AS pio_org_name,pir.create_date_time AS pir_create_date_time,pio.create_date_time as pio_create_date_time,
+        pio.out_id as pio_out_id,pio.trans_type AS pio_trans_type,pii.in_id as pii_in_id,pii.emp_order pii_emp_order,pr.rel_infor_id as pr_rel_infor_id,pia.acc_id AS pia_acc_id,pia.file_order pia_file_order,
+        pii.receiver_type as pii_receiver_type,pii.deal_status as pii_deal_status,pr.rel_id as pr_rel_id,pr.rel_name as pr_rel_name,pr.rel_type as pr_rel_type,
+        pia.acc_address as pia_acc_address,pia.acc_name as pia_acc_name,pia.acc_type as pia_acc_type,pia.node_id AS pia_node_id
+        FROM (SELECT infor_no,title,content,category,create_date_time FROM plat_infor_record r WHERE infor_no in 
+		<foreach collection="mapParam.parentNoArr" item="inforNO" open="(" separator="," close=")">
+                #{inforNO}
+		</foreach>
+        
+        )pir
+         JOIN plat_infor_outbox pio ON pio.infor_no = pir.infor_no
+        left JOIN plat_infor_inbox pii ON pii.out_id = pio.out_id
+        left join plat_infor_relevance pr on pr.infor_no=pio.infor_no
+        left join plat_infor_accessory pia on pia.infor_no=pio.infor_no
+        
+         order by pio_out_id desc,pia_file_order
+	</select>
+	<select id="getParent" resultType="java.util.HashMap">
+    SELECT getParentList(#{mapParam.infor_no}) parentNoStr
+	</select>
+    
+	<select id="getChild" resultType="java.util.HashMap">
+    	SELECT getChildList(#{mapParam.infor_no}) childNoStr
+	</select>
+	<select id="inforCareDetailList" resultMap="inforSendListResultMap">
+        SELECT pio.out_id as pio_out_id, pio.infor_no AS pio_infor_no,pio.sender_name AS pio_sender_name,pio.sender_id as pio_sender_id,pir.title AS pir_title,pir.content AS pir_content,pir.category as pir_category,pii.receiver_name AS pii_receiver_name,pii.receiver_id as pii_receiver_id, pio.org_name AS pio_org_name,pio.create_date_time AS pio_create_date_time,pii.receiver_type as pii_receiver_type,
+        pio.out_id AS pio_out_id,pii.in_id AS pii_in_id,pii.deal_status as pii_deal_status,pii.emp_order pii_emp_order,pr.rel_infor_id AS pr_rel_infor_id,pia.acc_id AS pia_acc_id,
+        pr.rel_id as pr_rel_id,pr.rel_name as pr_rel_name,pr.rel_type as pr_rel_type,pia.file_order pia_file_order,
+        pia.acc_address as pia_acc_address,pia.acc_name as pia_acc_name,pia.acc_type as pia_acc_type,pia.node_id AS pia_node_id
+        FROM (SELECT * FROM plat_infor_record WHERE infor_no in 
+		<foreach collection="mapParam.childNoArr" item="inforNO" open="(" separator="," close=")">
+                #{inforNO}
+		</foreach>
+		
+		 )pir
+         JOIN plat_infor_outbox pio ON pio.infor_no = pir.infor_no
+        left JOIN plat_infor_inbox pii ON pii.out_id = pio.out_id
+        left join plat_infor_relevance pr on pr.infor_no=pio.infor_no
+        left join plat_infor_accessory pia on pia.infor_no=pio.infor_no
+        
+        order by pio_out_id desc,pia_file_order
+	</select>
+	
+	<select id="getCareFlag" resultType="Integer">
+        SELECT count(infor_no) careCount FROM plat_infor_concern pic where pic.infor_no=#{mapParam.infor_no} and pic.emp_id=#{mapParam.emp_id}
+	</select>
+	
+	<select id="inforDealStatus" resultType="java.util.HashMap">
+        SELECT pii.deal_status FROM plat_infor_inbox pii where pii.infor_no=#{mapParam.infor_no}
+	</select>
+	
+	<delete id="deleteInforDetail" parameterType="String">
+     DELETE
+		FROM
+			plat_infor_detail
+		WHERE
+			in_id IN (
+				SELECT
+					in_id
+				FROM
+					plat_infor_inbox
+				WHERE
+					infor_no = #{infor_no}
+				)
+		
+	</delete>
+</mapper>

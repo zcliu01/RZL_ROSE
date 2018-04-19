@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.daywork.mapper.wkrecord.WkRecordListMapper" >
+  	<select id="list" resultType="java.util.HashMap">
+  		 select id,
+				wk_name,
+				begin_date_time,
+				end_date_time,
+				rel_code,
+				rel_type ,
+				create_date_time
+				from wk_record 
+				where create_emp_id = #{emp_id}
+				<if test="day_time != null and day_time !=''">
+				<!-- <![CDATA[and   begin_date_time< #{day_time} <  end_date_time]]> -->
+				  and #{day_time} >=begin_date_time and  end_date_time >= #{day_time}
+				  OR (create_emp_id = #{emp_id} AND (begin_date_time LIKE CONCAT(#{day_time}, '%') or  end_date_time like CONCAT( #{day_time}, '%')))
+				</if>
+				<if test="wk_name != null and wk_name !=''">
+				and  wk_name LIKE CONCAT('%',#{wk_name},'%')
+				</if>
+				<if test="wk_day != null and wk_day !=''">
+				and #{wk_day} >= begin_date_time and  end_date_time >= #{wk_day}
+			    OR (create_emp_id = #{emp_id} AND (begin_date_time LIKE CONCAT(#{wk_day}, '%') or  end_date_time like CONCAT( #{wk_day}, '%')))
+				</if>
+				ORDER BY create_date_time DESC
+  	</select>
+  	
+  	
+  	<select id="searchTime" resultType="java.util.HashMap">
+  		 select begin_date_time,
+				end_date_time 
+				from
+				wk_record
+				where create_emp_id = #{emp_id}
+  	</select>
+  	
+  	
+  	<select id="checkAll" resultType="java.util.HashMap">
+  		 select id,
+				wk_name,
+				wk_desc,
+				begin_date_time,
+				end_date_time,
+				rel_code,
+				rel_type ,
+				create_date_time
+		 from  	wk_record
+		 where 	create_emp_id = #{emp_id}
+		<if test="begin_time_begin != null and begin_time_begin !=''">
+			<if test="begin_time_end != null and begin_time_end !=''">
+			<!-- <![CDATA[and #{begin_time_begin}< begin_date_time <  #{begin_time_end}]]> -->
+			and begin_date_time >= #{begin_time_begin} and #{begin_time_end} >= begin_date_time
+			</if>
+			<if test="begin_time_end == null or begin_time_end ==''">
+				and begin_date_time >= #{begin_time_begin}
+			</if>
+		</if>
+		<if test="begin_time_begin == null or begin_time_begin ==''">
+			<if test="begin_time_end != null and begin_time_end !=''">
+				and begin_date_time >= #{begin_time_end}
+			</if>
+		</if>
+		
+		<if test="end_time_begin != null and end_time_begin !=''">
+			<if test="end_time_end != null and end_time_end !=''">
+			<!-- <![CDATA[and #{end_time_begin}< end_date_time <  #{end_time_end}]]> -->
+			and end_date_time >= #{end_time_begin} and  #{end_time_end} >= end_date_time
+			</if>
+			<if test="end_time_end == null or end_time_end ==''">
+				and  #{end_time_begin} >= end_date_time
+			</if>
+		</if>
+		<if test="end_time_begin == null or end_time_begin ==''">
+			<if test="end_time_end != null and end_time_end !=''">
+				and  #{end_time_end} >= end_date_time
+			</if>
+		</if>
+		
+		<if test="wk_name != null and wk_name !=''">
+			and wk_name LIKE CONCAT('%',#{wk_name},'%') 
+		</if>
+		ORDER BY create_date_time  DESC
+  	</select>
+  	
+</mapper>

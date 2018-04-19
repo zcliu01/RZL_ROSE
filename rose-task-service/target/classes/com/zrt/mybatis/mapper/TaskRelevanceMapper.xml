@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.TaskRelevanceMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.TaskRelevance" >
+    <id column="rel_task_id" property="relTaskId" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="rel_id" property="relId" jdbcType="VARCHAR" />
+    <result column="rel_name" property="relName" jdbcType="VARCHAR" />
+    <result column="rel_type" property="relType" jdbcType="CHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="VARCHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="VARCHAR" />
+    <result column="rel_status" property="relStatus" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    rel_task_id, task_id, rel_id, rel_name, rel_type, create_date_time, update_date_time, 
+    rel_status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.TaskRelevanceExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from task_relevance
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from task_relevance
+    where rel_task_id = #{relTaskId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from task_relevance
+    where rel_task_id = #{relTaskId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.TaskRelevanceExample" >
+    delete from task_relevance
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.TaskRelevance" >
+    insert into task_relevance (rel_task_id, task_id, rel_id, 
+      rel_name, rel_type, create_date_time, 
+      update_date_time, rel_status)
+    values (#{relTaskId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{relId,jdbcType=VARCHAR}, 
+      #{relName,jdbcType=VARCHAR}, #{relType,jdbcType=CHAR}, #{createDateTime,jdbcType=VARCHAR}, 
+      #{updateDateTime,jdbcType=VARCHAR}, #{relStatus,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.TaskRelevance" >
+    insert into task_relevance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="relTaskId != null" >
+        rel_task_id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="relId != null" >
+        rel_id,
+      </if>
+      <if test="relName != null" >
+        rel_name,
+      </if>
+      <if test="relType != null" >
+        rel_type,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="relStatus != null" >
+        rel_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="relTaskId != null" >
+        #{relTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="relId != null" >
+        #{relId,jdbcType=VARCHAR},
+      </if>
+      <if test="relName != null" >
+        #{relName,jdbcType=VARCHAR},
+      </if>
+      <if test="relType != null" >
+        #{relType,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="relStatus != null" >
+        #{relStatus,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.TaskRelevanceExample" resultType="java.lang.Integer" >
+    select count(*) from task_relevance
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update task_relevance
+    <set >
+      <if test="record.relTaskId != null" >
+        rel_task_id = #{record.relTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        task_id = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relId != null" >
+        rel_id = #{record.relId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relName != null" >
+        rel_name = #{record.relName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relType != null" >
+        rel_type = #{record.relType,jdbcType=CHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relStatus != null" >
+        rel_status = #{record.relStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update task_relevance
+    set rel_task_id = #{record.relTaskId,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR},
+      rel_id = #{record.relId,jdbcType=VARCHAR},
+      rel_name = #{record.relName,jdbcType=VARCHAR},
+      rel_type = #{record.relType,jdbcType=CHAR},
+      create_date_time = #{record.createDateTime,jdbcType=VARCHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=VARCHAR},
+      rel_status = #{record.relStatus,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.TaskRelevance" >
+    update task_relevance
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="relId != null" >
+        rel_id = #{relId,jdbcType=VARCHAR},
+      </if>
+      <if test="relName != null" >
+        rel_name = #{relName,jdbcType=VARCHAR},
+      </if>
+      <if test="relType != null" >
+        rel_type = #{relType,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="relStatus != null" >
+        rel_status = #{relStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    where rel_task_id = #{relTaskId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.TaskRelevance" >
+    update task_relevance
+    set task_id = #{taskId,jdbcType=VARCHAR},
+      rel_id = #{relId,jdbcType=VARCHAR},
+      rel_name = #{relName,jdbcType=VARCHAR},
+      rel_type = #{relType,jdbcType=CHAR},
+      create_date_time = #{createDateTime,jdbcType=VARCHAR},
+      update_date_time = #{updateDateTime,jdbcType=VARCHAR},
+      rel_status = #{relStatus,jdbcType=CHAR}
+    where rel_task_id = #{relTaskId,jdbcType=VARCHAR}
+  </update>
+</mapper>

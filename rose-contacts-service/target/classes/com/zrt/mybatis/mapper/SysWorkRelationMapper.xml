@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.SysWorkRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.SysWorkRelation" >
+    <id column="e_w_id" property="eWId" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="manage_emp_id" property="manageEmpId" jdbcType="VARCHAR" />
+    <result column="manage_emp_name" property="manageEmpName" jdbcType="VARCHAR" />
+    <result column="charge_emp_id" property="chargeEmpId" jdbcType="VARCHAR" />
+    <result column="charge_emp_name" property="chargeEmpName" jdbcType="VARCHAR" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    e_w_id, org_id, emp_id, manage_emp_id, manage_emp_name, charge_emp_id, charge_emp_name, 
+    tenant_id, create_date_time, update_date_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.SysWorkRelationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from sys_work_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_work_relation
+    where e_w_id = #{eWId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_work_relation
+    where e_w_id = #{eWId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.SysWorkRelationExample" >
+    delete from sys_work_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.SysWorkRelation" >
+    insert into sys_work_relation (e_w_id, org_id, emp_id, 
+      manage_emp_id, manage_emp_name, charge_emp_id, 
+      charge_emp_name, tenant_id, create_date_time, 
+      update_date_time)
+    values (#{eWId,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, 
+      #{manageEmpId,jdbcType=VARCHAR}, #{manageEmpName,jdbcType=VARCHAR}, #{chargeEmpId,jdbcType=VARCHAR}, 
+      #{chargeEmpName,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, 
+      #{updateDateTime,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.SysWorkRelation" >
+    insert into sys_work_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eWId != null" >
+        e_w_id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="manageEmpId != null" >
+        manage_emp_id,
+      </if>
+      <if test="manageEmpName != null" >
+        manage_emp_name,
+      </if>
+      <if test="chargeEmpId != null" >
+        charge_emp_id,
+      </if>
+      <if test="chargeEmpName != null" >
+        charge_emp_name,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eWId != null" >
+        #{eWId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="manageEmpId != null" >
+        #{manageEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="manageEmpName != null" >
+        #{manageEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeEmpId != null" >
+        #{chargeEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeEmpName != null" >
+        #{chargeEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.SysWorkRelationExample" resultType="java.lang.Integer" >
+    select count(*) from sys_work_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_work_relation
+    <set >
+      <if test="record.eWId != null" >
+        e_w_id = #{record.eWId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empId != null" >
+        emp_id = #{record.empId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manageEmpId != null" >
+        manage_emp_id = #{record.manageEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manageEmpName != null" >
+        manage_emp_name = #{record.manageEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chargeEmpId != null" >
+        charge_emp_id = #{record.chargeEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chargeEmpName != null" >
+        charge_emp_name = #{record.chargeEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_work_relation
+    set e_w_id = #{record.eWId,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      emp_id = #{record.empId,jdbcType=VARCHAR},
+      manage_emp_id = #{record.manageEmpId,jdbcType=VARCHAR},
+      manage_emp_name = #{record.manageEmpName,jdbcType=VARCHAR},
+      charge_emp_id = #{record.chargeEmpId,jdbcType=VARCHAR},
+      charge_emp_name = #{record.chargeEmpName,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.SysWorkRelation" >
+    update sys_work_relation
+    <set >
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="manageEmpId != null" >
+        manage_emp_id = #{manageEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="manageEmpName != null" >
+        manage_emp_name = #{manageEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeEmpId != null" >
+        charge_emp_id = #{chargeEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeEmpName != null" >
+        charge_emp_name = #{chargeEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    where e_w_id = #{eWId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.SysWorkRelation" >
+    update sys_work_relation
+    set org_id = #{orgId,jdbcType=VARCHAR},
+      emp_id = #{empId,jdbcType=VARCHAR},
+      manage_emp_id = #{manageEmpId,jdbcType=VARCHAR},
+      manage_emp_name = #{manageEmpName,jdbcType=VARCHAR},
+      charge_emp_id = #{chargeEmpId,jdbcType=VARCHAR},
+      charge_emp_name = #{chargeEmpName,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR}
+    where e_w_id = #{eWId,jdbcType=VARCHAR}
+  </update>
+</mapper>

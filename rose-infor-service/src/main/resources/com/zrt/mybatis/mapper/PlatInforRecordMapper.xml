@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.PlatInforRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.PlatInforRecord" >
+    <id column="infor_id" property="inforId" jdbcType="VARCHAR" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="infor_no" property="inforNo" jdbcType="VARCHAR" />
+    <result column="parent_no" property="parentNo" jdbcType="VARCHAR" />
+    <result column="infor_code" property="inforCode" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_emp_id" property="updateEmpId" jdbcType="VARCHAR" />
+    <result column="update_emp_name" property="updateEmpName" jdbcType="VARCHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="infor_version" property="inforVersion" jdbcType="CHAR" />
+    <result column="bus_id" property="busId" jdbcType="VARCHAR" />
+    <result column="bus_type" property="busType" jdbcType="VARCHAR" />
+    <result column="bus_domain" property="busDomain" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zrt.mybatis.domain.PlatInforRecord" extends="BaseResultMap" >
+    <result column="content_p" property="contentP" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    infor_id, tenant_id, infor_no, parent_no, infor_code, title, content, category, type, 
+    create_emp_id, create_emp_name, create_date_time, update_emp_id, update_emp_name, 
+    update_date_time, infor_version, bus_id, bus_type, bus_domain
+  </sql>
+  <sql id="Blob_Column_List" >
+    content_p
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.zrt.mybatis.domain.PlatInforRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from plat_infor_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.PlatInforRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from plat_infor_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from plat_infor_record
+    where infor_id = #{inforId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from plat_infor_record
+    where infor_id = #{inforId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.PlatInforRecordExample" >
+    delete from plat_infor_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.PlatInforRecord" >
+    insert into plat_infor_record (infor_id, tenant_id, infor_no, 
+      parent_no, infor_code, title, 
+      content, category, type, 
+      create_emp_id, create_emp_name, create_date_time, 
+      update_emp_id, update_emp_name, update_date_time, 
+      infor_version, bus_id, bus_type, 
+      bus_domain, content_p)
+    values (#{inforId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, #{inforNo,jdbcType=VARCHAR}, 
+      #{parentNo,jdbcType=VARCHAR}, #{inforCode,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{createEmpId,jdbcType=VARCHAR}, #{createEmpName,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, 
+      #{updateEmpId,jdbcType=VARCHAR}, #{updateEmpName,jdbcType=VARCHAR}, #{updateDateTime,jdbcType=CHAR}, 
+      #{inforVersion,jdbcType=CHAR}, #{busId,jdbcType=VARCHAR}, #{busType,jdbcType=VARCHAR}, 
+      #{busDomain,jdbcType=VARCHAR}, #{contentP,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.PlatInforRecord" >
+    insert into plat_infor_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inforId != null" >
+        infor_id,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="inforNo != null" >
+        infor_no,
+      </if>
+      <if test="parentNo != null" >
+        parent_no,
+      </if>
+      <if test="inforCode != null" >
+        infor_code,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id,
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="inforVersion != null" >
+        infor_version,
+      </if>
+      <if test="busId != null" >
+        bus_id,
+      </if>
+      <if test="busType != null" >
+        bus_type,
+      </if>
+      <if test="busDomain != null" >
+        bus_domain,
+      </if>
+      <if test="contentP != null" >
+        content_p,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inforId != null" >
+        #{inforId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="inforNo != null" >
+        #{inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNo != null" >
+        #{parentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="inforCode != null" >
+        #{inforCode,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="inforVersion != null" >
+        #{inforVersion,jdbcType=CHAR},
+      </if>
+      <if test="busId != null" >
+        #{busId,jdbcType=VARCHAR},
+      </if>
+      <if test="busType != null" >
+        #{busType,jdbcType=VARCHAR},
+      </if>
+      <if test="busDomain != null" >
+        #{busDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="contentP != null" >
+        #{contentP,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.PlatInforRecordExample" resultType="java.lang.Integer" >
+    select count(*) from plat_infor_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update plat_infor_record
+    <set >
+      <if test="record.inforId != null" >
+        infor_id = #{record.inforId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inforNo != null" >
+        infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentNo != null" >
+        parent_no = #{record.parentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inforCode != null" >
+        infor_code = #{record.inforCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category != null" >
+        category = #{record.category,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpId != null" >
+        create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpName != null" >
+        create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateEmpId != null" >
+        update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateEmpName != null" >
+        update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.inforVersion != null" >
+        infor_version = #{record.inforVersion,jdbcType=CHAR},
+      </if>
+      <if test="record.busId != null" >
+        bus_id = #{record.busId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.busType != null" >
+        bus_type = #{record.busType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.busDomain != null" >
+        bus_domain = #{record.busDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentP != null" >
+        content_p = #{record.contentP,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update plat_infor_record
+    set infor_id = #{record.inforId,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      parent_no = #{record.parentNo,jdbcType=VARCHAR},
+      infor_code = #{record.inforCode,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      category = #{record.category,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      infor_version = #{record.inforVersion,jdbcType=CHAR},
+      bus_id = #{record.busId,jdbcType=VARCHAR},
+      bus_type = #{record.busType,jdbcType=VARCHAR},
+      bus_domain = #{record.busDomain,jdbcType=VARCHAR},
+      content_p = #{record.contentP,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update plat_infor_record
+    set infor_id = #{record.inforId,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      parent_no = #{record.parentNo,jdbcType=VARCHAR},
+      infor_code = #{record.inforCode,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      category = #{record.category,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      infor_version = #{record.inforVersion,jdbcType=CHAR},
+      bus_id = #{record.busId,jdbcType=VARCHAR},
+      bus_type = #{record.busType,jdbcType=VARCHAR},
+      bus_domain = #{record.busDomain,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.PlatInforRecord" >
+    update plat_infor_record
+    <set >
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="inforNo != null" >
+        infor_no = #{inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNo != null" >
+        parent_no = #{parentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="inforCode != null" >
+        infor_code = #{inforCode,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="inforVersion != null" >
+        infor_version = #{inforVersion,jdbcType=CHAR},
+      </if>
+      <if test="busId != null" >
+        bus_id = #{busId,jdbcType=VARCHAR},
+      </if>
+      <if test="busType != null" >
+        bus_type = #{busType,jdbcType=VARCHAR},
+      </if>
+      <if test="busDomain != null" >
+        bus_domain = #{busDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="contentP != null" >
+        content_p = #{contentP,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where infor_id = #{inforId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zrt.mybatis.domain.PlatInforRecord" >
+    update plat_infor_record
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      infor_no = #{inforNo,jdbcType=VARCHAR},
+      parent_no = #{parentNo,jdbcType=VARCHAR},
+      infor_code = #{inforCode,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      infor_version = #{inforVersion,jdbcType=CHAR},
+      bus_id = #{busId,jdbcType=VARCHAR},
+      bus_type = #{busType,jdbcType=VARCHAR},
+      bus_domain = #{busDomain,jdbcType=VARCHAR},
+      content_p = #{contentP,jdbcType=LONGVARCHAR}
+    where infor_id = #{inforId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.PlatInforRecord" >
+    update plat_infor_record
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      infor_no = #{inforNo,jdbcType=VARCHAR},
+      parent_no = #{parentNo,jdbcType=VARCHAR},
+      infor_code = #{inforCode,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      infor_version = #{inforVersion,jdbcType=CHAR},
+      bus_id = #{busId,jdbcType=VARCHAR},
+      bus_type = #{busType,jdbcType=VARCHAR},
+      bus_domain = #{busDomain,jdbcType=VARCHAR}
+    where infor_id = #{inforId,jdbcType=VARCHAR}
+  </update>
+</mapper>

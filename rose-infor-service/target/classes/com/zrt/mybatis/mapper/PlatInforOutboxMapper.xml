@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.PlatInforOutboxMapper" >
+	<resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.PlatInforOutbox" >
+		<id column="out_id" property="outId" jdbcType="INTEGER" />
+		<result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+		<result column="infor_no" property="inforNo" jdbcType="VARCHAR" />
+		<result column="sender_id" property="senderId" jdbcType="VARCHAR" />
+		<result column="sender_name" property="senderName" jdbcType="VARCHAR" />
+		<result column="org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="send_status" property="sendStatus" jdbcType="CHAR" />
+		<result column="trans_type" property="transType" jdbcType="CHAR" />
+		<result column="is_show" property="isShow" jdbcType="CHAR" />
+		<result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+		<result column="send_date_time" property="sendDateTime" jdbcType="CHAR" />
+		<result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause" >
+		<where >
+			<foreach collection="oredCriteria" item="criteria" separator="or" >
+				<if test="criteria.valid" >
+					<trim prefix="(" suffix=")" prefixOverrides="and" >
+						<foreach collection="criteria.criteria" item="criterion" >
+							<choose >
+								<when test="criterion.noValue" >
+                  and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue" >
+                  and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause" >
+		<where >
+			<foreach collection="example.oredCriteria" item="criteria" separator="or" >
+				<if test="criteria.valid" >
+					<trim prefix="(" suffix=")" prefixOverrides="and" >
+						<foreach collection="criteria.criteria" item="criterion" >
+							<choose >
+								<when test="criterion.noValue" >
+                  and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue" >
+                  and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List" >
+    out_id, tenant_id, infor_no, sender_id, sender_name, org_id, org_name, send_status, 
+    trans_type, is_show, create_date_time, send_date_time, update_date_time
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.PlatInforOutboxExample" >
+    select
+		<if test="distinct" >
+      distinct
+		</if>
+    'true' as QUERYID,
+		<include refid="Base_Column_List" />
+    from plat_infor_outbox
+		<if test="_parameter != null" >
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null" >
+      order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+		<include refid="Base_Column_List" />
+    from plat_infor_outbox
+    where out_id = #{outId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plat_infor_outbox
+    where out_id = #{outId,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.PlatInforOutboxExample" >
+    delete from plat_infor_outbox
+		<if test="_parameter != null" >
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.zrt.mybatis.domain.PlatInforOutbox" >
+    insert into plat_infor_outbox (out_id, tenant_id, infor_no, 
+      sender_id, sender_name, org_id, 
+      org_name, send_status, trans_type, 
+      is_show, create_date_time, send_date_time, 
+      update_date_time)
+    values (#{outId,jdbcType=INTEGER}, #{tenantId,jdbcType=VARCHAR}, #{inforNo,jdbcType=VARCHAR}, 
+      #{senderId,jdbcType=VARCHAR}, #{senderName,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, 
+      #{orgName,jdbcType=VARCHAR}, #{sendStatus,jdbcType=CHAR}, #{transType,jdbcType=CHAR}, 
+      #{isShow,jdbcType=CHAR}, #{createDateTime,jdbcType=CHAR}, #{sendDateTime,jdbcType=CHAR}, 
+      #{updateDateTime,jdbcType=CHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.zrt.mybatis.domain.PlatInforOutbox" >
+    
+		<selectKey keyProperty="outId" order="AFTER" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_id()  
+		</selectKey>  
+    
+    insert into plat_infor_outbox
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="tenantId != null" >
+        tenant_id,
+			</if>
+			<if test="inforNo != null" >
+        infor_no,
+			</if>
+			<if test="senderId != null" >
+        sender_id,
+			</if>
+			<if test="senderName != null" >
+        sender_name,
+			</if>
+			<if test="orgId != null" >
+        org_id,
+			</if>
+			<if test="orgName != null" >
+        org_name,
+			</if>
+			<if test="sendStatus != null" >
+        send_status,
+			</if>
+			<if test="transType != null" >
+        trans_type,
+			</if>
+			<if test="isShow != null" >
+        is_show,
+			</if>
+			<if test="createDateTime != null" >
+        create_date_time,
+			</if>
+			<if test="sendDateTime != null" >
+        send_date_time,
+			</if>
+			<if test="updateDateTime != null" >
+        update_date_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+			</if>
+			<if test="inforNo != null" >
+        #{inforNo,jdbcType=VARCHAR},
+			</if>
+			<if test="senderId != null" >
+        #{senderId,jdbcType=VARCHAR},
+			</if>
+			<if test="senderName != null" >
+        #{senderName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+			</if>
+			<if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="sendStatus != null" >
+        #{sendStatus,jdbcType=CHAR},
+			</if>
+			<if test="transType != null" >
+        #{transType,jdbcType=CHAR},
+			</if>
+			<if test="isShow != null" >
+        #{isShow,jdbcType=CHAR},
+			</if>
+			<if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+			</if>
+			<if test="sendDateTime != null" >
+        #{sendDateTime,jdbcType=CHAR},
+			</if>
+			<if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.zrt.mybatis.domain.PlatInforOutboxExample" resultType="java.lang.Integer" >
+    select count(*) from plat_infor_outbox
+		<if test="_parameter != null" >
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map" >
+    update plat_infor_outbox
+		<set >
+			<if test="record.outId != null" >
+        out_id = #{record.outId,jdbcType=INTEGER},
+			</if>
+			<if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.inforNo != null" >
+        infor_no = #{record.inforNo,jdbcType=VARCHAR},
+			</if>
+			<if test="record.senderId != null" >
+        sender_id = #{record.senderId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.senderName != null" >
+        sender_name = #{record.senderName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.orgName != null" >
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sendStatus != null" >
+        send_status = #{record.sendStatus,jdbcType=CHAR},
+			</if>
+			<if test="record.transType != null" >
+        trans_type = #{record.transType,jdbcType=CHAR},
+			</if>
+			<if test="record.isShow != null" >
+        is_show = #{record.isShow,jdbcType=CHAR},
+			</if>
+			<if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+			</if>
+			<if test="record.sendDateTime != null" >
+        send_date_time = #{record.sendDateTime,jdbcType=CHAR},
+			</if>
+			<if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+			</if>
+		</set>
+		<if test="_parameter != null" >
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map" >
+    update plat_infor_outbox
+    set out_id = #{record.outId,jdbcType=INTEGER},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      sender_id = #{record.senderId,jdbcType=VARCHAR},
+      sender_name = #{record.senderName,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      send_status = #{record.sendStatus,jdbcType=CHAR},
+      trans_type = #{record.transType,jdbcType=CHAR},
+      is_show = #{record.isShow,jdbcType=CHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      send_date_time = #{record.sendDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR}
+		<if test="_parameter != null" >
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.PlatInforOutbox" >
+    update plat_infor_outbox
+		<set >
+			<if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+			</if>
+			<if test="inforNo != null" >
+        infor_no = #{inforNo,jdbcType=VARCHAR},
+			</if>
+			<if test="senderId != null" >
+        sender_id = #{senderId,jdbcType=VARCHAR},
+			</if>
+			<if test="senderName != null" >
+        sender_name = #{senderName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+			</if>
+			<if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=CHAR},
+			</if>
+			<if test="transType != null" >
+        trans_type = #{transType,jdbcType=CHAR},
+			</if>
+			<if test="isShow != null" >
+        is_show = #{isShow,jdbcType=CHAR},
+			</if>
+			<if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+			</if>
+			<if test="sendDateTime != null" >
+        send_date_time = #{sendDateTime,jdbcType=CHAR},
+			</if>
+			<if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+			</if>
+		</set>
+    where out_id = #{outId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.PlatInforOutbox" >
+    update plat_infor_outbox
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      infor_no = #{inforNo,jdbcType=VARCHAR},
+      sender_id = #{senderId,jdbcType=VARCHAR},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      send_status = #{sendStatus,jdbcType=CHAR},
+      trans_type = #{transType,jdbcType=CHAR},
+      is_show = #{isShow,jdbcType=CHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      send_date_time = #{sendDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR}
+    where out_id = #{outId,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.DocHanderMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.DocHander" >
+    <id column="doc_hander_id" property="docHanderId" jdbcType="INTEGER" />
+    <result column="doc_id" property="docId" jdbcType="VARCHAR" />
+    <result column="handerID" property="handerid" jdbcType="VARCHAR" />
+    <result column="hander_name" property="handerName" jdbcType="VARCHAR" />
+    <result column="hand_type" property="handType" jdbcType="CHAR" />
+    <result column="hand_info" property="handInfo" jdbcType="VARCHAR" />
+    <result column="doc_read" property="docRead" jdbcType="CHAR" />
+    <result column="hand_time" property="handTime" jdbcType="CHAR" />
+    <result column="hand_state" property="handState" jdbcType="CHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="hander_order" property="handerOrder" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    doc_hander_id, doc_id, handerID, hander_name, hand_type, hand_info, doc_read, hand_time, 
+    hand_state, remark, tenant_id, create_date_time, update_date_time, hander_order
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.DocHanderExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from doc_hander
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from doc_hander
+    where doc_hander_id = #{docHanderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from doc_hander
+    where doc_hander_id = #{docHanderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.DocHanderExample" >
+    delete from doc_hander
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.DocHander" >
+    insert into doc_hander (doc_hander_id, doc_id, handerID, 
+      hander_name, hand_type, hand_info, 
+      doc_read, hand_time, hand_state, 
+      remark, tenant_id, create_date_time, 
+      update_date_time, hander_order)
+    values (#{docHanderId,jdbcType=INTEGER}, #{docId,jdbcType=VARCHAR}, #{handerid,jdbcType=VARCHAR}, 
+      #{handerName,jdbcType=VARCHAR}, #{handType,jdbcType=CHAR}, #{handInfo,jdbcType=VARCHAR}, 
+      #{docRead,jdbcType=CHAR}, #{handTime,jdbcType=CHAR}, #{handState,jdbcType=CHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, 
+      #{updateDateTime,jdbcType=CHAR}, #{handerOrder,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.DocHander" >
+    insert into doc_hander
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="docHanderId != null" >
+        doc_hander_id,
+      </if>
+      <if test="docId != null" >
+        doc_id,
+      </if>
+      <if test="handerid != null" >
+        handerID,
+      </if>
+      <if test="handerName != null" >
+        hander_name,
+      </if>
+      <if test="handType != null" >
+        hand_type,
+      </if>
+      <if test="handInfo != null" >
+        hand_info,
+      </if>
+      <if test="docRead != null" >
+        doc_read,
+      </if>
+      <if test="handTime != null" >
+        hand_time,
+      </if>
+      <if test="handState != null" >
+        hand_state,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="handerOrder != null" >
+        hander_order,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="docHanderId != null" >
+        #{docHanderId,jdbcType=INTEGER},
+      </if>
+      <if test="docId != null" >
+        #{docId,jdbcType=VARCHAR},
+      </if>
+      <if test="handerid != null" >
+        #{handerid,jdbcType=VARCHAR},
+      </if>
+      <if test="handerName != null" >
+        #{handerName,jdbcType=VARCHAR},
+      </if>
+      <if test="handType != null" >
+        #{handType,jdbcType=CHAR},
+      </if>
+      <if test="handInfo != null" >
+        #{handInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="docRead != null" >
+        #{docRead,jdbcType=CHAR},
+      </if>
+      <if test="handTime != null" >
+        #{handTime,jdbcType=CHAR},
+      </if>
+      <if test="handState != null" >
+        #{handState,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="handerOrder != null" >
+        #{handerOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.DocHanderExample" resultType="java.lang.Integer" >
+    select count(*) from doc_hander
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update doc_hander
+    <set >
+      <if test="record.docHanderId != null" >
+        doc_hander_id = #{record.docHanderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.docId != null" >
+        doc_id = #{record.docId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handerid != null" >
+        handerID = #{record.handerid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handerName != null" >
+        hander_name = #{record.handerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handType != null" >
+        hand_type = #{record.handType,jdbcType=CHAR},
+      </if>
+      <if test="record.handInfo != null" >
+        hand_info = #{record.handInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.docRead != null" >
+        doc_read = #{record.docRead,jdbcType=CHAR},
+      </if>
+      <if test="record.handTime != null" >
+        hand_time = #{record.handTime,jdbcType=CHAR},
+      </if>
+      <if test="record.handState != null" >
+        hand_state = #{record.handState,jdbcType=CHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.handerOrder != null" >
+        hander_order = #{record.handerOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update doc_hander
+    set doc_hander_id = #{record.docHanderId,jdbcType=INTEGER},
+      doc_id = #{record.docId,jdbcType=VARCHAR},
+      handerID = #{record.handerid,jdbcType=VARCHAR},
+      hander_name = #{record.handerName,jdbcType=VARCHAR},
+      hand_type = #{record.handType,jdbcType=CHAR},
+      hand_info = #{record.handInfo,jdbcType=VARCHAR},
+      doc_read = #{record.docRead,jdbcType=CHAR},
+      hand_time = #{record.handTime,jdbcType=CHAR},
+      hand_state = #{record.handState,jdbcType=CHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      hander_order = #{record.handerOrder,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.DocHander" >
+    update doc_hander
+    <set >
+      <if test="docId != null" >
+        doc_id = #{docId,jdbcType=VARCHAR},
+      </if>
+      <if test="handerid != null" >
+        handerID = #{handerid,jdbcType=VARCHAR},
+      </if>
+      <if test="handerName != null" >
+        hander_name = #{handerName,jdbcType=VARCHAR},
+      </if>
+      <if test="handType != null" >
+        hand_type = #{handType,jdbcType=CHAR},
+      </if>
+      <if test="handInfo != null" >
+        hand_info = #{handInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="docRead != null" >
+        doc_read = #{docRead,jdbcType=CHAR},
+      </if>
+      <if test="handTime != null" >
+        hand_time = #{handTime,jdbcType=CHAR},
+      </if>
+      <if test="handState != null" >
+        hand_state = #{handState,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="handerOrder != null" >
+        hander_order = #{handerOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where doc_hander_id = #{docHanderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.DocHander" >
+    update doc_hander
+    set doc_id = #{docId,jdbcType=VARCHAR},
+      handerID = #{handerid,jdbcType=VARCHAR},
+      hander_name = #{handerName,jdbcType=VARCHAR},
+      hand_type = #{handType,jdbcType=CHAR},
+      hand_info = #{handInfo,jdbcType=VARCHAR},
+      doc_read = #{docRead,jdbcType=CHAR},
+      hand_time = #{handTime,jdbcType=CHAR},
+      hand_state = #{handState,jdbcType=CHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      hander_order = #{handerOrder,jdbcType=INTEGER}
+    where doc_hander_id = #{docHanderId,jdbcType=INTEGER}
+  </update>
+</mapper>

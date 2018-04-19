@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.vm.mapper.mtmanage.VmVedioMapper">
+	<select id="getVedioUserList" resultType="java.util.HashMap">
+		SELECT
+			b.auth_name,
+			b.auth_pwd
+		FROM
+			(
+			SELECT
+				va.auth_name,
+				va.auth_pwd,
+				a.outName
+			FROM
+				vm_bus_vidyo_auth va
+			LEFT JOIN (
+				SELECT
+					br.auth_name outName
+				FROM
+					vm_bus_record br
+				WHERE
+					br.mt_status != '2'
+				GROUP BY
+					br.auth_name
+	<![CDATA[HAVING count(br.auth_name) > 4]]>
+			) a ON a.outName = va.auth_name
+			AND a.outName IS NOT NULL
+			WHERE va.role_name = 'ADMIN'
+		) b
+		WHERE
+			b.outName IS NULL
+		
+	</select>
+	<select id="getVidvoRoomCount" resultType="java.util.HashMap">
+		SELECT count(0) roomCount FROM vm_bus_vidyo_room r where r.auth_name=#{auth_name}  
+	</select>
+	<select id="getRevEmpIds" resultType="java.util.HashMap">
+		SELECT bp.rec_emp_id FROM vm_bus_partin bp where bp.record_id=#{record_id}  
+	</select>
+	<select id="getParRevEmpIds" resultType="java.util.HashMap">
+		SELECT bp.rec_emp_id FROM vm_bus_person bp where bp.record_id=#{record_id}  
+	</select>
+	
+</mapper>

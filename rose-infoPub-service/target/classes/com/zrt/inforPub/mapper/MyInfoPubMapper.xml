@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.infoPub.mapper.MyInfoPubMapper" >
+  <select id="searchViewer" resultType="java.util.HashMap">
+  		 select info_view_id,
+				info_id,
+				view_id,
+				view_name,
+				is_read,
+				create_date_time
+				from 
+				infopub_viewer 
+				where  1 = 1
+				<if test="info_id != null and info_id !=''">
+				and info_id = #{info_id} 
+				</if>
+				<if test="view_id != null and view_id !=''">
+				and view_id = #{view_id} 
+				</if>
+				ORDER BY create_date_time desc
+  	</select>
+  	
+  	
+  	
+  <select id="searchAttach" resultType="java.util.HashMap">
+  		select info_attack_ID,
+  				node_id,
+				info_ID,
+				ATTACH_ID,
+				attach_type,
+				REMARK,
+				create_date_time,
+				attach_name,
+				infopub_attach_url
+				from 
+				infopub_attach
+				where  info_ID = #{info_id}
+				ORDER BY tenant_id 
+  	</select>
+  	
+  <select id="searchInfoType" resultType="java.util.HashMap">
+  		select info_type_code,
+				info_type_name,
+				info_type_state,
+				info_type_createData
+				from 
+				infopub_type 
+				where  1=1
+				<if test="info_type_state != null and info_type_state !=''">
+				 and info_type_state = #{info_type_state}
+				</if>
+				<if test="info_type_name != null and info_type_name !=''">
+				 and info_type_name LIKE CONCAT('%',#{info_type_name},'%') 
+				</if>
+				<if test="info_type_code != null and info_type_code !=''">
+				 and info_type_code = #{info_type_code}
+				</if>
+				ORDER BY info_type_createData
+  	</select>
+  	
+  	
+  	
+  	<select id="searchInfoPub" resultType="java.util.HashMap">
+  		 select info_ID,
+				info_title,
+				info_owner,
+				info_owner_id,
+				info_type,
+				info_state,
+				info_order,
+				info_number,
+				info_content,
+				info_pubdate,
+				create_date_time,
+				update_date_time,
+				info_type_code,
+				info_type_name
+				from 
+				infopub left join infopub_type
+				on infopub.info_type = infopub_type.info_type_code
+				where  info_owner_id = #{emp_id}
+				<if test="info_title != null and info_title !=''">
+				and info_title LIKE CONCAT('%',#{info_title},'%') 
+				</if>
+				<if test="info_type_code != null and info_type_code !=''">
+				and info_type = #{info_type_code}
+				</if>
+				<if test="info_owner != null and info_owner !=''">
+				and info_owner LIKE CONCAT('%',#{info_owner},'%')
+				</if>
+				<if test="info_state != null and info_state !=''">
+				and info_state = #{info_state} 
+				</if>
+				<!-- <if test=" info_order == '0'">
+				and info_order >= 0
+				</if> -->
+				<if test="info_pubdate_start != null and info_pubdate_start !=''">
+					and info_pubdate >= #{info_pubdate_start}
+				</if>
+				<if test="info_pubdate_end != null and info_pubdate_end !=''">
+					and #{info_pubdate_end} >=info_pubdate 
+				</if>
+				
+				<if test="create_date_time_start != null and create_date_time_start !=''">
+					and create_date_time >= #{create_date_time_start}
+				</if>
+				<if test="create_date_time_end != null and create_date_time_end !=''">
+					and #{create_date_time_end} >= create_date_time 
+				</if>
+				<if test="info_order == 1">
+					and info_order > 0 
+				</if>
+				ORDER BY info_order DESC  ,info_pubdate DESC, create_date_time DESC
+  	</select>
+  	
+  	
+  	<select id="searchInfoPubByView" resultType="java.util.HashMap">
+  		 select infopub.info_ID,
+				infopub.info_title,
+				infopub.info_owner,
+				infopub.info_owner_id,
+				infopub.info_type,
+				infopub.info_state,
+				infopub.info_order,
+				infopub.info_number,
+				infopub.info_content,
+				infopub.info_pubdate,
+				infopub.create_date_time,
+				infopub.update_date_time,
+				infopub_type.info_type_code,
+				infopub_type.info_type_name
+				from 
+				infopub left join infopub_viewer
+				on infopub.info_ID = infopub_viewer.info_id
+				 left join infopub_type
+				on infopub.info_type = infopub_type.info_type_code
+				where  infopub_viewer.view_id = #{emp_id} 
+				<if test="info_title != null and info_title !=''">
+				and info_title LIKE CONCAT('%',#{info_title},'%') 
+				</if>
+				<if test="info_type_code != null and info_type_code !=''">
+				and info_type = #{info_type_code}
+				</if>
+				<if test="info_owner != null and info_owner !=''">
+				and info_owner LIKE CONCAT('%',#{info_owner},'%') 
+				</if>
+				<if test="info_type != null and info_type !=''">
+				and info_type = #{info_type}
+				</if>
+				<if test="info_state != null and info_state !=''">
+				and info_state = #{info_state} 
+				</if>
+				
+				<if test="info_pubdate_start != null and info_pubdate_start !=''">
+					and info_pubdate >= #{info_pubdate_start}
+				</if>
+				<if test="info_pubdate_end != null and info_pubdate_end !=''">
+					and #{info_pubdate_end} >=info_pubdate 
+				</if>
+				<if test="info_order == 1">
+					and info_order > 0 
+				</if>
+				ORDER BY info_order DESC  ,info_pubdate DESC, create_date_time DESC
+  	</select>
+  	
+  	
+  	<select id="searchInfoPubByEveryOne" resultType="java.util.HashMap">
+  		 select infopub.info_ID,
+				infopub.info_title,
+				infopub.info_owner,
+				infopub.info_owner_id,
+				infopub.info_type,
+				infopub.info_state,
+				infopub.info_order,
+				infopub.info_number,
+				infopub.info_content,
+				infopub.info_pubdate,
+				infopub.create_date_time,
+				infopub.update_date_time,
+				infopub_type.info_type_code,
+				infopub_type.info_type_name
+				from 
+				infopub left join infopub_type
+				on infopub.info_type = infopub_type.info_type_code
+				where  infopub.info_isEveryOne = "1"
+				<if test="info_title != null and info_title !=''">
+				and info_title LIKE CONCAT('%',#{info_title},'%') 
+				</if>
+				<if test="info_type_code != null and info_type_code !=''">
+				and info_type = #{info_type_code}
+				</if>
+				<if test="info_owner != null and info_owner !=''">
+				and info_owner LIKE CONCAT('%',#{info_owner},'%') 
+				</if>
+				<if test="info_type != null and info_type !=''">
+				and info_type = #{info_type}
+				</if>
+				<if test="info_state != null and info_state !=''">
+				and info_state = #{info_state} 
+				</if>
+				
+				<if test="info_pubdate_start != null and info_pubdate_start !=''">
+					and info_pubdate >= #{info_pubdate_start}
+				</if>
+				<if test="info_pubdate_end != null and info_pubdate_end !=''">
+					and #{info_pubdate_end} >=info_pubdate 
+				</if>
+				ORDER BY info_order DESC  ,info_pubdate DESC, create_date_time DESC
+  	</select>
+  	
+  	
+  	<select id="searchMax" resultType="java.util.HashMap">
+  		SELECT COUNT(info_type_code) FROM infopub_type
+  	</select>
+  	
+  	
+  	
+  	<delete id="deleteAttach"  parameterType="java.util.Map">
+  		delete 
+  		from infopub_attach
+    	where 
+    	info_ID = #{info_id} 
+  	
+  	</delete>
+  	
+  	
+  	<delete id="deleteViewer"  parameterType="java.util.Map">
+  		delete 
+  		from infopub_viewer
+    	where 
+    	info_id = #{info_id} 
+  	
+  	</delete>
+  	
+  	
+  	<update id="updateIsRead"  parameterType="java.util.Map">
+  		update infopub_viewer
+  		set is_read = '1'
+  		where info_view_id = #{info_view_id}
+  	</update>
+</mapper>

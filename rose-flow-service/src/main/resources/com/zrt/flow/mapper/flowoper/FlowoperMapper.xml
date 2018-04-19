@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.flow.mapper.flowoper.FlowoperMapper">
+	<resultMap id="instInfoListResultMap" type="com.zrt.flow.domain.InstInfoDomain" >
+		<id column="inst_id" property="instId" jdbcType="VARCHAR" />
+		<result column="inst_apply_id" property="applyId" jdbcType="VARCHAR" />
+		<result column="inst_apply_name" property="applyName" jdbcType="VARCHAR" />
+		<result column="inst_org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="inst_org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="inst_fb_title" property="fbTitle" jdbcType="VARCHAR" />
+		<result column="inst_fb_content" property="fbContent" jdbcType="CHAR" />
+		<result column="inst_start_date_time" property="startDateTime" jdbcType="CHAR" />
+		<result column="inst_status" property="instStatus" jdbcType="CHAR" />
+		<result column="inst_fb_id" property="fbId" jdbcType="VARCHAR" />
+		<result column="inst_t_name" property="tName" jdbcType="VARCHAR" />
+		<result column="inst_t_code" property="tCode" jdbcType="VARCHAR" />
+		<result column="inst_project_flag" property="projectFlag" jdbcType="CHAR" />
+		<result column="inst_handle_flag" property="handleFlag" jdbcType="CHAR" />
+		<result column="inst_t_type_id" property="tTypeId" jdbcType="VARCHAR" />
+		<result column="inst_t_type_name" property="tTypeName" jdbcType="VARCHAR" />
+		<result column="inst_parent_t_type_id" property="parentTTypeId" jdbcType="VARCHAR" />
+		<result column="inst_parent_t_type_name" property="parentTTypeName" jdbcType="VARCHAR" />
+		
+		<result column="pre_id" property="preId" jdbcType="VARCHAR" />
+		<result column="pre_deal_id" property="predealId" jdbcType="VARCHAR" />
+		<result column="pre_deal_name" property="predealName" jdbcType="VARCHAR" />
+		
+		<collection property="taskList" ofType="com.zrt.flow.domain.TaskDomain">
+			<result column="tk_proc_inst_id" property="procInstId" jdbcType="VARCHAR" />
+			<result column="tk_task_id" property="taskId" jdbcType="VARCHAR" />
+			<result column="tk_cur_tag_id" property="curTagId" jdbcType="VARCHAR" />
+			<result column="tk_cur_tag_name" property="curTagName" jdbcType="VARCHAR" />
+			<result column="tk_cur_tag_assignee" property="curTagAssignee" jdbcType="VARCHAR" />
+			<result column="tk_delete_reason" property="deleteReason" jdbcType="VARCHAR" />
+			<result column="tk_end_time" property="endTime" jdbcType="VARCHAR" />
+			<result column="tk_duration" property="duration" jdbcType="BIGINT" />
+		</collection>
+		
+	</resultMap>
+	<!--
+	<select id="instList" resultType="java.util.HashMap">
+	SELECT 
+	  fbi.id AS inst_id,
+	  fbi.apply_id,
+	  fbi.apply_name,
+	  fbi.org_id,
+	  fbi.org_name,
+	  fbi.fb_titile,
+	  fbi.fb_content,
+	  fbi.start_date_time,
+	  fbi.inst_status,
+	  fbt.id AS fb_id,
+	  fbt.t_name,
+	  fbt.t_code,
+	  fbt1.id AS t_type_id,
+	  fbt1.t_name AS t_type_name,
+	  fbt2.id AS parent_t_type_id,
+	  fbt2.t_name AS parent_t_type_name ,
+	  are.act_id_ as cur_tag_id,
+	  '' as cur_tag_name,
+	  tk.assignee_ as cur_tag_assignee
+	FROM
+	  fb_bus_inst fbi 
+	  JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	  LEFT JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  LEFT JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  left join act_ru_execution are on are.business_key_=fbi.id
+	  left join (SELECT DISTINCT RES.* FROM ACT_RU_TASK RES LEFT JOIN ACT_RU_IDENTITYLINK I ON I.TASK_ID_ = RES.ID_ 
+	  WHERE 1=1
+	  <if test="cur_tag_assignee!=null and cur_tag_assignee!=''">
+	  	and (RES.ASSIGNEE_ = #{cur_tag_assignee} OR (RES.ASSIGNEE_ IS NULL AND I.TYPE_ = 'candidate' AND (I.USER_ID_ = #{cur_tag_assignee} ))) 
+	  </if>
+     ) tk on tk.execution_id_=are.id_
+	  <where>
+	  	<if test="t_code!=null and t_code!=''">
+	  		and fbt.t_code=#{t_code}
+	  	</if>
+	  	<if test="t_name!=null and t_name!=''">
+	  		and fbt.t_name like CONCAT(#{t_name},'%')
+	  	</if>
+	  	<if test="t_type_name!=null and t_type_name!=''">
+	  		and fbt1.t_type_name like CONCAT(#{t_type_name},'%')
+	  	</if>
+	  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+	  		and fbt2.parent_t_type_name like CONCAT(#{parent_t_type_name},'%')
+	  	</if>
+	  	<if test="apply_name!=null and apply_name!=''">
+	  		and fbi.apply_name=#{apply_name}
+	  	</if>
+	  	<if test="org_name!=null and org_name!=''">
+	  		and fbi.org_name like CONCAT(#{org_name},'%')
+	  	</if>
+	  	
+	  	<if test="fb_title!=null and fb_title!=''">
+	  		and fbi.fb_title  like CONCAT(#{fb_title},'%')
+	  	</if>
+	  	<if test="begin_start_date_time!=null and begin_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time >= #{begin_start_date_time}]]>
+	  	</if>
+	  	<if test="end_start_date_time!=null and end_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time <= #{end_start_date_time}]]>
+	  	</if>
+	  </where>
+	</select>-->
+	
+		<!--管理员查询所有流程列表-->
+	<select id="instList" resultMap="instInfoListResultMap">
+			SELECT 
+	  fbi.id AS inst_id,
+	  fbi.apply_id as inst_apply_id,
+	  fbi.apply_name as inst_apply_name,
+	  fbi.org_id as inst_org_id,
+	  fbi.org_name as inst_org_name,
+	  fbi.fb_title as inst_fb_title,
+	  fbi.fb_content as inst_fb_content,
+	  fbi.start_date_time as inst_start_date_time,
+	  fbi.inst_status as inst_status,
+	  fbt.id AS inst_fb_id,
+	  fbt.t_name as inst_t_name,
+	  fbt.t_code as inst_t_code,
+	  fbt.project_flag as inst_project_flag,
+	  fbt.handle_flag as inst_handle_flag,
+	  fbt1.id AS inst_t_type_id,
+	  fbt1.t_name AS inst_t_type_name,
+	  fbt2.id AS inst_parent_t_type_id,
+	  fbt2.t_name AS inst_parent_t_type_name ,
+	  tk.id_ as tk_task_id,
+	  tk.proc_inst_id_ as  tk_proc_inst_id,
+	  tk.task_def_key_ as tk_cur_tag_id,
+	  tk.name_ as tk_cur_tag_name,
+	  (
+    CASE
+      when (tk.assignee_ IS  not null)
+      then tk.assignee_
+      when (tk.assignee_ is  null and tk.user_id_ is not null )
+      then tk.user_id_
+      when (tk.assignee_ IS  NULL and tk.user_id_ IS NULL)
+      then tk.emp_id 
+    END
+  ) AS tk_cur_tag_assignee
+	FROM
+	    ( select distinct fbi.* from 
+	    fb_bus_inst fbi JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	   JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	   JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	    left join fb_bus_project fbpt
+	    on fbpt.inst_id=fbi.id
+	     where fbi.inst_status!='0'  
+	    <if test="t_code!=null and t_code!=''">
+	  		and fbt.t_code=#{t_code}
+	  	</if>
+	  	<if test="t_name!=null and t_name!=''">
+	  		and fbt.t_name like CONCAT('%',#{t_name},'%')
+	  	</if>
+	  	<if test="t_type_name!=null and t_type_name!=''">
+	  		and fbt1.t_name like CONCAT('%',#{t_type_name},'%')
+	  	</if>
+	  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+	  		and fbt2.t_name like CONCAT('%',#{parent_t_type_name},'%')
+	  	</if>
+	  	<if test="apply_name!=null and apply_name!=''">
+	  		and fbi.apply_name=#{apply_name}
+	  	</if>
+	  	<if test="org_name!=null and org_name!=''">
+	  		and fbi.org_name like CONCAT('%',#{org_name},'%')
+	  	</if>
+	  	<if test="inst_status!=null and inst_status!=''">
+	  		and fbi.inst_status =#{inst_status}
+	  	</if>
+	  	<if test="fb_title!=null and fb_title!=''">
+	  		and fbi.fb_title  like CONCAT('%',#{fb_title},'%')
+	  	</if>
+	  	<if test="fb_content!=null and fb_content!=''">
+	  		and fbi.fb_content  like CONCAT('%',#{fb_content},'%')
+	  	</if>
+	  	<if test="begin_start_date_time!=null and begin_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time >= #{begin_start_date_time}]]>
+	  	</if>
+	  	<if test="end_start_date_time!=null and end_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time <= #{end_start_date_time}]]>
+	  	</if>
+	  	<if test="apply_id!=null and apply_id!=''">
+	  		and fbi.apply_id =#{apply_id}
+	  	</if>
+	  	<if test="search!=null and search!=''">
+	  		and (fbi.fb_title like CONCAT('%',#{search},'%') or fbi.id  like CONCAT('%',#{search},'%'))
+	  	</if>
+	  	<if test="inst_id!=null and inst_id!=''">
+	  		and fbi.id =#{inst_id}
+	  	</if>
+	  	<if test="project_code!=null and project_code!=''">
+	  		and fbpt.project_code =#{project_code}
+	  	</if>
+	  	<if test="project_name!=null and project_name!=''">
+	  		and fbpt.project_name =#{project_name}
+	  	</if>
+	  	order by fbi.start_date_time desc
+	    <if test="firstresult != null">
+             limit #{firstresult},#{maxResult}
+		</if>) fbi
+	  JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	  JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  left join act_hi_procinst are on are.business_key_=fbi.id
+	  left join ( SELECT DISTINCT RES.*,fburole.emp_id ,i.user_id_
+    FROM
+      ACT_ru_TASK RES 
+      LEFT JOIN ACT_ru_IDENTITYLINK I 
+        ON I.TASK_ID_ = RES.ID_ 
+      LEFT JOIN fb_bus_role fbrole 
+        ON fbrole.role_code = i.group_id_ 
+      LEFT JOIN fb_bus_user_role fburole 
+        ON fburole.role_id = fbrole.role_id 
+	  where 1=1
+	  <if test="cur_tag_assignee!=null and cur_tag_assignee!=''">
+	  	and RES.ASSIGNEE_ = #{cur_tag_assignee} 
+	  	 OR (RES.ASSIGNEE_ IS NULL AND I.TYPE_ = 'candidate' AND I.USER_ID_ = #{cur_tag_assignee} ) 
+		 or (RES.ASSIGNEE_ IS NULL AND i.group_id_ IS NOT NULL AND I.TYPE_ = 'candidate' AND fburole.emp_id = #{cur_tag_assignee})
+	  </if>
+     ) tk on tk.proc_inst_id_=are.proc_inst_id_
+	  	
+
+
+	</select>
+	
+	
+	
+	
+	<select id="instCount" resultMap="instInfoListResultMap">
+			SELECT 
+	  fbi.id AS inst_id,
+	  fbi.apply_id as inst_apply_id,
+	  fbi.apply_name as inst_apply_name,
+	  fbi.org_id as inst_org_id,
+	  fbi.org_name as inst_org_name,
+	  fbi.fb_title as inst_fb_title,
+	  fbi.fb_content as inst_fb_content,
+	  fbi.start_date_time as inst_start_date_time,
+	  fbi.inst_status as inst_status,
+	  fbt.id AS inst_fb_id,
+	  fbt.t_name as inst_t_name,
+	  fbt.t_code as inst_t_code,
+	  fbt.project_flag as inst_project_flag,
+	  fbt.handle_flag as inst_handle_flag,
+	  fbt1.id AS inst_t_type_id,
+	  fbt1.t_name AS inst_t_type_name,
+	  fbt2.id AS inst_parent_t_type_id,
+	  fbt2.t_name AS inst_parent_t_type_name ,
+	  tk.id_ as tk_task_id,
+	  tk.proc_inst_id_ as  tk_proc_inst_id,
+	  tk.task_def_key_ as tk_cur_tag_id,
+	  tk.name_ as tk_cur_tag_name,
+	  (
+    CASE
+      when (tk.assignee_ IS  not null)
+      then tk.assignee_
+      when (tk.assignee_ is  null and tk.user_id_ is not null )
+      then tk.user_id_
+      when (tk.assignee_ IS  NULL and tk.user_id_ IS NULL)
+      then tk.emp_id 
+    END
+  ) AS tk_cur_tag_assignee
+	FROM
+	    ( select distinct fbi.* from 
+	    fb_bus_inst fbi JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	   JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	   JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	    left join fb_bus_project fbpt
+	    on fbpt.inst_id=fbi.id
+	     where fbi.inst_status!='0'  
+	    <if test="t_code!=null and t_code!=''">
+	  		and fbt.t_code=#{t_code}
+	  	</if>
+	  	<if test="t_name!=null and t_name!=''">
+	  		and fbt.t_name like CONCAT('%',#{t_name},'%')
+	  	</if>
+	  	<if test="t_type_name!=null and t_type_name!=''">
+	  		and fbt1.t_name like CONCAT('%',#{t_type_name},'%')
+	  	</if>
+	  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+	  		and fbt2.t_name like CONCAT('%',#{parent_t_type_name},'%')
+	  	</if>
+	  	<if test="apply_name!=null and apply_name!=''">
+	  		and fbi.apply_name=#{apply_name}
+	  	</if>
+	  	<if test="org_name!=null and org_name!=''">
+	  		and fbi.org_name like CONCAT('%',#{org_name},'%')
+	  	</if>
+	  	<if test="inst_status!=null and inst_status!=''">
+	  		and fbi.inst_status =#{inst_status}
+	  	</if>
+	  	<if test="fb_title!=null and fb_title!=''">
+	  		and fbi.fb_title  like CONCAT('%',#{fb_title},'%')
+	  	</if>
+	  	<if test="fb_content!=null and fb_content!=''">
+	  		and fbi.fb_content  like CONCAT('%',#{fb_content},'%')
+	  	</if>
+	  	<if test="begin_start_date_time!=null and begin_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time >= #{begin_start_date_time}]]>
+	  	</if>
+	  	<if test="end_start_date_time!=null and end_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time <= #{end_start_date_time}]]>
+	  	</if>
+	  	<if test="apply_id!=null and apply_id!=''">
+	  		and fbi.apply_id =#{apply_id}
+	  	</if>
+	  	<if test="search!=null and search!=''">
+	  		and (fbi.fb_title like CONCAT('%',#{search},'%') or fbi.id  like CONCAT('%',#{search},'%'))
+	  	</if>
+	  	<if test="inst_id!=null and inst_id!=''">
+	  		and fbi.id =#{inst_id}
+	  	</if>
+	  	<if test="project_code!=null and project_code!=''">
+	  		and fbpt.project_code =#{project_code}
+	  	</if>
+	  	<if test="project_name!=null and project_name!=''">
+	  		and fbpt.project_name =#{project_name}
+	  	</if>
+	  	order by fbi.start_date_time desc
+	    ) fbi
+	  JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	  JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  left join act_hi_procinst are on are.business_key_=fbi.id
+	  left join ( SELECT DISTINCT RES.*,fburole.emp_id ,i.user_id_
+    FROM
+      ACT_ru_TASK RES 
+      LEFT JOIN ACT_ru_IDENTITYLINK I 
+        ON I.TASK_ID_ = RES.ID_ 
+      LEFT JOIN fb_bus_role fbrole 
+        ON fbrole.role_code = i.group_id_ 
+      LEFT JOIN fb_bus_user_role fburole 
+        ON fburole.role_id = fbrole.role_id 
+	  where 1=1
+	  <if test="cur_tag_assignee!=null and cur_tag_assignee!=''">
+	  	and RES.ASSIGNEE_ = #{cur_tag_assignee} 
+	  	 OR (RES.ASSIGNEE_ IS NULL AND I.TYPE_ = 'candidate' AND I.USER_ID_ = #{cur_tag_assignee} ) 
+		 or (RES.ASSIGNEE_ IS NULL AND i.group_id_ IS NOT NULL AND I.TYPE_ = 'candidate' AND fburole.emp_id = #{cur_tag_assignee})
+	  </if>
+     ) tk on tk.proc_inst_id_=are.proc_inst_id_
+	  	
+
+
+	</select>
+	
+	
+		<!--查询发起的所有流程数量-->
+	<select id="instListCount" resultType="java.util.HashMap">
+	SELECT 
+	  count(fbi.id) as totalCount
+	FROM
+	  fb_bus_inst fbi 
+	  JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	  LEFT JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  LEFT JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  left join fb_bus_project fbpt
+	  on fbpt.inst_id=fbi.id
+	  WHERE  fbi.inst_status!='0'  
+	  	   
+	  	<if test="t_code!=null and t_code!=''">
+	  		and fbt.t_code=#{t_code}
+	  	</if>
+	  	<if test="t_name!=null and t_name!=''">
+	  		and fbt.t_name like CONCAT(#{t_name},'%')
+	  	</if>
+	  	<if test="t_type_name!=null and t_type_name!=''">
+	  		and fbt1.t_name like CONCAT(#{t_type_name},'%')
+	  	</if>
+	  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+	  		and fbt2.t_name like CONCAT(#{parent_t_type_name},'%')
+	  	</if>
+	  	<if test="apply_name!=null and apply_name!=''">
+	  		and fbi.apply_name=#{apply_name}
+	  	</if>
+	  	<if test="org_name!=null and org_name!=''">
+	  		and fbi.org_name like CONCAT(#{org_name},'%')
+	  	</if>
+	  	<if test="inst_status!=null and inst_status!=''">
+	  		and fbi.inst_status =#{inst_status}
+	  	</if>
+	  	<if test="fb_title!=null and fb_title!=''">
+	  		and fbi.fb_title  like CONCAT(#{fb_title},'%')
+	  	</if>
+	  	<if test="fb_content!=null and fb_content!=''">
+	  		and fbi.fb_content  like CONCAT(#{fb_content},'%')
+	  	</if>
+	  	<if test="begin_start_date_time!=null and begin_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time >= #{begin_start_date_time}]]>
+	  	</if>
+	  	<if test="end_start_date_time!=null and end_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time <= #{end_start_date_time}]]>
+	  	</if>
+	  	<if test="apply_id!=null and apply_id!=''">
+	  		and fbi.apply_id =#{apply_id}
+	  	</if>
+       <if test="search!=null and search!=''">
+	  		and (fbi.fb_title like CONCAT('%',#{search},'%') or fbi.id  like CONCAT('%',#{search},'%'))
+	  	</if>
+	  	<if test="inst_id!=null and inst_id!=''">
+	  		and fbi.id =#{inst_id}
+	  	</if>
+	  	<if test="project_code!=null and project_code!=''">
+	  		and fbpt.project_code =#{project_code}
+	  	</if>
+	  	<if test="project_name!=null and project_name!=''">
+	  		and fbpt.project_name =#{project_name}
+	  	</if>
+	</select>
+	
+	<!-- 已设置的所有委托流程 -->
+	<select id="entedList" resultType="java.util.HashMap">
+			  
+		SELECT 
+	  fbe.id,
+	  fbe.check_emp_id AS entrust_id,
+	  fbe.check_emp_name AS entrust_name,
+	  fbe.ent_emp_id AS entrusted_id,
+	  fbe.ent_emp_name AS entrusted_name,
+	  fbt.id AS fb_id,
+	  fbt.t_name,
+	  fbt.t_code,
+	  fbt.t_desc,
+	  fbt1.id AS t_type_id,
+	  fbt1.t_name AS t_type_name,
+	  fbt2.id AS parent_t_type_id,
+	  fbt2.t_name AS parent_t_type_name ,
+	  fmt.id AS fm_id,
+	  fmt.t_name AS fm_name
+	FROM
+	  fb_bus_entrust fbe 
+	  JOIN fb_bus_template fbt 
+	    ON fbe.fb_id = fbt.id 
+	  JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  JOIN fb_bus_fm fbf 
+	    ON fbf.fb_id = fbt.id 
+	  JOIN fm_bus_template fmt 
+	    ON fmt.id = fbf.fm_id 
+	    <where>
+	    	<if test="t_name!=null and t_name!=''">
+	  		    and fbt.t_name like CONCAT(#{t_name},'%')
+	  	    </if>
+	    	<if test="t_type_name!=null and t_type_name!=''">
+		  		and fbt1.t_name like CONCAT(#{t_type_name},'%')
+		  	</if>
+		  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+		  		and fbt2.t_name like CONCAT(#{parent_t_type_name},'%')
+		  	</if>
+		  	<if test="entrust_name!=null and entrust_name!=''">
+		  		and fbe.check_emp_name =#{entrust_name}
+		  	</if>
+		  	<if test="entrusted_name!=null and entrusted_name!=''">
+		  		and fbe.ent_emp_name =#{entrusted_name}
+		  	</if>
+	    </where>
+	</select>
+	
+	
+	
+	<!--管理员查询预处理流程 签报类的不预处理-->
+	<select id="preList" resultMap="instInfoListResultMap">
+			SELECT 
+		fbpr.id as pre_id,
+		fbpr.check_emp_id as pre_deal_id,
+	  fbpr.check_emp_name as pre_deal_name,
+	  fbi.id AS inst_id,
+	  fbi.apply_id as inst_apply_id,
+	  fbi.apply_name as inst_apply_name,
+	  fbi.org_id as inst_org_id,
+	  fbi.org_name as inst_org_name,
+	  fbi.fb_title as inst_fb_title,
+	  fbi.fb_content as inst_fb_content,
+	  fbi.start_date_time as inst_start_date_time,
+	  fbi.inst_status as inst_status,
+	  fbt.id AS inst_fb_id,
+	  fbt.t_name as inst_t_name,
+	  fbt.t_code as inst_t_code,
+	  fbt.project_flag as inst_project_flag,
+	  fbt.handle_flag as inst_handle_flag,
+	  fbt1.id AS inst_t_type_id,
+	  fbt1.t_name AS inst_t_type_name,
+	  fbt2.id AS inst_parent_t_type_id,
+	  fbt2.t_name AS inst_parent_t_type_name ,
+	  tk.id_ as tk_task_id,
+	  tk.proc_inst_id_ as  tk_proc_inst_id,
+	  tk.task_def_key_ as tk_cur_tag_id,
+	  tk.name_ as tk_cur_tag_name,
+	  (
+    CASE
+      when (tk.assignee_ IS  not null)
+      then tk.assignee_
+      when (tk.assignee_ is  null and tk.user_id_ is not null )
+      then tk.user_id_
+      when (tk.assignee_ IS  NULL and tk.user_id_ IS NULL)
+      then tk.emp_id 
+    END
+  ) AS tk_cur_tag_assignee
+	FROM
+	  fb_bus_predeal fbpr
+	  join fb_bus_inst fbi 
+	   on fbpr.inst_id=fbi.id
+	  JOIN fb_bus_template fbt 
+	    ON fbi.fb_id = fbt.id 
+	  JOIN fb_bus_type fbt1 
+	    ON fbt.f_b_t_id = fbt1.id 
+	  JOIN fb_bus_type fbt2 
+	    ON fbt.parent_id = fbt2.id 
+	  left join fb_bus_project fbpt
+	    on fbpt.inst_id=fbi.id
+	  left join act_hi_procinst are on are.business_key_=fbi.id
+	   left join ( SELECT DISTINCT RES.*,fburole.emp_id ,i.user_id_
+    FROM
+      ACT_ru_TASK RES 
+      LEFT JOIN ACT_ru_IDENTITYLINK I 
+        ON I.TASK_ID_ = RES.ID_ 
+      LEFT JOIN fb_bus_role fbrole 
+        ON fbrole.role_code = i.group_id_ 
+      LEFT JOIN fb_bus_user_role fburole 
+        ON fburole.role_id = fbrole.role_id 
+        where 1=1
+	  <if test="cur_tag_assignee!=null and cur_tag_assignee!=''">
+	  	and RES.ASSIGNEE_ = #{cur_tag_assignee} 
+	  	 OR (RES.ASSIGNEE_ IS NULL AND I.TYPE_ = 'candidate' AND I.USER_ID_ = #{cur_tag_assignee} ) 
+		 or (RES.ASSIGNEE_ IS NULL AND i.group_id_ IS NOT NULL AND I.TYPE_ = 'candidate' AND fburole.emp_id = #{cur_tag_assignee})
+	  </if>
+     ) tk on tk.proc_inst_id_=are.proc_inst_id_
+	  WHERE  fbi.inst_status!='0' and fbt.handle_flag!='1'
+	  	<if test="t_code!=null and t_code!=''">
+	  		and fbi.id=#{t_code}
+	  	</if>
+	  	<if test="t_name!=null and t_name!=''">
+	  		and fbt.t_name like CONCAT('%',#{t_name},'%')
+	  	</if>
+	  	<if test="t_type_name!=null and t_type_name!=''">
+	  		and fbt1.t_name like CONCAT('%',#{t_type_name},'%')
+	  	</if>
+	  	<if test="parent_t_type_name!=null and parent_t_type_name!=''">
+	  		and fbt2.t_name like CONCAT('%',#{parent_t_type_name},'%')
+	  	</if>
+	  	<if test="apply_name!=null and apply_name!=''">
+	  		and fbi.apply_name=#{apply_name}
+	  	</if>
+	  	<if test="org_name!=null and org_name!=''">
+	  		and fbi.org_name like CONCAT('%',#{org_name},'%')
+	  	</if>
+	  	<if test="inst_status!=null and inst_status!=''">
+	  		and fbi.inst_status =#{inst_status}
+	  	</if>
+	  	<if test="fb_title!=null and fb_title!=''">
+	  		and fbi.fb_title  like CONCAT('%',#{fb_title},'%')
+	  	</if>
+	  	<if test="fb_content!=null and fb_content!=''">
+	  		and fbi.fb_content  like CONCAT('%',#{fb_content},'%')
+	  	</if>
+	  	<if test="begin_start_date_time!=null and begin_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time >= #{begin_start_date_time}]]>
+	  	</if>
+	  	<if test="end_start_date_time!=null and end_start_date_time!=''">
+	  		<![CDATA[AND fbi.start_date_time <= #{end_start_date_time}]]>
+	  	</if>
+	  	<if test="apply_id!=null and apply_id!=''">
+	  		and fbi.apply_id =#{apply_id}
+	  	</if>
+	  	<if test="search!=null and search!=''">
+	  		and (fbi.fb_title like CONCAT('%',#{search},'%') or fbi.id  like CONCAT('%',#{search},'%'))
+	  	</if>
+	  	<if test="inst_id!=null and inst_id!=''">
+	  		and fbi.id =#{inst_id}
+	  	</if>
+	  	<if test="project_code!=null and project_code!=''">
+	  		and fbpt.project_code =#{project_code}
+	  	</if>
+	  	<if test="project_name!=null and project_name!=''">
+	  		and fbpt.project_name like CONCAT('%',#{project_name},'%')
+	  	</if>
+	  	<if test="check_emp_id!=null and check_emp_id!=''">
+	  		and fbpr.check_emp_id =#{check_emp_id}
+	  	</if>
+	  	<if test="predeal_name!=null and predeal_name!=''">
+	  		and fbpr.check_emp_name like CONCAT(#{predeal_name},'%')
+	  	</if>
+	  	ORDER BY inst_start_date_time DESC
+	</select>
+</mapper>

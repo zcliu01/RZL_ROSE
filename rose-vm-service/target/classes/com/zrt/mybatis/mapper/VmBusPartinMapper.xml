@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.VmBusPartinMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.VmBusPartin" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="record_id" property="recordId" jdbcType="VARCHAR" />
+    <result column="rec_emp_id" property="recEmpId" jdbcType="VARCHAR" />
+    <result column="rec_emp_name" property="recEmpName" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="mt_status" property="mtStatus" jdbcType="CHAR" />
+    <result column="mt_date_time" property="mtDateTime" jdbcType="CHAR" />
+    <result column="end_date_time" property="endDateTime" jdbcType="CHAR" />
+    <result column="rec_type" property="recType" jdbcType="VARCHAR" />
+    <result column="device_type" property="deviceType" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, record_id, rec_emp_id, rec_emp_name, org_id, org_name, mt_status, mt_date_time, 
+    end_date_time, rec_type, device_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.VmBusPartinExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from vm_bus_partin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from vm_bus_partin
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from vm_bus_partin
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.VmBusPartinExample" >
+    delete from vm_bus_partin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.VmBusPartin" >
+    insert into vm_bus_partin (id, record_id, rec_emp_id, 
+      rec_emp_name, org_id, org_name, 
+      mt_status, mt_date_time, end_date_time, 
+      rec_type, device_type)
+    values (#{id,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, #{recEmpId,jdbcType=VARCHAR}, 
+      #{recEmpName,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, 
+      #{mtStatus,jdbcType=CHAR}, #{mtDateTime,jdbcType=CHAR}, #{endDateTime,jdbcType=CHAR}, 
+      #{recType,jdbcType=VARCHAR}, #{deviceType,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.VmBusPartin" >
+    insert into vm_bus_partin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="recEmpId != null" >
+        rec_emp_id,
+      </if>
+      <if test="recEmpName != null" >
+        rec_emp_name,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="orgName != null" >
+        org_name,
+      </if>
+      <if test="mtStatus != null" >
+        mt_status,
+      </if>
+      <if test="mtDateTime != null" >
+        mt_date_time,
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time,
+      </if>
+      <if test="recType != null" >
+        rec_type,
+      </if>
+      <if test="deviceType != null" >
+        device_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="recordId != null" >
+        #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="recEmpId != null" >
+        #{recEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="recEmpName != null" >
+        #{recEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtStatus != null" >
+        #{mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="mtDateTime != null" >
+        #{mtDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="recType != null" >
+        #{recType,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        #{deviceType,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.VmBusPartinExample" resultType="java.lang.Integer" >
+    select count(*) from vm_bus_partin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update vm_bus_partin
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recordId != null" >
+        record_id = #{record.recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recEmpId != null" >
+        rec_emp_id = #{record.recEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recEmpName != null" >
+        rec_emp_name = #{record.recEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgName != null" >
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtStatus != null" >
+        mt_status = #{record.mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.mtDateTime != null" >
+        mt_date_time = #{record.mtDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.endDateTime != null" >
+        end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.recType != null" >
+        rec_type = #{record.recType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deviceType != null" >
+        device_type = #{record.deviceType,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update vm_bus_partin
+    set id = #{record.id,jdbcType=VARCHAR},
+      record_id = #{record.recordId,jdbcType=VARCHAR},
+      rec_emp_id = #{record.recEmpId,jdbcType=VARCHAR},
+      rec_emp_name = #{record.recEmpName,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      mt_status = #{record.mtStatus,jdbcType=CHAR},
+      mt_date_time = #{record.mtDateTime,jdbcType=CHAR},
+      end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      rec_type = #{record.recType,jdbcType=VARCHAR},
+      device_type = #{record.deviceType,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.VmBusPartin" >
+    update vm_bus_partin
+    <set >
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="recEmpId != null" >
+        rec_emp_id = #{recEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="recEmpName != null" >
+        rec_emp_name = #{recEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtStatus != null" >
+        mt_status = #{mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="mtDateTime != null" >
+        mt_date_time = #{mtDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time = #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="recType != null" >
+        rec_type = #{recType,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        device_type = #{deviceType,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.VmBusPartin" >
+    update vm_bus_partin
+    set record_id = #{recordId,jdbcType=VARCHAR},
+      rec_emp_id = #{recEmpId,jdbcType=VARCHAR},
+      rec_emp_name = #{recEmpName,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      mt_status = #{mtStatus,jdbcType=CHAR},
+      mt_date_time = #{mtDateTime,jdbcType=CHAR},
+      end_date_time = #{endDateTime,jdbcType=CHAR},
+      rec_type = #{recType,jdbcType=VARCHAR},
+      device_type = #{deviceType,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

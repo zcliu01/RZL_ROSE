@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.VmBusRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.VmBusRecord" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mt_titile" property="mtTitile" jdbcType="VARCHAR" />
+    <result column="create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="mt_desc" property="mtDesc" jdbcType="VARCHAR" />
+    <result column="notify_type" property="notifyType" jdbcType="CHAR" />
+    <result column="mt_status" property="mtStatus" jdbcType="CHAR" />
+    <result column="host_emp_id" property="hostEmpId" jdbcType="VARCHAR" />
+    <result column="host_emp_name" property="hostEmpName" jdbcType="VARCHAR" />
+    <result column="host_org_id" property="hostOrgId" jdbcType="VARCHAR" />
+    <result column="host_org_name" property="hostOrgName" jdbcType="VARCHAR" />
+    <result column="mt_pwd" property="mtPwd" jdbcType="VARCHAR" />
+    <result column="mt_pwd_flag" property="mtPwdFlag" jdbcType="CHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="begin_date_time" property="beginDateTime" jdbcType="CHAR" />
+    <result column="end_date_time" property="endDateTime" jdbcType="CHAR" />
+    <result column="mt_address" property="mtAddress" jdbcType="VARCHAR" />
+    <result column="real_begin_date_time" property="realBeginDateTime" jdbcType="VARCHAR" />
+    <result column="real_end_date_time" property="realEndDateTime" jdbcType="CHAR" />
+    <result column="video_flag" property="videoFlag" jdbcType="CHAR" />
+    <result column="video_url" property="videoUrl" jdbcType="VARCHAR" />
+    <result column="create_flag" property="createFlag" jdbcType="CHAR" />
+    <result column="mt_type" property="mtType" jdbcType="CHAR" />
+    <result column="room_url" property="roomUrl" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="video_status" property="videoStatus" jdbcType="CHAR" />
+    <result column="auth_name" property="authName" jdbcType="VARCHAR" />
+    <result column="extension" property="extension" jdbcType="VARCHAR" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, mt_titile, create_emp_id, create_emp_name, org_id, org_name, mt_desc, notify_type, 
+    mt_status, host_emp_id, host_emp_name, host_org_id, host_org_name, mt_pwd, mt_pwd_flag, 
+    create_date_time, update_date_time, begin_date_time, end_date_time, mt_address, real_begin_date_time, 
+    real_end_date_time, video_flag, video_url, create_flag, mt_type, room_url, room_id, 
+    video_status, auth_name, extension, room_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.VmBusRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from vm_bus_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from vm_bus_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from vm_bus_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.VmBusRecordExample" >
+    delete from vm_bus_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.VmBusRecord" >
+    insert into vm_bus_record (id, mt_titile, create_emp_id, 
+      create_emp_name, org_id, org_name, 
+      mt_desc, notify_type, mt_status, 
+      host_emp_id, host_emp_name, host_org_id, 
+      host_org_name, mt_pwd, mt_pwd_flag, 
+      create_date_time, update_date_time, begin_date_time, 
+      end_date_time, mt_address, real_begin_date_time, 
+      real_end_date_time, video_flag, video_url, 
+      create_flag, mt_type, room_url, 
+      room_id, video_status, auth_name, 
+      extension, room_name)
+    values (#{id,jdbcType=VARCHAR}, #{mtTitile,jdbcType=VARCHAR}, #{createEmpId,jdbcType=VARCHAR}, 
+      #{createEmpName,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, 
+      #{mtDesc,jdbcType=VARCHAR}, #{notifyType,jdbcType=CHAR}, #{mtStatus,jdbcType=CHAR}, 
+      #{hostEmpId,jdbcType=VARCHAR}, #{hostEmpName,jdbcType=VARCHAR}, #{hostOrgId,jdbcType=VARCHAR}, 
+      #{hostOrgName,jdbcType=VARCHAR}, #{mtPwd,jdbcType=VARCHAR}, #{mtPwdFlag,jdbcType=CHAR}, 
+      #{createDateTime,jdbcType=CHAR}, #{updateDateTime,jdbcType=CHAR}, #{beginDateTime,jdbcType=CHAR}, 
+      #{endDateTime,jdbcType=CHAR}, #{mtAddress,jdbcType=VARCHAR}, #{realBeginDateTime,jdbcType=VARCHAR}, 
+      #{realEndDateTime,jdbcType=CHAR}, #{videoFlag,jdbcType=CHAR}, #{videoUrl,jdbcType=VARCHAR}, 
+      #{createFlag,jdbcType=CHAR}, #{mtType,jdbcType=CHAR}, #{roomUrl,jdbcType=VARCHAR}, 
+      #{roomId,jdbcType=INTEGER}, #{videoStatus,jdbcType=CHAR}, #{authName,jdbcType=VARCHAR}, 
+      #{extension,jdbcType=VARCHAR}, #{roomName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.VmBusRecord" >
+    insert into vm_bus_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mtTitile != null" >
+        mt_titile,
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="orgName != null" >
+        org_name,
+      </if>
+      <if test="mtDesc != null" >
+        mt_desc,
+      </if>
+      <if test="notifyType != null" >
+        notify_type,
+      </if>
+      <if test="mtStatus != null" >
+        mt_status,
+      </if>
+      <if test="hostEmpId != null" >
+        host_emp_id,
+      </if>
+      <if test="hostEmpName != null" >
+        host_emp_name,
+      </if>
+      <if test="hostOrgId != null" >
+        host_org_id,
+      </if>
+      <if test="hostOrgName != null" >
+        host_org_name,
+      </if>
+      <if test="mtPwd != null" >
+        mt_pwd,
+      </if>
+      <if test="mtPwdFlag != null" >
+        mt_pwd_flag,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="beginDateTime != null" >
+        begin_date_time,
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time,
+      </if>
+      <if test="mtAddress != null" >
+        mt_address,
+      </if>
+      <if test="realBeginDateTime != null" >
+        real_begin_date_time,
+      </if>
+      <if test="realEndDateTime != null" >
+        real_end_date_time,
+      </if>
+      <if test="videoFlag != null" >
+        video_flag,
+      </if>
+      <if test="videoUrl != null" >
+        video_url,
+      </if>
+      <if test="createFlag != null" >
+        create_flag,
+      </if>
+      <if test="mtType != null" >
+        mt_type,
+      </if>
+      <if test="roomUrl != null" >
+        room_url,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="videoStatus != null" >
+        video_status,
+      </if>
+      <if test="authName != null" >
+        auth_name,
+      </if>
+      <if test="extension != null" >
+        extension,
+      </if>
+      <if test="roomName != null" >
+        room_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="mtTitile != null" >
+        #{mtTitile,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtDesc != null" >
+        #{mtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyType != null" >
+        #{notifyType,jdbcType=CHAR},
+      </if>
+      <if test="mtStatus != null" >
+        #{mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="hostEmpId != null" >
+        #{hostEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="hostEmpName != null" >
+        #{hostEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOrgId != null" >
+        #{hostOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOrgName != null" >
+        #{hostOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPwd != null" >
+        #{mtPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPwdFlag != null" >
+        #{mtPwdFlag,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="beginDateTime != null" >
+        #{beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="mtAddress != null" >
+        #{mtAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="realBeginDateTime != null" >
+        #{realBeginDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="realEndDateTime != null" >
+        #{realEndDateTime,jdbcType=CHAR},
+      </if>
+      <if test="videoFlag != null" >
+        #{videoFlag,jdbcType=CHAR},
+      </if>
+      <if test="videoUrl != null" >
+        #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createFlag != null" >
+        #{createFlag,jdbcType=CHAR},
+      </if>
+      <if test="mtType != null" >
+        #{mtType,jdbcType=CHAR},
+      </if>
+      <if test="roomUrl != null" >
+        #{roomUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="videoStatus != null" >
+        #{videoStatus,jdbcType=CHAR},
+      </if>
+      <if test="authName != null" >
+        #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null" >
+        #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.VmBusRecordExample" resultType="java.lang.Integer" >
+    select count(*) from vm_bus_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update vm_bus_record
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtTitile != null" >
+        mt_titile = #{record.mtTitile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpId != null" >
+        create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpName != null" >
+        create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgName != null" >
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtDesc != null" >
+        mt_desc = #{record.mtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notifyType != null" >
+        notify_type = #{record.notifyType,jdbcType=CHAR},
+      </if>
+      <if test="record.mtStatus != null" >
+        mt_status = #{record.mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.hostEmpId != null" >
+        host_emp_id = #{record.hostEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostEmpName != null" >
+        host_emp_name = #{record.hostEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostOrgId != null" >
+        host_org_id = #{record.hostOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostOrgName != null" >
+        host_org_name = #{record.hostOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtPwd != null" >
+        mt_pwd = #{record.mtPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtPwdFlag != null" >
+        mt_pwd_flag = #{record.mtPwdFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.beginDateTime != null" >
+        begin_date_time = #{record.beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.endDateTime != null" >
+        end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.mtAddress != null" >
+        mt_address = #{record.mtAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realBeginDateTime != null" >
+        real_begin_date_time = #{record.realBeginDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realEndDateTime != null" >
+        real_end_date_time = #{record.realEndDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.videoFlag != null" >
+        video_flag = #{record.videoFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.videoUrl != null" >
+        video_url = #{record.videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createFlag != null" >
+        create_flag = #{record.createFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.mtType != null" >
+        mt_type = #{record.mtType,jdbcType=CHAR},
+      </if>
+      <if test="record.roomUrl != null" >
+        room_url = #{record.roomUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomId != null" >
+        room_id = #{record.roomId,jdbcType=INTEGER},
+      </if>
+      <if test="record.videoStatus != null" >
+        video_status = #{record.videoStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.authName != null" >
+        auth_name = #{record.authName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extension != null" >
+        extension = #{record.extension,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomName != null" >
+        room_name = #{record.roomName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update vm_bus_record
+    set id = #{record.id,jdbcType=VARCHAR},
+      mt_titile = #{record.mtTitile,jdbcType=VARCHAR},
+      create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      mt_desc = #{record.mtDesc,jdbcType=VARCHAR},
+      notify_type = #{record.notifyType,jdbcType=CHAR},
+      mt_status = #{record.mtStatus,jdbcType=CHAR},
+      host_emp_id = #{record.hostEmpId,jdbcType=VARCHAR},
+      host_emp_name = #{record.hostEmpName,jdbcType=VARCHAR},
+      host_org_id = #{record.hostOrgId,jdbcType=VARCHAR},
+      host_org_name = #{record.hostOrgName,jdbcType=VARCHAR},
+      mt_pwd = #{record.mtPwd,jdbcType=VARCHAR},
+      mt_pwd_flag = #{record.mtPwdFlag,jdbcType=CHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      begin_date_time = #{record.beginDateTime,jdbcType=CHAR},
+      end_date_time = #{record.endDateTime,jdbcType=CHAR},
+      mt_address = #{record.mtAddress,jdbcType=VARCHAR},
+      real_begin_date_time = #{record.realBeginDateTime,jdbcType=VARCHAR},
+      real_end_date_time = #{record.realEndDateTime,jdbcType=CHAR},
+      video_flag = #{record.videoFlag,jdbcType=CHAR},
+      video_url = #{record.videoUrl,jdbcType=VARCHAR},
+      create_flag = #{record.createFlag,jdbcType=CHAR},
+      mt_type = #{record.mtType,jdbcType=CHAR},
+      room_url = #{record.roomUrl,jdbcType=VARCHAR},
+      room_id = #{record.roomId,jdbcType=INTEGER},
+      video_status = #{record.videoStatus,jdbcType=CHAR},
+      auth_name = #{record.authName,jdbcType=VARCHAR},
+      extension = #{record.extension,jdbcType=VARCHAR},
+      room_name = #{record.roomName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.VmBusRecord" >
+    update vm_bus_record
+    <set >
+      <if test="mtTitile != null" >
+        mt_titile = #{mtTitile,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtDesc != null" >
+        mt_desc = #{mtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyType != null" >
+        notify_type = #{notifyType,jdbcType=CHAR},
+      </if>
+      <if test="mtStatus != null" >
+        mt_status = #{mtStatus,jdbcType=CHAR},
+      </if>
+      <if test="hostEmpId != null" >
+        host_emp_id = #{hostEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="hostEmpName != null" >
+        host_emp_name = #{hostEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOrgId != null" >
+        host_org_id = #{hostOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOrgName != null" >
+        host_org_name = #{hostOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPwd != null" >
+        mt_pwd = #{mtPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPwdFlag != null" >
+        mt_pwd_flag = #{mtPwdFlag,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="beginDateTime != null" >
+        begin_date_time = #{beginDateTime,jdbcType=CHAR},
+      </if>
+      <if test="endDateTime != null" >
+        end_date_time = #{endDateTime,jdbcType=CHAR},
+      </if>
+      <if test="mtAddress != null" >
+        mt_address = #{mtAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="realBeginDateTime != null" >
+        real_begin_date_time = #{realBeginDateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="realEndDateTime != null" >
+        real_end_date_time = #{realEndDateTime,jdbcType=CHAR},
+      </if>
+      <if test="videoFlag != null" >
+        video_flag = #{videoFlag,jdbcType=CHAR},
+      </if>
+      <if test="videoUrl != null" >
+        video_url = #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createFlag != null" >
+        create_flag = #{createFlag,jdbcType=CHAR},
+      </if>
+      <if test="mtType != null" >
+        mt_type = #{mtType,jdbcType=CHAR},
+      </if>
+      <if test="roomUrl != null" >
+        room_url = #{roomUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="videoStatus != null" >
+        video_status = #{videoStatus,jdbcType=CHAR},
+      </if>
+      <if test="authName != null" >
+        auth_name = #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null" >
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.VmBusRecord" >
+    update vm_bus_record
+    set mt_titile = #{mtTitile,jdbcType=VARCHAR},
+      create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      mt_desc = #{mtDesc,jdbcType=VARCHAR},
+      notify_type = #{notifyType,jdbcType=CHAR},
+      mt_status = #{mtStatus,jdbcType=CHAR},
+      host_emp_id = #{hostEmpId,jdbcType=VARCHAR},
+      host_emp_name = #{hostEmpName,jdbcType=VARCHAR},
+      host_org_id = #{hostOrgId,jdbcType=VARCHAR},
+      host_org_name = #{hostOrgName,jdbcType=VARCHAR},
+      mt_pwd = #{mtPwd,jdbcType=VARCHAR},
+      mt_pwd_flag = #{mtPwdFlag,jdbcType=CHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      begin_date_time = #{beginDateTime,jdbcType=CHAR},
+      end_date_time = #{endDateTime,jdbcType=CHAR},
+      mt_address = #{mtAddress,jdbcType=VARCHAR},
+      real_begin_date_time = #{realBeginDateTime,jdbcType=VARCHAR},
+      real_end_date_time = #{realEndDateTime,jdbcType=CHAR},
+      video_flag = #{videoFlag,jdbcType=CHAR},
+      video_url = #{videoUrl,jdbcType=VARCHAR},
+      create_flag = #{createFlag,jdbcType=CHAR},
+      mt_type = #{mtType,jdbcType=CHAR},
+      room_url = #{roomUrl,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=INTEGER},
+      video_status = #{videoStatus,jdbcType=CHAR},
+      auth_name = #{authName,jdbcType=VARCHAR},
+      extension = #{extension,jdbcType=VARCHAR},
+      room_name = #{roomName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

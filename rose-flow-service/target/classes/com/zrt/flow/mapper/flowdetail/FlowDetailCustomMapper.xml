@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.flow.mapper.flowdetail.FlowDetailCustomMapper">
+	
+	<select id="joinSignDetail" resultMap="JoinSignResultMap">
+		SELECT
+			  
+			  fc.id check_id,
+			  fc.check_emp_id,
+			  fc.check_emp_name,
+			  fc.org_id as check_org_id,
+			  fc.org_name as check_org_name,
+			  fc.check_status,
+			  fc.check_type,
+			  fc.check_comment,
+			  fc.arrive_date_time,
+			  fc.read_date_time,
+			  fc.create_date_time,
+			  fc.check_date_time,
+			  fc.inst_tag,
+			  fc.inst_tag_name,
+			  js.id sign_id,
+			  js.sign_emp_id,
+			  js.sign_emp_name,
+			  js.org_id sign_org_id,
+			  js.org_name sign_org_name,
+			  js.check_status sign_check_status,
+			  js.check_comment sign_check_comment,
+			  js.sign_status,
+			  js.sign_desc,
+			  jsf.file_url sign_file_url,
+			  jsf.file_name sign_file_name,
+			  jsf.file_type sign_file_type,
+			  jsf.node_id sign_file_node_id,
+			  jsf.file_order sign_file_order,
+			  jsr.rel_id sign_rel_id,
+			  jsr.rel_name sign_rel_name,
+			  jsr.rel_type sign_rel_type,
+			   fcd.id con_id,
+			  fcd.res_content,
+			  fcd.rev_content,
+			  fcd.con_status,
+			  faf.file_url add_file_url,
+			  faf.file_name add_file_name,
+			  faf.file_type add_file_type,
+			  faf.node_id add_file_node_id,
+			  faf.file_order add_file_order,
+			  faf.con_type file_con_type,
+			  far.rel_id add_rel_id,
+			  far.rel_name add_rel_name,
+			  far.rel_type add_rel_type,
+			  far.con_type rel_con_type
+
+		FROM
+		fb_bus_check fc 
+	    left JOIN fb_bus_join_sign js ON fc.id=js.check_id
+		LEFT JOIN fb_bus_join_sign_file jsf ON js.id=jsf.sign_id
+		LEFT JOIN fb_bus_join_sign_relevance jsr ON js.id=jsr.sign_id
+		LEFT JOIN fb_bus_condition fcd ON fc.id=fcd.check_id
+		LEFT JOIN fb_bus_add_file faf ON fcd.id=faf.con_id
+		LEFT JOIN fb_bus_add_relevance far ON fcd.id=far.con_id
+		WHERE 1=1
+		<if test="check_id!=null and check_id!=''">
+	  		and fc.id=#{check_id} 
+		</if>
+		order by add_file_order,sign_file_order
+		
+	</select>
+	
+	
+	<!--审批详情-->
+	<select id="getFlowDetail" resultMap="flowDetailResultMap">
+		SELECT
+			  fi.id inst_id,
+			  fi.fb_id,
+			  fi.fb_title,
+			  fi.fb_content,
+			  fi.apply_id,
+			  fi.apply_name,
+			  fi.org_id,
+			  fi.org_name,
+			  fi.start_date_time,
+			  fi.inst_status,
+			  fb.t_code,
+			  fb.t_name,
+			  fb.t_desc,
+			  fb.project_flag,
+			  fb.handle_flag,
+			  fm.id fm_id,
+			  fm.t_name fm_name,
+			  fr.check_id rel_check_id,
+			  fr.rel_id rel_id,
+			  fr.rel_name,
+			  fr.rel_type,
+			  fr.fb_type as fr_fb_type,
+			  ff.check_id file_check_id,
+			  ff.file_url,
+			  ff.file_name,
+			  ff.file_type,
+			  ff.file_order,
+			  ff.fb_type as ff_fb_type,
+			  ff.node_id as file_node_id,
+			  pjt.project_code,
+			  pjt.project_name,
+			  pjt.fund_code,
+			  fc.id check_id,
+			   (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.old_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.check_emp_id
+			    END
+			  )AS check_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.old_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.check_emp_name
+			    END
+			  )AS check_emp_name,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.check_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.old_emp_id
+			    END
+			  )AS ented_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.check_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.old_emp_name
+			    END
+			  )AS ented_emp_name,
+			  fc.org_id as check_org_id,
+			  fc.org_name as check_org_name,
+			  fc.check_status,
+			  fc.check_type,
+			  fc.check_comment,
+			  fc.arrive_date_time,
+			  fc.read_date_time,
+			  fc.create_date_time,
+			  fc.check_date_time,
+			  fc.inst_tag,
+			  fc.inst_tag_name,
+			  fc.old_emp_id,
+			  fc.old_emp_name,
+			  rr.id rr_id,
+			  rr.old_inst_tag reject_tag_id,
+			  rr.old_inst_tag_name reject_tag_name,
+			  fcd.id con_id,
+			  fcd.res_content,
+			  fcd.rev_content,
+			  fcd.con_status,
+			  faf.file_url add_file_url,
+			  faf.file_name add_file_name,
+			  faf.file_type add_file_type,
+			  faf.node_id add_file_node_id,
+			  far.rel_id add_rel_id,
+			  faf.file_order add_file_order,
+			  far.rel_name add_rel_name,
+			  far.rel_type add_rel_type,
+			  far.con_type rel_con_type,
+			  js.id sign_id,
+			  js.sign_emp_id,
+			  js.sign_emp_name,
+			  js.org_id sign_org_id,
+			  js.org_name sign_org_name,
+			  js.check_status sign_check_status,
+			  js.check_comment sign_check_comment,
+			  js.sign_status,
+			  js.sign_desc,
+			  jsf.file_url sign_file_url,
+			  jsf.file_name sign_file_name,
+			  jsf.file_type sign_file_type,
+			  jsf.node_id sign_file_node_id,
+			  jsf.file_order sign_file_order,
+			  jsr.rel_id sign_rel_id,
+			  jsr.rel_name sign_rel_name,
+			  jsr.rel_type sign_rel_type,
+			  fas.id add_sign_id,
+			  fas.add_emp_id,
+			  fas.add_emp_name 
+		FROM
+			fb_bus_inst fi
+		JOIN fb_bus_template fb ON fi.fb_id = fb.id
+		JOIN fb_bus_fm bm ON fb.id = bm.fb_id
+		JOIN fm_bus_template fm ON bm.fm_id = fm.id
+		LEFT JOIN fb_bus_file ff ON fi.id = ff.inst_id
+		LEFT JOIN fb_bus_relevance fr ON fi.id = fr.inst_id
+		LEFT JOIN fb_bus_project pjt ON fi.id = pjt.inst_id
+		LEFT JOIN (select * from fb_bus_check where check_status is not null) fc ON fi.id = fc.inst_id
+		LEFT JOIN fb_bus_reject_rule rr ON fc.id=rr.check_id
+		LEFT JOIN fb_bus_add_sign fas ON fc.id=fas.check_id
+		LEFT JOIN fb_bus_condition fcd ON fc.id=fcd.check_id
+		LEFT JOIN fb_bus_add_file faf ON fcd.id=faf.con_id
+		LEFT JOIN fb_bus_add_relevance far ON fcd.id=far.con_id
+		LEFT JOIN fb_bus_join_sign js ON fc.id=js.check_id
+		LEFT JOIN fb_bus_join_sign_file jsf ON js.id=jsf.sign_id
+		LEFT JOIN fb_bus_join_sign_relevance jsr ON js.id=jsr.sign_id
+		WHERE fi.id=#{inst_id} 
+		order by fc.arrive_date_time,fc.check_date_time,file_order,add_file_order,sign_file_order
+	</select>
+		
+	<resultMap id="flowDetailResultMap" type="com.zrt.flow.domain.InstDomain" >
+		<id column="inst_id" property="id" jdbcType="VARCHAR" />
+		<result column="fb_id" property="fbId" jdbcType="VARCHAR" />
+		<result column="fb_title" property="fbTitle" jdbcType="VARCHAR" />
+		<result column="fb_content" property="fbContent" jdbcType="VARCHAR" />
+		<result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+		<result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+		<result column="org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="start_date_time" property="startDateTime" jdbcType="VARCHAR" />
+		<result column="inst_status" property="instStatus" jdbcType="CHAR" />
+		<association property="fbDomain" javaType="com.zrt.flow.domain.FbBusTemplateDomain">
+			<id column="fb_id" property="id" jdbcType="VARCHAR" />
+			<result column="t_code" property="tCode" jdbcType="VARCHAR" />
+			<result column="t_name" property="tName" jdbcType="VARCHAR" />
+			<result column="t_desc" property="tDesc" jdbcType="VARCHAR" />
+			<result column="project_flag" property="projectFlag" jdbcType="VARCHAR" />
+			<result column="handle_flag" property="handleFlag" jdbcType="VARCHAR" />
+			<association property="bm" javaType="com.zrt.flow.domain.FbBusFmKeyDomain">
+				<association property="fmDomain" javaType="com.zrt.flow.domain.FmBusTemplateDomain">
+					<id column="fm_id" property="id" jdbcType="VARCHAR" />
+					<result column="fm_name" property="tName" jdbcType="VARCHAR" />
+				</association>
+			</association>
+		</association>
+		<collection property="fileList" ofType="com.zrt.flow.domain.FileDomain">
+			<result column="file_check_id" property="checkId" jdbcType="VARCHAR" />
+			<result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+			<result column="file_type" property="fileType" jdbcType="CHAR" />
+			<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+			<result column="ff_fb_type" property="fbType" jdbcType="CHAR" />
+			<result column="file_node_id" property="nodeId" jdbcType="CHAR" />
+			<result column="file_order" property="fileOrder" jdbcType="INTEGER" />
+		</collection>
+		<collection property="relList" ofType="com.zrt.flow.domain.RelevanceDomain">
+			<result column="rel_check_id" property="checkId" jdbcType="VARCHAR" />
+			<result column="rel_id" property="relId" jdbcType="VARCHAR" />
+			<result column="rel_type" property="relType" jdbcType="CHAR" />
+			<result column="rel_name" property="relName" jdbcType="VARCHAR" />
+			<result column="fr_fb_type" property="fbType" jdbcType="CHAR" />
+		</collection>
+		<collection property="projectList" ofType="com.zrt.flow.domain.ProjectDomain">
+			<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+			<result column="project_name" property="projectName" jdbcType="CHAR" />
+			<result column="fund_code" property="fundCode" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="checkList" ofType="com.zrt.flow.domain.CheckDomain">
+			<id column="check_id" property="id" jdbcType="VARCHAR" />
+			<result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+			<result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+			<result column="check_org_id" property="orgId" jdbcType="VARCHAR" />
+			<result column="check_org_name" property="orgName" jdbcType="VARCHAR" />
+			<result column="check_status" property="checkStatus" jdbcType="CHAR" />
+			<result column="check_type" property="checkType" jdbcType="CHAR" />
+			<result column="check_comment" property="checkComment" jdbcType="VARCHAR" />
+			<result column="arrive_date_time" property="arriveDateTime" jdbcType="CHAR" />
+			<result column="read_date_time" property="readDateTime" jdbcType="CHAR" />
+			<result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+			<result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+			<result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+			<result column="check_date_time" property="checkDateTime" jdbcType="CHAR" />
+			<result column="ented_emp_id" property="entedEmpId" jdbcType="VARCHAR" />
+			<result column="ented_emp_name" property="entedEmpName" jdbcType="VARCHAR" />
+			
+			<association property="fbBusRejectRule" javaType="com.zrt.mybatis.domain.FbBusRejectRule">
+				<id column="rr_id" property="id" jdbcType="VARCHAR" />
+				<result column="reject_tag_id" property="oldInstTag" jdbcType="VARCHAR" />
+				<result column="reject_tag_name" property="oldInstTagName" jdbcType="VARCHAR" />
+			</association>
+			
+			<collection property="addSignList" ofType="com.zrt.mybatis.domain.FbBusAddSign">
+				<result column="add_sign_id" property="id" jdbcType="VARCHAR" />
+				<result column="add_emp_id" property="addEmpId" jdbcType="VARCHAR" />
+				<result column="add_emp_name" property="addEmpName" jdbcType="VARCHAR" />
+			</collection>
+			
+			<collection property="conList" ofType="com.zrt.flow.domain.FbBusConditionDomain">
+				<id column="con_id" property="id" jdbcType="VARCHAR" />
+				<result column="res_content" property="resContent" jdbcType="VARCHAR" />
+				<result column="rev_content" property="revContent" jdbcType="VARCHAR" />
+				<result column="con_status" property="conStatus" jdbcType="CHAR" />
+				<collection property="addFlieList" ofType="com.zrt.flow.domain.AddFileDomain">
+					<result column="add_file_url" property="fileUrl" jdbcType="VARCHAR" />
+					<result column="add_file_name" property="fileName" jdbcType="VARCHAR" />
+					<result column="add_file_type" property="fileType" jdbcType="CHAR" />
+					<result column="file_con_type" property="conType" jdbcType="CHAR" />
+					<result column="add_file_node_id" property="nodeId" jdbcType="VARCHAR" />
+					<result column="add_file_order" property="fileOrder" jdbcType="INTEGER" />
+				</collection>
+				<collection property="addRelList" ofType="com.zrt.flow.domain.AddRelevanceDomain">
+					<result column="add_rel_id" property="relId" jdbcType="VARCHAR" />
+					<result column="add_rel_name" property="relName" jdbcType="VARCHAR" />
+					<result column="add_rel_type" property="relType" jdbcType="CHAR" />
+					<result column="rel_con_type" property="conType" jdbcType="CHAR" />
+				</collection>
+			</collection>
+			<collection property="signList" ofType="com.zrt.flow.domain.JoinSignDomain">
+				<id column="sign_id" property="id" jdbcType="VARCHAR" />
+				<result column="sign_emp_id" property="signEmpId" jdbcType="VARCHAR" />
+				<result column="sign_emp_name" property="signEmpName" jdbcType="VARCHAR" />
+				<result column="sign_org_id" property="orgId" jdbcType="VARCHAR" />
+				<result column="sign_org_name" property="orgName" jdbcType="VARCHAR" />
+				<result column="sign_check_comment" property="checkComment" jdbcType="VARCHAR" />
+				<result column="sign_check_status" property="checkStatus" jdbcType="CHAR" />
+				<result column="sign_status" property="signStatus" jdbcType="CHAR" />
+				<result column="sign_desc" property="signDesc" jdbcType="VARCHAR" />
+				<collection property="signFlieList" ofType="com.zrt.flow.domain.JoinSignFileDomain">
+					<result column="sign_file_url" property="fileUrl" jdbcType="VARCHAR" />
+					<result column="sign_file_name" property="fileName" jdbcType="VARCHAR" />
+					<result column="sign_file_type" property="fileType" jdbcType="CHAR" />
+				    <result column="sign_file_node_id" property="nodeId" jdbcType="VARCHAR" />
+				    <result column="sign_file_order" property="fileOrder" jdbcType="INTEGER" />
+				</collection>
+				<collection property="signRelList" ofType="com.zrt.flow.domain.JoinSignRelevanceDomain">
+					<result column="sign_rel_id" property="relId" jdbcType="VARCHAR" />
+					<result column="sign_rel_name" property="relName" jdbcType="VARCHAR" />
+					<result column="sign_rel_type" property="relType" jdbcType="CHAR" />
+				</collection>
+			</collection>
+		</collection>
+	</resultMap>
+	
+	
+	<resultMap id="JoinSignResultMap" type="com.zrt.flow.domain.CheckDomain" >
+		
+		<id column="check_id" property="id" jdbcType="VARCHAR" />
+		<result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+		<result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+		<result column="check_org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="check_org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="check_status" property="checkStatus" jdbcType="CHAR" />
+		<result column="check_type" property="checkType" jdbcType="CHAR" />
+		<result column="check_comment" property="checkComment" jdbcType="VARCHAR" />
+		<result column="arrive_date_time" property="arriveDateTime" jdbcType="CHAR" />
+		<result column="read_date_time" property="readDateTime" jdbcType="CHAR" />
+		<result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+		<result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+		<result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+		<result column="check_date_time" property="checkDateTime" jdbcType="CHAR" />
+		<result column="ented_emp_id" property="entedEmpId" jdbcType="VARCHAR" />
+		<result column="ented_emp_name" property="entedEmpName" jdbcType="VARCHAR" />
+		<collection property="signList" ofType="com.zrt.flow.domain.JoinSignDomain">
+			<id column="sign_id" property="id" jdbcType="VARCHAR" />
+			<result column="sign_emp_id" property="signEmpId" jdbcType="VARCHAR" />
+			<result column="sign_emp_name" property="signEmpName" jdbcType="VARCHAR" />
+			<result column="sign_org_id" property="orgId" jdbcType="VARCHAR" />
+			<result column="sign_org_name" property="orgName" jdbcType="VARCHAR" />
+			<result column="sign_check_comment" property="checkComment" jdbcType="VARCHAR" />
+			<result column="sign_check_status" property="checkStatus" jdbcType="CHAR" />
+			<result column="sign_status" property="signStatus" jdbcType="CHAR" />
+			<result column="sign_desc" property="signDesc" jdbcType="VARCHAR" />
+			<collection property="signFlieList" ofType="com.zrt.flow.domain.JoinSignFileDomain">
+				<result column="sign_file_url" property="fileUrl" jdbcType="VARCHAR" />
+				<result column="sign_file_name" property="fileName" jdbcType="VARCHAR" />
+				<result column="sign_file_type" property="fileType" jdbcType="CHAR" />
+				<result column="sign_file_node_id" property="nodeId" jdbcType="VARCHAR" />
+				<result column="sign_file_order" property="fileOrder" jdbcType="INTEGER" />
+			</collection>
+			<collection property="signRelList" ofType="com.zrt.flow.domain.JoinSignRelevanceDomain">
+				<result column="sign_rel_id" property="relId" jdbcType="VARCHAR" />
+				<result column="sign_rel_name" property="relName" jdbcType="VARCHAR" />
+				<result column="sign_rel_type" property="relType" jdbcType="CHAR" />
+			</collection>
+		</collection>
+		<collection property="conList" ofType="com.zrt.flow.domain.FbBusConditionDomain">
+			<id column="con_id" property="id" jdbcType="VARCHAR" />
+			<result column="res_content" property="resContent" jdbcType="VARCHAR" />
+			<result column="rev_content" property="revContent" jdbcType="VARCHAR" />
+			<result column="con_status" property="conStatus" jdbcType="CHAR" />
+			<collection property="addFlieList" ofType="com.zrt.flow.domain.AddFileDomain">
+				<result column="add_file_url" property="fileUrl" jdbcType="VARCHAR" />
+				<result column="add_file_name" property="fileName" jdbcType="VARCHAR" />
+				<result column="add_file_type" property="fileType" jdbcType="CHAR" />
+				<result column="file_con_type" property="conType" jdbcType="CHAR" />
+				<result column="add_file_node_id" property="nodeId" jdbcType="VARCHAR" />
+				<result column="add_file_order" property="fileOrder" jdbcType="INTEGER" />
+			</collection>
+			<collection property="addRelList" ofType="com.zrt.flow.domain.AddRelevanceDomain">
+				<result column="add_rel_id" property="relId" jdbcType="VARCHAR" />
+				<result column="add_rel_name" property="relName" jdbcType="VARCHAR" />
+				<result column="add_rel_type" property="relType" jdbcType="CHAR" />
+				<result column="rel_con_type" property="conType" jdbcType="CHAR" />
+			</collection>
+		</collection>
+	</resultMap>
+	
+</mapper>

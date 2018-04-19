@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper
+	namespace="com.zrt.contacts.mapper.empsearchwindow.EmpSearchWindowCustomMapper">
+	<!--我的联系人-->
+	<select id="friendEmpTree" resultType="map">
+		SELECT sse.emp_id AS id,'1' AS parent_id,sse.emp_name AS
+		show_name,sse.emp_id
+		,sse.emp_name,sse.emp_code,sso.org_id,sso.org_name
+		FROM
+		(SELECT
+		friend_emp_id FROM emp_contacts_friend WHERE emp_id =
+		#{mapParam.emp_id}) ecf
+		LEFT JOIN sys_sec_emp sse ON
+		ecf.friend_emp_id =sse.emp_id 
+		join sys_sec_emp_position ssep on ssep.emp_id=sse.emp_id
+		JOIN sys_sec_org sso ON ssep.org_id = sso.org_id
+
+         where sse.emp_active='1' and sse.emp_enabled='1'
+           and ssep.is_first_org='1'
+	</select>
+	<!--我的群组-->
+	<select id="friendGroupEmpTree" resultType="map">
+
+		SELECT
+		ecfg1.friend_group_id AS id,'3' AS parent_id,
+		ecfg1.friend_group_name
+		AS show_name,'' AS emp_id,'' AS emp_code,'' AS
+		emp_name,'' AS org_id,''
+		AS org_name
+		FROM
+		emp_contacts_friend_group ecfg1
+		WHERE
+		ecfg1.friend_group_id IN(
+		SELECT friend_group_id FROM
+		emp_contacts_group_member WHERE
+		
+		member_status='1' AND ecfg1.create_emp_id = #{mapParam.emp_id}
+		) OR
+		ecfg1.friend_group_type='2'
+		UNION ALL
+		(SELECT
+		sse.emp_id AS id,ecfg.friend_group_id AS
+		parent_id,sse.emp_name
+		AS
+		show_name,sse.emp_id,sse.emp_code,sse.emp_name,sso.org_id,sso.org_name
+		FROM emp_contacts_friend_group ecfg
+		LEFT JOIN emp_contacts_group_member
+		ecgm ON
+		ecfg.friend_group_id=ecgm.friend_group_id
+		JOIN (SELECT * FROM
+		sys_sec_emp WHERE emp_enabled='1') sse ON
+		sse.emp_id =ecgm.emp_id
+        join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN sys_sec_org sso ON
+		sso.org_id=ssep.org_id
+		WHERE ecfg.friend_group_id
+		IN ( SELECT ecgm.friend_group_id
+		FROM
+		emp_contacts_group_member ecgm
+		WHERE
+		ecfg.create_emp_id = #{mapParam.emp_id} ) OR ecfg.friend_group_type='2'
+		ORDER
+		BY
+		ecfg.friend_group_id )
+
+	</select>
+
+	<select id="orgEmpTree" resultType="map">
+		SELECT
+	sso1.org_id AS id,
+	sso1.parent_org_id AS parent_id,
+	sso1.org_name AS show_name,
+	'' AS emp_id,
+	'' AS emp_code,
+	'' AS emp_name,
+	sso1.org_id,
+	sso1.org_name,'' emp_order
+FROM
+	(
+		SELECT
+			o.org_id,
+			o.parent_org_id,
+			o.org_name,
+			o.group_type
+		FROM
+			sys_sec_org o
+		WHERE
+			o.org_id LIKE '00010001%'
+		AND o.sec_enabled = '1'
+	) sso1
+WHERE
+	sso1.group_type = '1'
+UNION ALL
+	SELECT
+		sse.emp_id AS id,
+		sso.org_id AS parent_id,
+		sse.emp_name AS show_name,
+		sse.emp_id,
+		sse.emp_code,
+		sse.emp_name,
+		sso.org_id,
+		sso.org_name,
+		sse.emp_order
+	FROM
+		sys_sec_emp sse 
+	JOIN (
+		SELECT
+			p.emp_id,p.team_id
+		FROM
+			sys_sec_emp_position p
+		<!--WHERE	
+			is_first_org = '1' -->
+	) ssep ON ssep.emp_id = sse.emp_id
+	JOIN (
+		SELECT
+			o.org_id,
+			o.parent_org_id,
+			o.org_name,
+			o.group_type
+		FROM
+			sys_sec_org o
+		WHERE
+			o.org_id LIKE '00010001%'
+		AND o.sec_enabled = '1'
+	) sso ON sso.org_id = ssep.team_id
+
+		<where>
+			sse.emp_enabled='1' and sso.group_type='1'
+			<!-- <choose> <when test="mapParam.searchArr != null "> <foreach collection="mapParam.searchArr" 
+				item="search1" open="AND (" close=")" separator="or"> ( sse.emp_name LIKE 
+				CONCAT('%',#{search1},'%') or sse.emp_code LIKE CONCAT('%',#{search1},'%') 
+				or sse.emp_sl LIKE CONCAT('',#{search1},'%') or sse.emp_py LIKE CONCAT('',#{search1},'%') 
+				or sso.org_name LIKE CONCAT('%',#{search1},'%') ) </foreach> </when> <when 
+				test="mapParam.searchArr == null " > <if test="mapParam.search != null and 
+				mapParam.search != ''" > AND ( sse.emp_name LIKE CONCAT('%',#{mapParam.search},'%') 
+				OR sse.emp_sl LIKE CONCAT('',#{mapParam.search},'%') OR sse.emp_code LIKE 
+				CONCAT('%',#{mapParam.search},'%') OR sse.emp_py LIKE CONCAT('',#{mapParam.search},'%') 
+				OR sse.emp_phone LIKE CONCAT('%',#{mapParam.search},'%') OR sse.emp_mobile_phone 
+				LIKE CONCAT('%',#{mapParam.search},'%') OR sse.emp_email LIKE CONCAT('%',#{mapParam.search},'%') 
+				OR sso.org_name LIKE CONCAT('%',#{mapParam.search},'%') ) </if> </when> </choose> -->
+			<include refid="com.zrt.contacts.mapping.common.moreMateWhere" />
+		</where>
+		ORDER BY emp_order,org_id,emp_id
+	</select>
+	<!--待撤销部门-->
+	<select id="preCancelOrgEmpTree" resultType="map">
+		SELECT sso1.org_id AS id,'4' AS parent_id,sso1.org_name AS
+		show_name,'' AS emp_id,'' AS emp_code,'' AS
+		emp_name,sso1.org_id,sso1.org_name
+		FROM sys_sec_org sso1 WHERE
+		sso1.group_type='0'
+		UNION ALL
+		SELECT sse.emp_id AS id,sse.org_id AS
+		parent_id,sse.emp_name AS
+		show_name,sse.emp_id,sse.emp_code,sse.emp_name,sso.org_id,sso.org_name
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN sys_sec_org sso ON ssep.org_id =sso.org_id
+
+		<where>
+			<if test="true">
+				1 = 1 and sso.group_type='0' and sse.emp_enabled ='1'
+			</if>
+			<!-- <include refid="com.zrt.contacts.mapping.common.moreMateWhere" /> -->
+		</where>
+	</select>
+
+	<select id="getRecentlyCmuct" resultType="map">
+		SELECT sccr.cmuct_id,sse.emp_name FROM emp_contacts_cmuct_rcd sccr
+		LEFT JOIN
+		(SELECT
+		emp_id,emp_name,emp_code,emp_phone,emp_mobile_phone,emp_email
+		FROM
+		sys_sec_emp WHERE emp_enabled = '1') sse
+		ON sse.emp_id = sccr.cmuct_id
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN sys_sec_org sso ON ssep.org_id = sso.org_id
+		<where>
+			<if test="true">
+				1 = 1
+			</if>
+			<if test="mapParam.emp_id != null">
+				AND sccr.emp_id = #{mapParam.emp_id}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreMateWhere" />
+		</where>
+	</select>
+
+	<!-- 通用的联系人搜索功能 -->
+	<!-- <select id="commonEmpSearch" resultType="map"> select sse.emp_id,sse.emp_name 
+		,sse.emp_code,sse.emp_sl,sse.emp_py,sse.emp_active,sse.emp_head_photo, sso.org_id,sso.org_name 
+		from sys_sec_emp sse left join sys_sec_org sso on sso.org_id =sse.org_id 
+		<where> <if test="true"> 1 = 1 and sse.is_first_org='1' and sse.emp_enabled 
+		='1' </if> <include refid="com.zrt.contacts.mapping.common.moreMateWhere" 
+		/> </where> </select> -->
+
+	<!-- 通用的模糊联系人检索 -->
+	<select id="EmpLikeSearch" resultType="map">
+		select sse.emp_id,sse.emp_name
+		,sse.emp_code,sse.emp_sl,sse.emp_py,sse.emp_active,
+		sse.emp_head_photo,sse.emp_order_mail,ssep.team_id,
+		sso.org_id,sso.org_name,sso.org_name_owner,sso.org_name_all,spp.p_name,sse.emp_head_photo,UPPER(SUBSTRING(sse.emp_py,1,1)) AS emp_first_py
+		from sys_sec_emp sse
+        left join sys_sec_emp_position  ssep 
+        on ssep.emp_id=sse.emp_id
+		 join sys_sec_org sso
+		on sso.org_id =ssep.org_id
+		 join sys_plat_position spp 
+		on ssep.emp_position_id=spp.p_s_p_id
+		<where>
+			sse.emp_enabled ='1' and ssep.is_first_org='1' 
+			<include refid="com.zrt.contacts.mapping.common.moreMateWhere" />
+		</where>
+		order by sse.emp_name
+		limit 0,8
+	</select>
+
+	<!-- 通用的精确联系人检索 -->
+	<select id="EmpTrueSearch" resultType="map">
+		select sse.emp_id,sse.emp_name
+		,sse.emp_code,sse.emp_sl,sse.emp_py,sse.emp_active,sse.emp_head_photo,sse.emp_order_mail,
+		sso.org_id,sso.org_name,sso.org_name_owner,sso.org_name_all,spp.p_name,sse.emp_head_photo,UPPER(SUBSTRING(sse.emp_py,1,1)) AS emp_first_py
+		from sys_sec_emp sse
+	    left join sys_sec_emp_position ssep 
+	    on ssep.emp_id=sse.emp_id
+		 join sys_sec_org sso
+		on sso.org_id =ssep.org_id
+		 join sys_plat_position spp 
+		on ssep.emp_position_id=spp.p_s_p_id
+		<where>
+			sse.emp_enabled ='1' and ssep.is_first_org='1'
+
+			<if test="map.singleSearch!=null and map.singleSearch!=''">
+				and (
+				sse.alias_emp_name = #{map.singleSearch}
+				or sse.emp_code =
+				#{map.singleSearch}
+				or sse.emp_sl = #{map.singleSearch}
+				or LOWER(sse.emp_py)
+				= #{map.singleSearch}
+				or sso.org_name = #{map.singleSearch}
+				)
+			</if>
+
+		</where>
+	</select>
+	<!-- 查询员工信息放入redis -->
+	<select id="setRedis" resultType="java.util.HashMap">
+		SELECT
+			sse.emp_id,
+			sse.emp_name,
+			sse.emp_code,
+			sse.emp_order_mail emp_order,
+			sse.emp_sl,
+			sse.emp_py,
+			sse.emp_active,
+			sse.emp_head_photo,
+			sso.org_id,
+			sso.org_name,
+			sso.org_name_owner,
+			sso.org_name_all
+		FROM
+			sys_sec_emp sse
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				sys_sec_emp_position
+			WHERE
+				is_first_org = '1'
+		) ssep ON ssep.emp_id = sse.emp_id
+		LEFT JOIN sys_sec_org sso ON sso.org_id = ssep.org_id
+		WHERE
+			sse.emp_enabled = '1'
+
+	</select>
+
+	<!-- 根据讯息收件人ID按职级排序 -->
+	<select id="infoReceiverOrderByRank" resultType="map">
+		select sse.emp_id,spr.r_order,sse.emp_name
+		from sys_sec_emp sse 
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+        join sys_plat_rank spr on ssep.r_id = spr.r_id
+		<where>
+			<if test="map.searchArr != null">
+				<foreach collection="map.searchArr" item="empId" open="AND ("
+					close=")" separator="or">
+						sse.emp_id = #{empId}
+				</foreach>
+			</if>
+			order by spr.r_order
+		</where>
+	</select>
+	
+	
+	<!-- 参会人信息列表 -->
+	<select id="meetEmpInfo" resultType="map">
+		select sse.emp_id as rec_emp_id,sse.emp_name as rec_emp_name,ssep.org_name as org_name
+		from sys_sec_emp sse
+        join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		<where>
+			1=1
+			<if test="mapParam.emp_ids != null">
+				and sse.emp_id in
+				<foreach collection="mapParam.emp_ids" item="empId" open="(" separator="," close=")">
+                #{empId}
+				</foreach>
+			</if>
+			<if test="mapParam.rec_emp_name != null and mapParam.rec_emp_name !=''">
+				AND sse.emp_name LIKE CONCAT(#{mapParam.rec_emp_name},'%')
+			</if>
+			<if test="mapParam.org_name != null and mapParam.org_name !=''">
+				AND ssep.org_name LIKE CONCAT(#{mapParam.org_name},'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找员工所有的岗位部门 -->
+	<select id="empOrgInfo" resultType="map">
+		SELECT sse.emp_code AS emp_id,sse.emp_name,ssep.team_id as org_id,ssep.org_name,ssep.is_first_org,sso.org_name_owner,sso.org_name_view
+		FROM sys_sec_emp sse
+	    JOIN sys_sec_emp_position ssep ON ssep.emp_id=sse.emp_id
+	    LEFT JOIN sys_sec_org sso ON ssep.team_id=sso.org_id
+        where sse.emp_code=#{search_emp_id}
+	</select>
+	
+	<!-- 根据部门查询员工 -->
+	<select id="selectByOrg" resultType="map">
+		SELECT
+			sse.emp_id,
+			sse.emp_name,
+			sso.org_name
+		FROM
+			sys_sec_emp sse,
+			(
+				SELECT
+				DISTINCT(p.emp_id),
+				p.org_id,
+				p.team_id
+			FROM
+				sys_sec_emp_position p
+			WHERE
+				p.is_first_org = '1'
+			) ssep,
+			sys_sec_org sso
+		WHERE
+			sse.emp_id = ssep.emp_id
+			AND ssep.team_id = sso.org_id
+			AND ssep.org_id like CONCAT (#{org_id},'%')
+			ORDER BY sse.emp_order
+	</select>
+
+</mapper>

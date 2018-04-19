@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.flow.mapper.act.ListenMapper">
+		<resultMap id="instInfoResultMap" type="com.zrt.flow.domain.InstDomain" >
+		<id column="inst_id" property="id" jdbcType="VARCHAR" />
+		<result column="fb_id" property="fbId" jdbcType="VARCHAR" />
+		<result column="fb_title" property="fbTitle" jdbcType="VARCHAR" />
+		<result column="fb_content" property="fbContent" jdbcType="VARCHAR" />
+		<result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+		<result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+		<result column="org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="start_date_time" property="startDateTime" jdbcType="VARCHAR" />
+		<result column="inst_status" property="instStatus" jdbcType="CHAR" />
+		<association property="fbDomain" javaType="com.zrt.flow.domain.FbBusTemplateDomain">
+			<id column="fb_id" property="id" jdbcType="VARCHAR" />
+			<result column="t_code" property="tCode" jdbcType="VARCHAR" />
+			<result column="t_name" property="tName" jdbcType="VARCHAR" />
+			<result column="t_desc" property="tDesc" jdbcType="VARCHAR" />
+			<association property="bm" javaType="com.zrt.flow.domain.FbBusFmKeyDomain">
+				<association property="fmDomain" javaType="com.zrt.flow.domain.FmBusTemplateDomain">
+					<id column="fm_id" property="id" jdbcType="VARCHAR" />
+					<result column="fm_name" property="tName" jdbcType="VARCHAR" />
+				</association>
+			</association>
+		</association>
+		
+		<collection property="entList" ofType="com.zrt.mybatis.domain.FbBusEntrust">
+		        <id column="ent_id" property="id" jdbcType="VARCHAR" />
+				<result column="ent_emp_id" property="entEmpId" jdbcType="VARCHAR" />
+				<result column="ent_emp_name" property="entEmpName" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="preList" ofType="com.zrt.mybatis.domain.FbBusPredeal">
+		        <id column="pre_id" property="id" jdbcType="VARCHAR" />
+				<result column="pre_check_status" property="checkStatus" jdbcType="CHAR" />
+				<result column="pre_repeat_flag" property="repeatFlag" jdbcType="CHAR" />
+				<result column="pre_inst_tag" property="instTag" jdbcType="VARCHAR" />
+				<result column="pre_inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+				<result column="pre_check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+				<result column="pre_check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+				<result column="pre_org_id" property="orgId" jdbcType="VARCHAR" />
+				<result column="pre_org_name" property="orgName" jdbcType="VARCHAR" />
+				<result column="pre_create_date_time" property="createDateTime" jdbcType="CHAR" />
+				<result column="pre_update_date_time" property="updateDateTime" jdbcType="CHAR" />
+				<result column="pre_check_comment" property="checkComment" jdbcType="VARCHAR" />
+				<result column="pre_pre_status" property="preStatus" jdbcType="VARCHAR" />
+				<result column="pre_inst_id" property="instId" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="checkList" ofType="com.zrt.flow.domain.CheckDomain">
+			<id column="check_id" property="id" jdbcType="VARCHAR" />
+			<result column="check_inst_id" property="instId" jdbcType="VARCHAR" />
+			<result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+			<result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+			<result column="check_status" property="checkStatus" jdbcType="CHAR" />
+			<result column="check_type" property="checkType" jdbcType="CHAR" />
+			<result column="check_comment" property="checkComment" jdbcType="VARCHAR" />
+			<result column="arrive_date_time" property="arriveDateTime" jdbcType="CHAR" />
+			<result column="read_date_time" property="readDateTime" jdbcType="CHAR" />
+			<result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+			<result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+			<result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+			<result column="check_date_time" property="checkDateTime" jdbcType="CHAR" />		
+			<result column="check_repeat_flag" property="repeatFlag" jdbcType="CHAR" />
+		</collection>
+	</resultMap>
+	
+	<!--监听该节点信息-->
+	<select id="instInfoList"  resultMap="instInfoResultMap">
+	    	SELECT
+			  fi.id inst_id,
+			  fi.fb_id,
+			  fi.fb_title,
+			  fi.fb_content,
+			  fi.apply_id,
+			  fi.apply_name,
+			  fi.org_id,
+			  fi.org_name,
+			  fi.start_date_time,
+			  fi.inst_status,
+			  fb.t_code,
+			  fb.t_name,
+			  fb.t_desc,
+			  fm.id fm_id,
+			  fm.t_name fm_name,
+			  fc.id check_id,
+			  fc.inst_id as check_inst_id,
+			  fc.check_emp_id,
+			  fc.check_emp_name,
+			  fc.org_id,
+			  fc.org_name,
+			  fc.check_status,
+			  fc.check_type,
+			  fc.check_comment,
+			  fc.arrive_date_time,
+			  fc.read_date_time,
+			  fc.create_date_time,
+			  fc.check_date_time,
+			  fc.inst_tag,
+			  fc.inst_tag_name,
+			  fc.repeat_flag as check_repeat_flag,
+			  fe.id as ent_id,
+			  fe.ent_emp_id,
+			  fe.ent_emp_name,
+			  pred.id as pre_id,
+			  pred.check_status as pre_check_status,
+			  pred.inst_tag as pre_inst_tag,
+			  pred.inst_tag_name as pre_inst_tag_name,
+			  pred.repeat_flag as pre_repeat_flag,
+			  pred.check_emp_id as pre_check_emp_id,
+			  pred.check_emp_name as pre_check_emp_name,
+			  pred.org_id as pre_org_id,
+			  pred.org_name as pre_org_name,
+			  pred.create_date_time as pre_create_date_time,
+			  pred.update_date_time as pre_update_date_time,
+			  pred.check_comment as pre_check_comment,
+			  pred.pre_status as pre_pre_status,
+			  pred.inst_id as pre_inst_id
+		FROM
+			fb_bus_inst fi
+		JOIN fb_bus_template fb ON fi.fb_id = fb.id
+		JOIN fb_bus_fm bm ON fb.id = bm.fb_id
+		JOIN fm_bus_template fm ON bm.fm_id = fm.id
+		LEFT JOIN (select * from fb_bus_check where check_status ='1' and check_emp_id=#{check_emp_id}) fc ON fi.id = fc.inst_id
+		LEFT JOIN (select * from fb_bus_entrust fe where fe.ent_enabled='1' and fe.check_emp_id=#{check_emp_id}) fe ON fe.fb_code = fb.t_code
+		left join (select * from fb_bus_predeal pred where pred.check_emp_id=#{check_emp_id}) pred on pred.inst_id=fi.id
+		  where fi.id=#{inst_id} 
+	</select>
+	
+	
+</mapper>

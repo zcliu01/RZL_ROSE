@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.flow.mapper.act.ActMapper">
+	
+	
+	<!--流程实例已经经过的节点-->
+	<select id="instTagList" resultType="java.util.HashMap">
+		    
+	SELECT DISTINCT 
+	  ahia.act_id_ AS act_id,
+	  ahia.act_name_ AS act_name 
+	FROM
+	  act_hi_procinst ahip 
+	  LEFT JOIN act_hi_actinst ahia 
+	    ON ahip.proc_inst_id_ = ahia.proc_inst_id_ 
+	WHERE ahip.business_key_ = #{bus_id}  and act_type_='userTask'
+	</select>
+	
+	<!--流程实例已经经过的完成的节点-->
+	<select id="instfinishTagList" resultType="java.util.HashMap">
+		    
+	SELECT DISTINCT 
+	  ahia.act_id_ AS finish_tag_id,
+	  ahia.act_name_ AS finish_tag_name 
+	FROM
+	  act_hi_procinst ahip 
+	  LEFT JOIN act_hi_actinst ahia 
+	    ON ahip.proc_inst_id_ = ahia.proc_inst_id_ 
+	WHERE ahip.business_key_ = #{bus_id} and ahia.end_time_ is not null and act_type_='userTask'
+	</select>
+	
+	<!--待办根据业务id-->
+	<select id="queryDoDeal" resultType="java.util.HashMap">
+		    
+SELECT 
+   distinct 
+  fbc.id AS check_id,
+  fbc.read_date_time AS read_date_time,
+  tk.id_ AS task_id,tk.owner_ AS check_owner,
+  tk.task_def_key_ AS inst_tag,
+  tk.name_ AS inst_tag_name,
+  (
+    CASE
+      when (tk.assignee_ IS  not null)
+      then tk.assignee_
+      when (tk.assignee_ is  null and tk.user_id_ is not null )
+      then tk.user_id_
+      when (tk.assignee_ IS  NULL and tk.user_id_ IS NULL)
+      then tk.emp_id 
+    END
+  ) AS check_emp_id,
+  DATE_FORMAT(tk.create_time_, '%Y%m%d%H%i%s') AS arrive_date_time 
+FROM
+  act_hi_procinst are 
+  JOIN 
+    (SELECT DISTINCT 
+      RES.*,
+      fburole.emp_id ,
+      i.user_id_
+    FROM
+      ACT_ru_TASK RES 
+      LEFT JOIN ACT_ru_IDENTITYLINK I 
+        ON I.TASK_ID_ = RES.ID_ 
+      LEFT JOIN fb_bus_role fbrole 
+        ON fbrole.role_code = i.group_id_ 
+      LEFT JOIN fb_bus_user_role fburole 
+        ON fburole.role_id = fbrole.role_id 
+    WHERE RES.ASSIGNEE_ IS NOT NULL 
+      OR (
+        RES.ASSIGNEE_ IS NULL 
+        AND I.TYPE_ = 'candidate'
+      ) 
+      OR (
+        RES.ASSIGNEE_ IS NULL 
+        AND i.group_id_ IS NOT NULL 
+        AND I.TYPE_ = 'candidate'
+      )) tk 
+    ON tk.proc_inst_id_ = are.proc_inst_id_ 
+  LEFT JOIN fb_bus_check fbc 
+    ON fbc.task_id = tk.id_ 
+	    WHERE are.business_key_=#{bus_id}
+	</select>
+</mapper>

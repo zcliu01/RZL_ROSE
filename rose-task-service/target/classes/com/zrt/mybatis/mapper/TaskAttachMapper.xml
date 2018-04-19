@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.TaskAttachMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.TaskAttach" >
+    <id column="task_attack_id" property="taskAttackId" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="attach_id" property="attachId" jdbcType="CHAR" />
+    <result column="attach_type" property="attachType" jdbcType="CHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="task_attach_url" property="taskAttachUrl" jdbcType="VARCHAR" />
+    <result column="attach_name" property="attachName" jdbcType="VARCHAR" />
+    <result column="node_id" property="nodeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    task_attack_id, task_id, attach_id, attach_type, remark, tenant_id, create_date_time, 
+    update_date_time, task_attach_url, attach_name, node_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.TaskAttachExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from task_attach
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from task_attach
+    where task_attack_id = #{taskAttackId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from task_attach
+    where task_attack_id = #{taskAttackId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.TaskAttachExample" >
+    delete from task_attach
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.TaskAttach" >
+    insert into task_attach (task_attack_id, task_id, attach_id, 
+      attach_type, remark, tenant_id, 
+      create_date_time, update_date_time, task_attach_url, 
+      attach_name, node_id)
+    values (#{taskAttackId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{attachId,jdbcType=CHAR}, 
+      #{attachType,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, 
+      #{createDateTime,jdbcType=CHAR}, #{updateDateTime,jdbcType=CHAR}, #{taskAttachUrl,jdbcType=VARCHAR}, 
+      #{attachName,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.TaskAttach" >
+    insert into task_attach
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskAttackId != null" >
+        task_attack_id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="attachId != null" >
+        attach_id,
+      </if>
+      <if test="attachType != null" >
+        attach_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="taskAttachUrl != null" >
+        task_attach_url,
+      </if>
+      <if test="attachName != null" >
+        attach_name,
+      </if>
+      <if test="nodeId != null" >
+        node_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskAttackId != null" >
+        #{taskAttackId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="attachId != null" >
+        #{attachId,jdbcType=CHAR},
+      </if>
+      <if test="attachType != null" >
+        #{attachType,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="taskAttachUrl != null" >
+        #{taskAttachUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachName != null" >
+        #{attachName,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null" >
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.TaskAttachExample" resultType="java.lang.Integer" >
+    select count(*) from task_attach
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update task_attach
+    <set >
+      <if test="record.taskAttackId != null" >
+        task_attack_id = #{record.taskAttackId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        task_id = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachId != null" >
+        attach_id = #{record.attachId,jdbcType=CHAR},
+      </if>
+      <if test="record.attachType != null" >
+        attach_type = #{record.attachType,jdbcType=CHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.taskAttachUrl != null" >
+        task_attach_url = #{record.taskAttachUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachName != null" >
+        attach_name = #{record.attachName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nodeId != null" >
+        node_id = #{record.nodeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update task_attach
+    set task_attack_id = #{record.taskAttackId,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR},
+      attach_id = #{record.attachId,jdbcType=CHAR},
+      attach_type = #{record.attachType,jdbcType=CHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      task_attach_url = #{record.taskAttachUrl,jdbcType=VARCHAR},
+      attach_name = #{record.attachName,jdbcType=VARCHAR},
+      node_id = #{record.nodeId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.TaskAttach" >
+    update task_attach
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="attachId != null" >
+        attach_id = #{attachId,jdbcType=CHAR},
+      </if>
+      <if test="attachType != null" >
+        attach_type = #{attachType,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="taskAttachUrl != null" >
+        task_attach_url = #{taskAttachUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachName != null" >
+        attach_name = #{attachName,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null" >
+        node_id = #{nodeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where task_attack_id = #{taskAttackId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.TaskAttach" >
+    update task_attach
+    set task_id = #{taskId,jdbcType=VARCHAR},
+      attach_id = #{attachId,jdbcType=CHAR},
+      attach_type = #{attachType,jdbcType=CHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      task_attach_url = #{taskAttachUrl,jdbcType=VARCHAR},
+      attach_name = #{attachName,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR}
+    where task_attack_id = #{taskAttackId,jdbcType=VARCHAR}
+  </update>
+</mapper>

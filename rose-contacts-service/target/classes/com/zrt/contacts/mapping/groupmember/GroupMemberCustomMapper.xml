@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.contacts.mapper.groupmember.GroupMemberCustomMapper">
+
+	<insert id="insertMore" parameterType="java.util.List">
+		insert into emp_contacts_group_member
+		(group_member_id,friend_group_id, emp_id, member_level,
+		create_date_time)
+		values
+		<foreach collection="list" item="groupMember" separator=",">
+			(#{groupMember.groupMemberId,jdbcType=VARCHAR},#{groupMember.friendGroupId,jdbcType=VARCHAR},#{groupMember.empId,jdbcType=VARCHAR},
+			#{groupMember.memberLevel,jdbcType=VARCHAR},#{groupMember.createDateTime,jdbcType=CHAR})
+		</foreach>
+	</insert>
+	<insert id="insertMemberList" useGeneratedKeys="true" keyProperty="group_member_id" parameterType="java.util.List">
+		INSERT INTO emp_contacts_group_member (friend_group_id,emp_id,member_level,member_status,create_date_time) 
+			VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.friend_group_id,jdbcType=VARCHAR},
+			#{item.emp_id,jdbcType=VARCHAR},
+			#{item.member_level,jdbcType=VARCHAR},
+			#{item.member_status,jdbcType=VARCHAR},
+			#{item.create_date_time,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	<update id="updateMemberCount">
+		UPDATE emp_contacts_friend_group SET member_quantity =
+		#{memberCount}
+		<where>
+			<if test="friendGroupId!=null and friendGroupId!=''">
+				friend_group_id=#{friendGroupId}
+			</if>
+		</where>
+	</update>
+	<delete id="groupMemberDeleteIn">
+		DELETE FROM emp_contacts_group_member
+		<where>
+			<if test="friendGroupId != null">
+				friend_group_id = #{friendGroupId} AND
+			</if>
+
+			emp_id IN
+			<foreach collection="empIdArr" item="empId" open="("
+				separator="," close=")">
+				#{empId}
+			</foreach>
+
+		</where>
+	</delete>
+
+	<!-- PC端 群组成员列表+多条件检索 -->
+	<select id="friendGroupEmpList" resultType="map">
+		SELECT
+		sse.emp_id,sse.emp_head_photo,sse.emp_code,sse.emp_name,sso.org_name_view org_name,psp.p_name,sse.entry_time,sse.create_date_time,sse.emp_work_address,sse.emp_email,sse.emp_sex,sse.emp_active
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1') sso ON
+		sso.org_id = ssep.team_id /*组织机构-部门*/
+		LEFT JOIN
+		(SELECT * FROM sys_plat_position WHERE p_status = '1') psp ON
+		psp.p_s_p_id = ssep.emp_position_id /*职位*/
+		RIGHT JOIN (SELECT emp_id
+		FROM emp_contacts_group_member WHERE
+		friend_group_id =
+		#{mapParam.friend_group_id} AND member_status = '1')
+		scgm ON
+		scgm.emp_id = sse.emp_id/*群组内员工列表*/
+		<where>
+			 and sse.emp_enabled='1' and sse.emp_active = '1'
+			<include refid="com.zrt.contacts.mapping.common.moreConditionForFriendEmp" />
+		</where>
+	</select>
+
+	<!--app端群组成员列表 -->
+	<select id="appFriendGroupMemList" resultType="map">
+		SELECT
+		ecgm.member_level,sse.emp_id,sse.emp_name,sse.emp_head_photo,sse.emp_active,sso.org_name_view org_name
+		FROM emp_contacts_group_member ecgm
+		LEFT JOIN sys_sec_emp sse ON
+		sse.emp_id=ecgm.emp_id
+		 join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.team_id=sse.emp_id
+	 JOIN sys_sec_org sso ON
+		ssep.org_id=sso.org_id
+		<where>
+			ecgm.member_status='1'  and sse.emp_enabled='1'
+			<if test="map.friend_group_id!=null and map.friend_group_id!='' ">
+				AND ecgm.friend_group_id=#{map.friend_group_id}
+			</if>
+			<if test="map.status!=null and map.status!='' ">
+				AND sse.emp_active =#{map.status}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreSearchWhere" />
+		</where>
+	</select>
+
+	<!--app端 添加群组成员页面初始化 -->
+	<select id="groupMemberSavePage" resultType="map">
+		SELECT
+		sse.emp_id,sse.emp_name,sse.emp_head_photo,sse.emp_active,sso.org_name
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+	 JOIN sys_sec_org sso ON
+		ssep.org_id =sso.org_id
+		<where>
+			ssep.is_first_org='1' and sse.emp_enabled='1'
+			<if test="map.friend_group_id!=null and map.friend_group_id!='' ">
+				AND sse.emp_id NOT IN( SELECT emp_id FROM emp_contacts_group_member
+				WHERE
+				friend_group_id = #{map.friend_group_id})
+			</if>
+			<if test="map.status!=null and map.status!='' ">
+				AND sse.emp_active =#{map.status}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreSearchWhere" />
+		</where>
+	</select>
+</mapper>

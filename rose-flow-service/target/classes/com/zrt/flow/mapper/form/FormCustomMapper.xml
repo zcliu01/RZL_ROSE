@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.flow.mapper.form.FormCustomMapper">
+	
+	<!--获取表单列表-->
+	<select id="getFormList" resultType="java.util.HashMap">
+       	SELECT
+			tt.id,
+			tt.t_code,
+			tt.t_name,
+			tt.t_desc,
+			tt.t_enabled,
+			t1.id t_type_id,
+			t1.t_name t_type_name,
+			tt.create_date_time,
+			tt.update_date_time
+		FROM
+			fm_bus_template tt
+			JOIN fm_bus_type t1 ON tt.f_b_t_id = t1.id
+		<where>
+			1=1
+		<if test="t_name != null and t_name !=''">
+                AND tt.t_name  LIKE CONCAT ('%',#{t_name},'%')
+		</if>
+		<if test="t_type_id != null and t_type_id !=''">
+                AND t1.id =#{t_type_id}
+		</if>
+		<if test="t_type_name != null and t_type_name !=''">
+                AND t1.t_name LIKE CONCAT('%',#{t_type_name},'%')
+		</if>
+		<if test="t_enabled != null and t_enabled !=''">
+                AND  tt.t_enabled in
+			<foreach collection="t_enabled" item="id" open="(" separator="," close=")">
+		            #{id}
+			</foreach>
+		</if>      
+		</where>
+		order by tt.create_date_time desc
+	</select>
+  	
+</mapper>

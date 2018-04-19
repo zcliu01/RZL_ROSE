@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.infor.mapper.inforinner.AppInforInnerMapper">
+
+	<!-- 查询所有讯息列表，隐藏，显示 -->
+	<select id="inforList" resultType="java.util.HashMap">
+      	 SELECT 
+      	      pio.out_id,
+			  pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '1' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+			  pir.bus_domain,
+              '' AS deal_status,
+              pio.is_show,
+               CASE ((SELECT COUNT(1) FROM plat_infor_concern pic WHERE pic.infor_no=pir.infor_no) ) WHEN 0 THEN '0' ELSE '1' END AS is_care,
+              '1' as is_draft,
+              pir.bus_id
+			FROM
+			   plat_infor_record pir join plat_infor_outbox pio on pio.infor_no = pir.infor_no 
+			  where
+			  	pio.sender_id = #{sender_emp_id}
+			    AND pio.send_status ='1'
+			   
+			 
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="is_show != null and is_show !=''">
+	                and pio.is_show=#{is_show}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送人名称*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+			UNION ALL
+			SELECT 
+			   pio.out_id,
+			   pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+		   	  pir.bus_domain,
+              pii.deal_status,
+              pii.is_show,
+              CASE ((SELECT COUNT(1) FROM plat_infor_concern pic WHERE pic.infor_no=pir.infor_no) ) WHEN 0 THEN '0' ELSE '1' END AS is_care,
+              '1' as is_draft,
+              pir.bus_id
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii
+			WHERE 
+				pii.receiver_id = #{receiver_emp_id}
+				AND pii.deal_status BETWEEN '0' and '3'
+				AND pii.out_id = pio.out_id 
+				AND pio.infor_no = pir.infor_no 
+			   
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="is_show != null and is_show !=''">
+	                and pii.is_show=#{is_show}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送人名称*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+		<if test="deal_status != null and deal_status !=''">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{deal_status}
+		</if>
+               
+               order by out_id desc
+               
+	</select>
+      
+      
+	<!-- 草稿，发送的-->
+	<select id="inforSendList" resultType="java.util.HashMap">
+        SELECT 
+              pio.out_id,
+			  pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '1' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time,
+			  pir.category,
+			  '' AS deal_status,
+              pio.is_show,
+              CASE ((SELECT COUNT(1) FROM plat_infor_concern pic WHERE pic.infor_no=pir.infor_no) ) WHEN 0 THEN '0' ELSE '1' END AS is_care,
+              pio.send_status as is_draft,
+              pir.bus_id
+			FROM
+			   plat_infor_record pir,
+			  plat_infor_outbox pio
+        where pio.infor_no=pir.infor_no
+            and  pio.sender_id=#{sender_emp_id}
+            
+		<if test="send_status != null and send_status !=''">
+                /*发送人*/
+                AND pio.send_status = #{send_status}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="trans_type != null and trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{trans_type}
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+		<if test="is_show != null and is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{is_show}
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+         order by out_id desc
+	</select>
+    
+    
+	<!-- 接收的，待阅，未阅，已办，未办-->
+	<select id="inforReceiverList" resultType="java.util.HashMap">
+        SELECT 
+              pio.out_id,
+			  pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pii.deal_status,
+              pii.is_show,
+              CASE ((SELECT COUNT(1) FROM plat_infor_concern pic WHERE pic.infor_no=pir.infor_no) ) WHEN 0 THEN '0' ELSE '1' END AS is_care,
+              '1' as is_draft,
+              pir.bus_id
+			FROM
+			   plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii
+        where 
+    	    pii.receiver_id=#{receiver_emp_id}
+			AND pii.out_id = pio.out_id 
+            AND pio.send_status='1'
+    	    AND pio.infor_no = pir.infor_no 
+		<if test="deal_status != null and deal_status !=''">
+                /*接收讯息状态*/
+                AND pii.deal_status = #{deal_status}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="trans_type != null and trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{trans_type}
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+		<if test="is_show != null and is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pii.is_show = #{is_show}
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+             order by out_id desc
+	</select>
+    
+	<!-- 关注列表 -->
+	<select id="inforCareList" resultType="java.util.HashMap">
+    	 SELECT 
+    	      pio.out_id,
+			  pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '1' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pic.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  '' AS deal_status,
+              pio.is_show,
+              '1'  is_care,
+              '1' as is_draft,
+              pir.bus_id
+			  
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_concern pic
+			  WHERE pio.infor_no = pir.infor_no 
+			  AND pic.infor_no=pir.infor_no 
+			  AND pio.send_status = '1' 
+			  AND pio.sender_id = #{sender_emp_id}
+			 
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="is_show != null and is_show !=''">
+	                and pio.is_show=#{is_show}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+			UNION
+			ALL 
+			SELECT 
+			pio.out_id,
+			   pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pic.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pii.deal_status,
+              pii.is_show,
+              '1' as  is_care,
+              '1' as is_draft,
+              pir.bus_id
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii,
+			  plat_infor_concern pic
+			WHERE 
+				pii.receiver_id = #{receiver_emp_id}
+				AND pii.deal_status BETWEEN '0' and '3'
+			    AND pii.out_id = pio.out_id 
+				AND pio.send_status='1'
+				AND pio.infor_no = pir.infor_no 
+			    AND pic.infor_no=pir.infor_no
+			    AND pic.emp_id=#{receiver_emp_id}
+			   
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="is_show != null and is_show !=''">
+	                and pii.is_show=#{is_show}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+		<if test="org_name != null and org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+		<if test="deal_status != null and deal_status !=''">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{deal_status}
+		</if>
+               
+               order by out_id desc
+	</select>
+	<!-- 关注未阅、已阅、已办列表 -->
+	<select id="inforCareStatusList" resultType="java.util.HashMap">
+			SELECT 
+			pio.out_id,
+			   pio.infor_no,
+			  pio.sender_name,
+			  pio.sender_id,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pir.title,
+			  pir.content,
+			  pic.create_date_time,
+			  pir.category,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pii.deal_status,
+              pii.is_show,
+              '1' as  is_care,
+              '1' as is_draft,
+              pir.bus_id
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii,
+			  plat_infor_concern pic
+			WHERE pio.infor_no = pir.infor_no 
+			  AND pii.out_id = pio.out_id 
+			  and pic.infor_no=pir.infor_no
+			  AND pii.deal_status BETWEEN '0' and '3'
+			  and pio.send_status='1'
+			  AND pii.receiver_id = #{receiver_emp_id}
+		<if test="start_time != null and start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{start_time}]]>
+		</if>
+		<if test="end_time != null and end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{end_time}]]>
+		</if>
+		<if test="is_show != null and is_show !=''">
+	                and pii.is_show=#{is_show}
+		</if>
+		<if test="title != null and title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="search_content != null and search_content !=''">
+                /*讯息内容*/
+                AND ( pir.content LIKE CONCAT('%',#{search_content},'%') or pir.title LIKE CONCAT('%',#{search_content},'%') )
+		</if>
+		<if test="sender_id != null and sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{sender_id}
+		</if>
+		<if test="sender_name != null and sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{sender_name},'%')
+		</if>
+		<if test="category != null and category !=''">
+                /*讯息类别*/
+                AND pir.category = #{category}
+		</if>
+		<if test="deal_status != null and deal_status !=''">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{deal_status}
+		</if>
+               
+               order by out_id desc
+	</select>
+     
+</mapper>

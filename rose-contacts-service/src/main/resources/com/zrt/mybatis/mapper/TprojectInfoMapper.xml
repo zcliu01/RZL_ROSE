@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.TprojectInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.TprojectInfo" >
+    <result column="C_PROJECTCODE" property="cProjectcode" jdbcType="VARCHAR" />
+    <result column="C_PROJECTNAME" property="cProjectname" jdbcType="VARCHAR" />
+    <result column="C_FUNDCODE" property="cFundcode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    C_PROJECTCODE, C_PROJECTNAME, C_FUNDCODE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.TprojectInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from tproject_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.TprojectInfoExample" >
+    delete from tproject_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.TprojectInfo" >
+    insert into tproject_info (C_PROJECTCODE, C_PROJECTNAME, C_FUNDCODE
+      )
+    values (#{cProjectcode,jdbcType=VARCHAR}, #{cProjectname,jdbcType=VARCHAR}, #{cFundcode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.TprojectInfo" >
+    insert into tproject_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cProjectcode != null" >
+        C_PROJECTCODE,
+      </if>
+      <if test="cProjectname != null" >
+        C_PROJECTNAME,
+      </if>
+      <if test="cFundcode != null" >
+        C_FUNDCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cProjectcode != null" >
+        #{cProjectcode,jdbcType=VARCHAR},
+      </if>
+      <if test="cProjectname != null" >
+        #{cProjectname,jdbcType=VARCHAR},
+      </if>
+      <if test="cFundcode != null" >
+        #{cFundcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.TprojectInfoExample" resultType="java.lang.Integer" >
+    select count(*) from tproject_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tproject_info
+    <set >
+      <if test="record.cProjectcode != null" >
+        C_PROJECTCODE = #{record.cProjectcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cProjectname != null" >
+        C_PROJECTNAME = #{record.cProjectname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cFundcode != null" >
+        C_FUNDCODE = #{record.cFundcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tproject_info
+    set C_PROJECTCODE = #{record.cProjectcode,jdbcType=VARCHAR},
+      C_PROJECTNAME = #{record.cProjectname,jdbcType=VARCHAR},
+      C_FUNDCODE = #{record.cFundcode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

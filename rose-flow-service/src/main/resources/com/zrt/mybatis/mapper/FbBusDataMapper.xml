@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FbBusDataMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FbBusData" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="col_text" property="colText" jdbcType="VARCHAR" />
+    <result column="inst_id" property="instId" jdbcType="VARCHAR" />
+    <result column="col_code" property="colCode" jdbcType="VARCHAR" />
+    <result column="col_title" property="colTitle" jdbcType="VARCHAR" />
+    <result column="col_type" property="colType" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+    <result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zrt.mybatis.domain.FbBusData" extends="BaseResultMap" >
+    <result column="col_value" property="colValue" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, col_text, inst_id, col_code, col_title, col_type, version, inst_tag, inst_tag_name
+  </sql>
+  <sql id="Blob_Column_List" >
+    col_value
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.zrt.mybatis.domain.FbBusDataExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fb_bus_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FbBusDataExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fb_bus_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fb_bus_data
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fb_bus_data
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FbBusDataExample" >
+    delete from fb_bus_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FbBusData" >
+    insert into fb_bus_data (id, col_text, inst_id, 
+      col_code, col_title, col_type, 
+      version, inst_tag, inst_tag_name, 
+      col_value)
+    values (#{id,jdbcType=VARCHAR}, #{colText,jdbcType=VARCHAR}, #{instId,jdbcType=VARCHAR}, 
+      #{colCode,jdbcType=VARCHAR}, #{colTitle,jdbcType=VARCHAR}, #{colType,jdbcType=VARCHAR}, 
+      #{version,jdbcType=INTEGER}, #{instTag,jdbcType=VARCHAR}, #{instTagName,jdbcType=VARCHAR}, 
+      #{colValue,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FbBusData" >
+    insert into fb_bus_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="colText != null" >
+        col_text,
+      </if>
+      <if test="instId != null" >
+        inst_id,
+      </if>
+      <if test="colCode != null" >
+        col_code,
+      </if>
+      <if test="colTitle != null" >
+        col_title,
+      </if>
+      <if test="colType != null" >
+        col_type,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="instTag != null" >
+        inst_tag,
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name,
+      </if>
+      <if test="colValue != null" >
+        col_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="colText != null" >
+        #{colText,jdbcType=VARCHAR},
+      </if>
+      <if test="instId != null" >
+        #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="colCode != null" >
+        #{colCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colTitle != null" >
+        #{colTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="colType != null" >
+        #{colType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="instTag != null" >
+        #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="colValue != null" >
+        #{colValue,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FbBusDataExample" resultType="java.lang.Integer" >
+    select count(*) from fb_bus_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fb_bus_data
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colText != null" >
+        col_text = #{record.colText,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instId != null" >
+        inst_id = #{record.instId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colCode != null" >
+        col_code = #{record.colCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colTitle != null" >
+        col_title = #{record.colTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colType != null" >
+        col_type = #{record.colType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.instTag != null" >
+        inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instTagName != null" >
+        inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colValue != null" >
+        col_value = #{record.colValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update fb_bus_data
+    set id = #{record.id,jdbcType=VARCHAR},
+      col_text = #{record.colText,jdbcType=VARCHAR},
+      inst_id = #{record.instId,jdbcType=VARCHAR},
+      col_code = #{record.colCode,jdbcType=VARCHAR},
+      col_title = #{record.colTitle,jdbcType=VARCHAR},
+      col_type = #{record.colType,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=INTEGER},
+      inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      col_value = #{record.colValue,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fb_bus_data
+    set id = #{record.id,jdbcType=VARCHAR},
+      col_text = #{record.colText,jdbcType=VARCHAR},
+      inst_id = #{record.instId,jdbcType=VARCHAR},
+      col_code = #{record.colCode,jdbcType=VARCHAR},
+      col_title = #{record.colTitle,jdbcType=VARCHAR},
+      col_type = #{record.colType,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=INTEGER},
+      inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{record.instTagName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FbBusData" >
+    update fb_bus_data
+    <set >
+      <if test="colText != null" >
+        col_text = #{colText,jdbcType=VARCHAR},
+      </if>
+      <if test="instId != null" >
+        inst_id = #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="colCode != null" >
+        col_code = #{colCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colTitle != null" >
+        col_title = #{colTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="colType != null" >
+        col_type = #{colType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="instTag != null" >
+        inst_tag = #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="colValue != null" >
+        col_value = #{colValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zrt.mybatis.domain.FbBusData" >
+    update fb_bus_data
+    set col_text = #{colText,jdbcType=VARCHAR},
+      inst_id = #{instId,jdbcType=VARCHAR},
+      col_code = #{colCode,jdbcType=VARCHAR},
+      col_title = #{colTitle,jdbcType=VARCHAR},
+      col_type = #{colType,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      inst_tag = #{instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      col_value = #{colValue,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FbBusData" >
+    update fb_bus_data
+    set col_text = #{colText,jdbcType=VARCHAR},
+      inst_id = #{instId,jdbcType=VARCHAR},
+      col_code = #{colCode,jdbcType=VARCHAR},
+      col_title = #{colTitle,jdbcType=VARCHAR},
+      col_type = #{colType,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      inst_tag = #{instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{instTagName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

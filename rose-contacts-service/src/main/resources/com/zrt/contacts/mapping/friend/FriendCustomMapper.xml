@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.contacts.mapper.friend.FriendCustomMapper">
+	<!--添加常用联系人 原主人代码 <insert id="insertMore" parameterType="java.util.List"> 
+		insert into emp_contacts_friend (friend_id,emp_id, friend_emp_id, create_date_time) 
+		values <foreach collection="list" item="friend" separator=","> (#{friend.friendId,jdbcType=VARCHAR},#{friend.empId,jdbcType=VARCHAR}, 
+		#{friend.friendEmpId,jdbcType=VARCHAR},#{friend.createDateTime,jdbcType=CHAR}) 
+		</foreach> </insert> -->
+
+	<select id="orgAllList" resultType="java.util.HashMap">
+		SELECT a.org_id,a.org_name FROM sys_sec_org a
+		<where>
+			<if test="org_level!=null and org_level!=''">
+				a.org_level = #{org_level}
+			</if>
+			<if test="org_parent_id!=null and org_parent_id!=''">
+				AND a.parent_org_id = #{org_parent_id}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="selectEmpDetail" parameterType="string" resultType="map">
+		SELECT
+		sse.emp_id,sse.emp_code,sse.emp_name,sse.emp_active,
+		sse2.manage_emp_id AS manage_emp_id,
+		sse2.manage_emp_name AS manage_emp_name,
+		sse2.charge_emp_id AS charge_emp_id,
+		sse2.charge_emp_name AS charge_emp_name,
+		<!--sse2.emp_name	AS	immediate_superiors,-->
+		sse.create_date_time,sse.emp_email,sse.emp_sex,sse.emp_birthday,sse.emp_phone,sse.emp_mobile_phone,sse.emp_fax,sse.emp_address,sse.emp_postcode,sse.emp_work_address,sse.entry_time
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		<!-- LEFT JOIN sys_sec_emp sse2 ON sse.immediate_superiors_id = sse2.emp_id -->
+		<!--LEFT JOIN		sys_sec_emp sse2 ON		ssep.up_emp_id=sse2.emp_id-->
+		LEFT JOIN sys_work_relation sse2 ON sse2.emp_id = sse.emp_id
+		WHERE
+		sse.emp_id =#{empId}
+		AND sse.emp_enabled ='1'
+	</select>
+
+
+	<select id="selectEmpOrgPosition" parameterType="string"
+		resultType="map">
+		SELECT
+		sso.org_name,psp.p_name,<!--sse2.emp_name AS immediate_superiors-->
+		sse2.manage_emp_id AS manage_emp_id,
+		sse2.manage_emp_name AS manage_emp_name,
+		sse2.charge_emp_id AS charge_emp_id,
+		sse2.charge_emp_name AS charge_emp_name,sse.emp_order
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position ) ssep on ssep.emp_id=sse.emp_id
+		LEFT
+		JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1' AND
+		sec_delete_flag = '0') sso ON sso.org_id =
+		ssep.org_id /*组织机构-部门*/
+		LEFT
+		JOIN (SELECT * FROM sys_plat_position WHERE
+		p_status = '1') psp ON
+		psp.p_s_p_id = ssep.emp_position_id
+		/*职位*/
+		<!--LEFT JOIN		sys_sec_emp sse2 ON		ssep.up_emp_id=sse2.emp_id-->
+		LEFT JOIN sys_work_relation sse2 ON sse2.emp_id = sse.emp_id
+		/*直接上级*/
+		<where>
+			<if test="userId != null">
+				sse.emp_id = #{userId}
+			</if>
+			<if test="isFirstOrg != null">
+				AND ssep.is_first_org = #{isFirstOrg}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- <select id="selectEmpOrgPosition" parameterType="string" resultType="map"> 
+		SELECT sse.emp_id,sse.emp_name,sso.org_name,psp.p_name,sse2.emp_name AS immediate_superiors 
+		FROM sys_sec_emp sse LEFT JOIN (SELECT * FROM sys_sec_org WHERE sec_enabled 
+		= '1' AND sec_delete_flag = '0') sso ON sso.org_id = sse.org_id /*组织机构-部门*/ 
+		LEFT JOIN (SELECT * FROM sys_plat_position WHERE p_status = '1') psp ON psp.p_s_p_id 
+		= sse.emp_position_id LEFT JOIN sys_work_relation swr ON swr.emp_id=sse.emp_id 
+		LEFT JOIN sys_sec_emp sse2 ON swr.up_emp_id=sse2.emp_id <where> <if test="userId 
+		!= null"> sse.user_id = #{userId} </if> <if test="empId != null"> sse.emp_id 
+		= #{empId} </if> <if test="isFirstOrg != null"> AND sse.is_first_org = #{isFirstOrg} 
+		</if> </where> </select> -->
+
+	<!--pc端 常用联系人列表 -->
+	<select id="empList" resultType="map">
+		<!-- SELECT sse.emp_id,sse.user_id,sse.emp_code,sse.emp_name,sse.emp_active,sso.org_name, 
+			psp.p_name,sse.entry_time,sse.create_date_time,sse.emp_email,sse.emp_sex,sse.emp_work_address 
+			FROM sys_sec_emp sse LEFT JOIN (SELECT * FROM sys_sec_org WHERE sec_enabled 
+			= '1' AND sec_delete_flag = '0') sso ON sso.org_id = sse.org_id /*组织机构-部门*/ 
+			LEFT JOIN (SELECT * FROM sys_plat_position WHERE p_status = '1') psp ON psp.p_s_p_id 
+			= sse.emp_position_id /*职位*/ -->
+		SELECT
+		sse.emp_id,sse.emp_code,sse.emp_name,sse.emp_active,sse.emp_enabled,sso.org_name_view org_name,
+		psp.p_name,sse.entry_time,sse.create_date_time,sse.emp_email,sse.emp_sex,sse.emp_work_address
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1' ) ssep on ssep.emp_id=sse.emp_id
+		JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1') sso ON
+		sso.org_id = ssep.team_id
+		LEFT JOIN (SELECT *
+		FROM
+		emp_contacts_friend WHERE
+		emp_status = '1') ecf ON
+		ecf.friend_emp_id =
+		sse.emp_id
+		LEFT JOIN (SELECT * FROM
+		sys_plat_position WHERE
+		p_status = '1') psp ON
+		psp.p_s_p_id =
+		ssep.emp_position_id
+		<where>
+			
+			<if test="mapParam.emp_id != null and mapParam.emp_id!=''">
+				 ecf.emp_id= #{mapParam.emp_id}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreConditionForFriendEmp" />
+		</where>
+		order by sse.emp_order,sso.org_name,sse.emp_id
+	</select>
+
+	<!-- pc端组织结构员工列表 -->
+	<select id="orgEmpList" resultType="java.util.HashMap">
+		SELECT
+		sso.org_id,
+		sso.org_name_view org_name,
+		sse.emp_code,
+		sse.emp_id,sse.emp_name,sse.emp_email,
+		psp.p_name,
+		sse.create_date_time,
+		sse.entry_time,
+		sse.emp_work_address,
+		sse.emp_sex,
+		sse.emp_order
+		FROM
+		sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		join sys_sec_org sso on sso.org_id= ssep.team_id
+		
+		left join sys_plat_position psp on ssep.emp_position_id = psp.p_s_p_id 
+
+		<where>
+			
+			1=1
+			<if test="mapParam.org_id!=null and mapParam.org_id!=''">
+				and sso.org_id = #{mapParam.org_id}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreConditionForFriendEmp" />
+		</where>
+      order by sse.emp_order,sse.emp_id ,sso.org_name
+	</select>
+	
+	
+	<!-- pc端组织结构员工列表 -->
+	<select id="orgEmpListByOrgName" resultType="java.util.HashMap">
+		SELECT
+		sso.org_id,
+		sso.org_name_view org_name,
+		sse.emp_code,
+		sse.emp_id,sse.emp_name,sse.emp_email,
+		psp.p_name,
+		sse.create_date_time,
+		sse.entry_time,
+		sse.emp_work_address,
+		sse.emp_sex,
+		sse.emp_order
+		FROM
+		sys_sec_emp sse
+		join sys_sec_emp_position ssep on ssep.emp_id=sse.emp_id
+		join sys_sec_org sso on sso.org_id= ssep.team_id
+		
+		left join sys_plat_position psp on ssep.emp_position_id = psp.p_s_p_id 
+
+		<where>
+			
+			1=1
+			
+			
+			<if test="mapParam.org_id!=null and mapParam.org_id!=''">
+				and sso.org_id = #{mapParam.org_id}
+			</if>
+			<if test="mapParam.parent_org_id!=null and mapParam.parent_org_id!=''">
+				and sso.parent_org_id = #{mapParam.parent_org_id} or sso.org_id=#{mapParam.parent_org_id}
+			</if>
+			<if test="mapParam.is_first_org!=null and mapParam.is_first_org!=''">
+				and ssep.is_first_org = #{mapParam.is_first_org}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreConditionForFriendEmp" />
+		</where>
+      order by sse.emp_order,sse.emp_id ,sso.org_name
+	</select>
+	<!-- 云盘获取员工列表 -->
+	<select id="ypEmpList" resultType="java.util.HashMap">
+		SELECT
+		sso.org_id,
+		sse.emp_id,
+		sse.emp_name,
+		sse.emp_email,
+		sse.emp_sex,
+		sse.emp_enabled,
+		sse.emp_active
+		FROM
+		sys_sec_emp sse
+		LEFT join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		LEFT join sys_sec_org sso on sso.org_id= ssep.team_id
+		
+		left join sys_plat_position psp on ssep.emp_position_id = psp.p_s_p_id
+
+      order by sse.emp_order,sso.org_name
+	</select>
+
+	<delete id="friendDeleteIn">
+		DELETE FROM emp_contacts_friend
+		<where>
+			<if test="empId != null">
+				emp_id = #{empId} AND
+			</if>
+
+			friend_emp_id IN
+			<foreach collection="friendEmpIdArr" item="friendEmpId" open="("
+				separator="," close=")">
+				#{friendEmpId}
+			</foreach>
+
+		</where>
+	</delete>
+
+	<!--导出员工信息到本地 -->
+	<select id="exportEmpToExcel" resultType="map">
+		SELECT
+		sse.emp_code,sse.emp_name,sso.org_name_view org_name,psp.p_name,sse.create_date_time,sse.emp_email,sse.emp_sex,sse.emp_work_address
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1' AND
+		sec_delete_flag = '0') sso ON sso.org_id =
+		ssep.org_id /*组织机构-部门*/
+		LEFT JOIN (SELECT * FROM sys_plat_position WHERE
+		p_status = '1') psp ON
+		psp.p_s_p_id = ssep.emp_position_id
+		/*职位*/
+
+		<where>
+			emp_id IN
+			<foreach collection="empIdArr" item="empId" open="("
+				separator="," close=")">
+				#{empId}
+			</foreach>
+		</where>
+		order by sse.emp_order,sso.org_name
+	</select>
+
+	<select id="getWorkRedeploy" parameterType="string" resultType="map">
+		SELECT
+		sswr.work_redeploy_id,sso.org_name_view org_name,psp.p_name,sswr.create_date_time,sswr.end_date_time,sswr.redeploy_content
+		FROM sys_work_redeploy sswr
+		LEFT JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1' AND
+		sec_delete_flag = '0') sso ON sso.org_id =
+		sswr.org_id /*组织机构-部门*/
+		LEFT JOIN (SELECT * FROM sys_plat_position
+		WHERE p_status = '1') psp
+		ON psp.p_s_p_id = sswr.emp_position_id /*职位*/
+		<where>
+			<if test="_parameter != null">
+				sswr.emp_id = #{empId}
+			</if>
+		</where>
+	</select>
+
+	<!--APP端 根据员工的ID 统计常用联系人 的数目 -->
+	<select id="contactsCount" parameterType="string" resultType="java.lang.Integer">
+		SELECT COUNT(sse.emp_id) FROM sys_sec_emp sse
+		LEFT JOIN emp_contacts_friend ecf ON
+		sse.emp_id = ecf.friend_emp_id
+		<where>
+        ecf.emp_status='1' AND sse.emp_enabled='1'
+			<if test="empId != null">
+        AND   ecf.emp_id=#{empId}
+			</if>
+			<if test="status != null and status!=''">
+       AND sse.emp_active = #{status} 
+			</if>
+		</where>
+
+		<!-- SELECT COUNT(ecf.friend_emp_id) FROM emp_contacts_friend ecf LEFT 
+			JOIN sys_sec_emp sse ON sse.emp_id = ecf.friend_emp_id <where> sse.emp_enabled 
+			='1' <if test="empId != null"> AND ecf.emp_id = #{empId} /*根据员工的ID查询常用联系人的数目*/ 
+			</if> <if test="status != null and status!=''"> AND sse.emp_active = #{status} 
+			/*根据选择查询在职员工还是离职员工*/ </if> </where> -->
+	</select>
+
+
+	<!-- APP端 常用联系人列表 -->
+	<select id="friendList" parameterType="map" resultType="map">
+		SELECT
+		sse.emp_id,sse.emp_name,sse.emp_code,sse.emp_head_photo,sso.org_name_view org_name,sse.emp_order,sse.emp_enabled,sse.emp_active,sse.emp_sl,sse.emp_py,UPPER(SUBSTRING(sse.emp_py,1,1)) AS emp_first_py
+		FROM sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+		JOIN (SELECT * FROM sys_sec_org WHERE
+		sec_enabled = '1') sso ON
+		sso.org_id = ssep.team_id
+		/*查询员工ID,员工姓名,员工的头像地址,员工所属的主部门*/
+		LEFT JOIN (SELECT * FROM
+		emp_contacts_friend WHERE
+		emp_status = '1') ecf ON
+		ecf.friend_emp_id =
+		sse.emp_id
+		<where>
+			ssep.is_first_org = '1' AND sse.emp_enabled ='1'
+			<if test="map.emp_id != null and map.emp_id!=''">
+				AND ecf.emp_id= #{map.emp_id}
+			</if>
+			<if test="map.status != null and map.status!=''">
+				AND sse.emp_active = #{map.status}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreSearchWhere" />
+        ORDER BY sse.emp_py 
+		</where>
+	</select>
+
+
+	<!-- APP端 添加常用联系人 页面初始化 -->
+	<select id="friendSavePage" parameterType="map" resultType="map">
+		SELECT
+		sse.emp_id,sse.emp_name,sse.emp_head_photo,sse.emp_active,sso.org_id,sso.org_name_view org_name,sse.emp_sl,sse.emp_py,UPPER(SUBSTRING(sse.emp_py,1,1)) AS emp_first_py
+		FROM sys_sec_emp sse
+		join sys_sec_emp_position ssep on ssep.emp_id=sse.emp_id
+		JOIN sys_sec_org sso ON
+		sso.org_id =ssep.team_id
+		<where>
+			 sse.emp_enabled ='1'
+			<if test="map.emp_id != null and map.emp_id!=''">
+				AND sse.emp_id NOT IN (SELECT friend_emp_id FROM
+				emp_contacts_friend
+				WHERE emp_id=#{map.emp_id})
+				AND sse.emp_id !=#{map.emp_id}
+			</if>
+			<if test="map.status != null and map.status!=''">
+				AND sse.emp_active = #{map.status}
+			</if>
+			<include refid="com.zrt.contacts.mapping.common.moreSearchWhere" />
+            ORDER BY sse.emp_py 
+		</where>
+	</select>
+
+
+	<!-- pc端根据员工ID查询员工信息  导出-->
+	<select id="selectEmpByEmpId" parameterType="string" resultType="map">
+		SELECT
+		
+		sso.org_name_view org_name,
+		sse.emp_code,
+		sse.emp_id,sse.emp_name,sse.emp_email,
+		spp.p_name,
+		sse.create_date_time,
+		sse.entry_time,
+		sse.emp_work_address,
+		sse.emp_sex,
+		sse.emp_order
+		FROM
+		
+		sys_sec_emp sse
+		join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+        join sys_sec_org sso on sso.org_id= ssep.team_id
+		left join sys_plat_position spp on ssep.emp_position_id = spp.p_s_p_id 
+		<where>
+			1=1
+			<if test="empId != null and empId!=''">
+				AND sse.emp_id = #{empId}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

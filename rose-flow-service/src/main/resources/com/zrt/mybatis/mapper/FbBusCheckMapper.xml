@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FbBusCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FbBusCheck" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+    <result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="CHAR" />
+    <result column="inst_id" property="instId" jdbcType="VARCHAR" />
+    <result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+    <result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="check_type" property="checkType" jdbcType="CHAR" />
+    <result column="check_comment" property="checkComment" jdbcType="VARCHAR" />
+    <result column="old_emp_id" property="oldEmpId" jdbcType="VARCHAR" />
+    <result column="old_emp_name" property="oldEmpName" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="arrive_date_time" property="arriveDateTime" jdbcType="CHAR" />
+    <result column="read_date_time" property="readDateTime" jdbcType="CHAR" />
+    <result column="repeat_flag" property="repeatFlag" jdbcType="CHAR" />
+    <result column="check_date_time" property="checkDateTime" jdbcType="CHAR" />
+    <result column="next_inst_tag" property="nextInstTag" jdbcType="VARCHAR" />
+    <result column="next_inst_tag_name" property="nextInstTagName" jdbcType="VARCHAR" />
+    <result column="check_desc" property="checkDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, parent_id, check_emp_id, check_emp_name, org_id, org_name, check_status, inst_id, 
+    inst_tag, inst_tag_name, create_date_time, update_date_time, check_type, check_comment, 
+    old_emp_id, old_emp_name, task_id, arrive_date_time, read_date_time, repeat_flag, 
+    check_date_time, next_inst_tag, next_inst_tag_name, check_desc
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FbBusCheckExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fb_bus_check
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from fb_bus_check
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fb_bus_check
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FbBusCheckExample" >
+    delete from fb_bus_check
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FbBusCheck" >
+    insert into fb_bus_check (id, parent_id, check_emp_id, 
+      check_emp_name, org_id, org_name, 
+      check_status, inst_id, inst_tag, 
+      inst_tag_name, create_date_time, update_date_time, 
+      check_type, check_comment, old_emp_id, 
+      old_emp_name, task_id, arrive_date_time, 
+      read_date_time, repeat_flag, check_date_time, 
+      next_inst_tag, next_inst_tag_name, check_desc
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{checkEmpId,jdbcType=VARCHAR}, 
+      #{checkEmpName,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, 
+      #{checkStatus,jdbcType=CHAR}, #{instId,jdbcType=VARCHAR}, #{instTag,jdbcType=VARCHAR}, 
+      #{instTagName,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, #{updateDateTime,jdbcType=CHAR}, 
+      #{checkType,jdbcType=CHAR}, #{checkComment,jdbcType=VARCHAR}, #{oldEmpId,jdbcType=VARCHAR}, 
+      #{oldEmpName,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{arriveDateTime,jdbcType=CHAR}, 
+      #{readDateTime,jdbcType=CHAR}, #{repeatFlag,jdbcType=CHAR}, #{checkDateTime,jdbcType=CHAR}, 
+      #{nextInstTag,jdbcType=VARCHAR}, #{nextInstTagName,jdbcType=VARCHAR}, #{checkDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FbBusCheck" >
+    insert into fb_bus_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="checkEmpId != null" >
+        check_emp_id,
+      </if>
+      <if test="checkEmpName != null" >
+        check_emp_name,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="orgName != null" >
+        org_name,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="instId != null" >
+        inst_id,
+      </if>
+      <if test="instTag != null" >
+        inst_tag,
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="checkType != null" >
+        check_type,
+      </if>
+      <if test="checkComment != null" >
+        check_comment,
+      </if>
+      <if test="oldEmpId != null" >
+        old_emp_id,
+      </if>
+      <if test="oldEmpName != null" >
+        old_emp_name,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="arriveDateTime != null" >
+        arrive_date_time,
+      </if>
+      <if test="readDateTime != null" >
+        read_date_time,
+      </if>
+      <if test="repeatFlag != null" >
+        repeat_flag,
+      </if>
+      <if test="checkDateTime != null" >
+        check_date_time,
+      </if>
+      <if test="nextInstTag != null" >
+        next_inst_tag,
+      </if>
+      <if test="nextInstTagName != null" >
+        next_inst_tag_name,
+      </if>
+      <if test="checkDesc != null" >
+        check_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpId != null" >
+        #{checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpName != null" >
+        #{checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=CHAR},
+      </if>
+      <if test="instId != null" >
+        #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="instTag != null" >
+        #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="checkType != null" >
+        #{checkType,jdbcType=CHAR},
+      </if>
+      <if test="checkComment != null" >
+        #{checkComment,jdbcType=VARCHAR},
+      </if>
+      <if test="oldEmpId != null" >
+        #{oldEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="oldEmpName != null" >
+        #{oldEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveDateTime != null" >
+        #{arriveDateTime,jdbcType=CHAR},
+      </if>
+      <if test="readDateTime != null" >
+        #{readDateTime,jdbcType=CHAR},
+      </if>
+      <if test="repeatFlag != null" >
+        #{repeatFlag,jdbcType=CHAR},
+      </if>
+      <if test="checkDateTime != null" >
+        #{checkDateTime,jdbcType=CHAR},
+      </if>
+      <if test="nextInstTag != null" >
+        #{nextInstTag,jdbcType=VARCHAR},
+      </if>
+      <if test="nextInstTagName != null" >
+        #{nextInstTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDesc != null" >
+        #{checkDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FbBusCheckExample" resultType="java.lang.Integer" >
+    select count(*) from fb_bus_check
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fb_bus_check
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null" >
+        parent_id = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkEmpId != null" >
+        check_emp_id = #{record.checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkEmpName != null" >
+        check_emp_name = #{record.checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgName != null" >
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkStatus != null" >
+        check_status = #{record.checkStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.instId != null" >
+        inst_id = #{record.instId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instTag != null" >
+        inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instTagName != null" >
+        inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.checkType != null" >
+        check_type = #{record.checkType,jdbcType=CHAR},
+      </if>
+      <if test="record.checkComment != null" >
+        check_comment = #{record.checkComment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oldEmpId != null" >
+        old_emp_id = #{record.oldEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oldEmpName != null" >
+        old_emp_name = #{record.oldEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        task_id = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.arriveDateTime != null" >
+        arrive_date_time = #{record.arriveDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.readDateTime != null" >
+        read_date_time = #{record.readDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.repeatFlag != null" >
+        repeat_flag = #{record.repeatFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.checkDateTime != null" >
+        check_date_time = #{record.checkDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.nextInstTag != null" >
+        next_inst_tag = #{record.nextInstTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nextInstTagName != null" >
+        next_inst_tag_name = #{record.nextInstTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkDesc != null" >
+        check_desc = #{record.checkDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fb_bus_check
+    set id = #{record.id,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=VARCHAR},
+      check_emp_id = #{record.checkEmpId,jdbcType=VARCHAR},
+      check_emp_name = #{record.checkEmpName,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      check_status = #{record.checkStatus,jdbcType=CHAR},
+      inst_id = #{record.instId,jdbcType=VARCHAR},
+      inst_tag = #{record.instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{record.instTagName,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      check_type = #{record.checkType,jdbcType=CHAR},
+      check_comment = #{record.checkComment,jdbcType=VARCHAR},
+      old_emp_id = #{record.oldEmpId,jdbcType=VARCHAR},
+      old_emp_name = #{record.oldEmpName,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR},
+      arrive_date_time = #{record.arriveDateTime,jdbcType=CHAR},
+      read_date_time = #{record.readDateTime,jdbcType=CHAR},
+      repeat_flag = #{record.repeatFlag,jdbcType=CHAR},
+      check_date_time = #{record.checkDateTime,jdbcType=CHAR},
+      next_inst_tag = #{record.nextInstTag,jdbcType=VARCHAR},
+      next_inst_tag_name = #{record.nextInstTagName,jdbcType=VARCHAR},
+      check_desc = #{record.checkDesc,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FbBusCheck" >
+    update fb_bus_check
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpId != null" >
+        check_emp_id = #{checkEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkEmpName != null" >
+        check_emp_name = #{checkEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=CHAR},
+      </if>
+      <if test="instId != null" >
+        inst_id = #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="instTag != null" >
+        inst_tag = #{instTag,jdbcType=VARCHAR},
+      </if>
+      <if test="instTagName != null" >
+        inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="checkType != null" >
+        check_type = #{checkType,jdbcType=CHAR},
+      </if>
+      <if test="checkComment != null" >
+        check_comment = #{checkComment,jdbcType=VARCHAR},
+      </if>
+      <if test="oldEmpId != null" >
+        old_emp_id = #{oldEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="oldEmpName != null" >
+        old_emp_name = #{oldEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveDateTime != null" >
+        arrive_date_time = #{arriveDateTime,jdbcType=CHAR},
+      </if>
+      <if test="readDateTime != null" >
+        read_date_time = #{readDateTime,jdbcType=CHAR},
+      </if>
+      <if test="repeatFlag != null" >
+        repeat_flag = #{repeatFlag,jdbcType=CHAR},
+      </if>
+      <if test="checkDateTime != null" >
+        check_date_time = #{checkDateTime,jdbcType=CHAR},
+      </if>
+      <if test="nextInstTag != null" >
+        next_inst_tag = #{nextInstTag,jdbcType=VARCHAR},
+      </if>
+      <if test="nextInstTagName != null" >
+        next_inst_tag_name = #{nextInstTagName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDesc != null" >
+        check_desc = #{checkDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FbBusCheck" >
+    update fb_bus_check
+    set parent_id = #{parentId,jdbcType=VARCHAR},
+      check_emp_id = #{checkEmpId,jdbcType=VARCHAR},
+      check_emp_name = #{checkEmpName,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=CHAR},
+      inst_id = #{instId,jdbcType=VARCHAR},
+      inst_tag = #{instTag,jdbcType=VARCHAR},
+      inst_tag_name = #{instTagName,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      check_type = #{checkType,jdbcType=CHAR},
+      check_comment = #{checkComment,jdbcType=VARCHAR},
+      old_emp_id = #{oldEmpId,jdbcType=VARCHAR},
+      old_emp_name = #{oldEmpName,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=VARCHAR},
+      arrive_date_time = #{arriveDateTime,jdbcType=CHAR},
+      read_date_time = #{readDateTime,jdbcType=CHAR},
+      repeat_flag = #{repeatFlag,jdbcType=CHAR},
+      check_date_time = #{checkDateTime,jdbcType=CHAR},
+      next_inst_tag = #{nextInstTag,jdbcType=VARCHAR},
+      next_inst_tag_name = #{nextInstTagName,jdbcType=VARCHAR},
+      check_desc = #{checkDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

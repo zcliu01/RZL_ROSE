@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.SysSecEmpMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.SysSecEmp" >
+    <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="emp_account" property="empAccount" jdbcType="VARCHAR" />
+    <result column="emp_password" property="empPassword" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_sex" property="empSex" jdbcType="CHAR" />
+    <result column="emp_phone" property="empPhone" jdbcType="VARCHAR" />
+    <result column="emp_mobile_phone" property="empMobilePhone" jdbcType="VARCHAR" />
+    <result column="emp_fax" property="empFax" jdbcType="VARCHAR" />
+    <result column="emp_email" property="empEmail" jdbcType="VARCHAR" />
+    <result column="emp_birthday" property="empBirthday" jdbcType="VARCHAR" />
+    <result column="emp_address" property="empAddress" jdbcType="VARCHAR" />
+    <result column="emp_postcode" property="empPostcode" jdbcType="VARCHAR" />
+    <result column="emp_work_address" property="empWorkAddress" jdbcType="VARCHAR" />
+    <result column="emp_head_photo" property="empHeadPhoto" jdbcType="VARCHAR" />
+    <result column="emp_desc" property="empDesc" jdbcType="VARCHAR" />
+    <result column="emp_order" property="empOrder" jdbcType="INTEGER" />
+    <result column="emp_enabled" property="empEnabled" jdbcType="CHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="entry_time" property="entryTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="oper_flag" property="operFlag" jdbcType="CHAR" />
+    <result column="emp_mobile_v" property="empMobileV" jdbcType="VARCHAR" />
+    <result column="emp_email_v" property="empEmailV" jdbcType="VARCHAR" />
+    <result column="emp_active" property="empActive" jdbcType="CHAR" />
+    <result column="emp_message" property="empMessage" jdbcType="VARCHAR" />
+    <result column="emp_sl" property="empSl" jdbcType="VARCHAR" />
+    <result column="emp_py" property="empPy" jdbcType="VARCHAR" />
+    <result column="cer_type" property="cerType" jdbcType="CHAR" />
+    <result column="cer_no" property="cerNo" jdbcType="VARCHAR" />
+    <result column="syn_flag" property="synFlag" jdbcType="CHAR" />
+    <result column="alias_emp_name" property="aliasEmpName" jdbcType="VARCHAR" />
+    <result column="emp_order_mail" property="empOrderMail" jdbcType="INTEGER" />
+    <result column="can_login_type" property="canLoginType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    emp_id, tenant_id, emp_code, emp_account, emp_password, emp_name, emp_sex, emp_phone, 
+    emp_mobile_phone, emp_fax, emp_email, emp_birthday, emp_address, emp_postcode, emp_work_address, 
+    emp_head_photo, emp_desc, emp_order, emp_enabled, create_date_time, entry_time, update_date_time, 
+    oper_flag, emp_mobile_v, emp_email_v, emp_active, emp_message, emp_sl, emp_py, cer_type, 
+    cer_no, syn_flag, alias_emp_name, emp_order_mail, can_login_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.SysSecEmpExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from sys_sec_emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_sec_emp
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_sec_emp
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.SysSecEmpExample" >
+    delete from sys_sec_emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.SysSecEmp" >
+    insert into sys_sec_emp (emp_id, tenant_id, emp_code, 
+      emp_account, emp_password, emp_name, 
+      emp_sex, emp_phone, emp_mobile_phone, 
+      emp_fax, emp_email, emp_birthday, 
+      emp_address, emp_postcode, emp_work_address, 
+      emp_head_photo, emp_desc, emp_order, 
+      emp_enabled, create_date_time, entry_time, 
+      update_date_time, oper_flag, emp_mobile_v, 
+      emp_email_v, emp_active, emp_message, 
+      emp_sl, emp_py, cer_type, 
+      cer_no, syn_flag, alias_emp_name, 
+      emp_order_mail, can_login_type)
+    values (#{empId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, #{empCode,jdbcType=VARCHAR}, 
+      #{empAccount,jdbcType=VARCHAR}, #{empPassword,jdbcType=VARCHAR}, #{empName,jdbcType=VARCHAR}, 
+      #{empSex,jdbcType=CHAR}, #{empPhone,jdbcType=VARCHAR}, #{empMobilePhone,jdbcType=VARCHAR}, 
+      #{empFax,jdbcType=VARCHAR}, #{empEmail,jdbcType=VARCHAR}, #{empBirthday,jdbcType=VARCHAR}, 
+      #{empAddress,jdbcType=VARCHAR}, #{empPostcode,jdbcType=VARCHAR}, #{empWorkAddress,jdbcType=VARCHAR}, 
+      #{empHeadPhoto,jdbcType=VARCHAR}, #{empDesc,jdbcType=VARCHAR}, #{empOrder,jdbcType=INTEGER}, 
+      #{empEnabled,jdbcType=CHAR}, #{createDateTime,jdbcType=CHAR}, #{entryTime,jdbcType=CHAR}, 
+      #{updateDateTime,jdbcType=CHAR}, #{operFlag,jdbcType=CHAR}, #{empMobileV,jdbcType=VARCHAR}, 
+      #{empEmailV,jdbcType=VARCHAR}, #{empActive,jdbcType=CHAR}, #{empMessage,jdbcType=VARCHAR}, 
+      #{empSl,jdbcType=VARCHAR}, #{empPy,jdbcType=VARCHAR}, #{cerType,jdbcType=CHAR}, 
+      #{cerNo,jdbcType=VARCHAR}, #{synFlag,jdbcType=CHAR}, #{aliasEmpName,jdbcType=VARCHAR}, 
+      #{empOrderMail,jdbcType=INTEGER}, #{canLoginType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.SysSecEmp" >
+    insert into sys_sec_emp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="empCode != null" >
+        emp_code,
+      </if>
+      <if test="empAccount != null" >
+        emp_account,
+      </if>
+      <if test="empPassword != null" >
+        emp_password,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="empSex != null" >
+        emp_sex,
+      </if>
+      <if test="empPhone != null" >
+        emp_phone,
+      </if>
+      <if test="empMobilePhone != null" >
+        emp_mobile_phone,
+      </if>
+      <if test="empFax != null" >
+        emp_fax,
+      </if>
+      <if test="empEmail != null" >
+        emp_email,
+      </if>
+      <if test="empBirthday != null" >
+        emp_birthday,
+      </if>
+      <if test="empAddress != null" >
+        emp_address,
+      </if>
+      <if test="empPostcode != null" >
+        emp_postcode,
+      </if>
+      <if test="empWorkAddress != null" >
+        emp_work_address,
+      </if>
+      <if test="empHeadPhoto != null" >
+        emp_head_photo,
+      </if>
+      <if test="empDesc != null" >
+        emp_desc,
+      </if>
+      <if test="empOrder != null" >
+        emp_order,
+      </if>
+      <if test="empEnabled != null" >
+        emp_enabled,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="entryTime != null" >
+        entry_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="operFlag != null" >
+        oper_flag,
+      </if>
+      <if test="empMobileV != null" >
+        emp_mobile_v,
+      </if>
+      <if test="empEmailV != null" >
+        emp_email_v,
+      </if>
+      <if test="empActive != null" >
+        emp_active,
+      </if>
+      <if test="empMessage != null" >
+        emp_message,
+      </if>
+      <if test="empSl != null" >
+        emp_sl,
+      </if>
+      <if test="empPy != null" >
+        emp_py,
+      </if>
+      <if test="cerType != null" >
+        cer_type,
+      </if>
+      <if test="cerNo != null" >
+        cer_no,
+      </if>
+      <if test="synFlag != null" >
+        syn_flag,
+      </if>
+      <if test="aliasEmpName != null" >
+        alias_emp_name,
+      </if>
+      <if test="empOrderMail != null" >
+        emp_order_mail,
+      </if>
+      <if test="canLoginType != null" >
+        can_login_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empAccount != null" >
+        #{empAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="empPassword != null" >
+        #{empPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        #{empSex,jdbcType=CHAR},
+      </if>
+      <if test="empPhone != null" >
+        #{empPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="empMobilePhone != null" >
+        #{empMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="empFax != null" >
+        #{empFax,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmail != null" >
+        #{empEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="empBirthday != null" >
+        #{empBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="empAddress != null" >
+        #{empAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="empPostcode != null" >
+        #{empPostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="empWorkAddress != null" >
+        #{empWorkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="empHeadPhoto != null" >
+        #{empHeadPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="empDesc != null" >
+        #{empDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrder != null" >
+        #{empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="empEnabled != null" >
+        #{empEnabled,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="entryTime != null" >
+        #{entryTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="operFlag != null" >
+        #{operFlag,jdbcType=CHAR},
+      </if>
+      <if test="empMobileV != null" >
+        #{empMobileV,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmailV != null" >
+        #{empEmailV,jdbcType=VARCHAR},
+      </if>
+      <if test="empActive != null" >
+        #{empActive,jdbcType=CHAR},
+      </if>
+      <if test="empMessage != null" >
+        #{empMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="empSl != null" >
+        #{empSl,jdbcType=VARCHAR},
+      </if>
+      <if test="empPy != null" >
+        #{empPy,jdbcType=VARCHAR},
+      </if>
+      <if test="cerType != null" >
+        #{cerType,jdbcType=CHAR},
+      </if>
+      <if test="cerNo != null" >
+        #{cerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="synFlag != null" >
+        #{synFlag,jdbcType=CHAR},
+      </if>
+      <if test="aliasEmpName != null" >
+        #{aliasEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrderMail != null" >
+        #{empOrderMail,jdbcType=INTEGER},
+      </if>
+      <if test="canLoginType != null" >
+        #{canLoginType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.SysSecEmpExample" resultType="java.lang.Integer" >
+    select count(*) from sys_sec_emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_sec_emp
+    <set >
+      <if test="record.empId != null" >
+        emp_id = #{record.empId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empCode != null" >
+        emp_code = #{record.empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empAccount != null" >
+        emp_account = #{record.empAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empPassword != null" >
+        emp_password = #{record.empPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empName != null" >
+        emp_name = #{record.empName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empSex != null" >
+        emp_sex = #{record.empSex,jdbcType=CHAR},
+      </if>
+      <if test="record.empPhone != null" >
+        emp_phone = #{record.empPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empMobilePhone != null" >
+        emp_mobile_phone = #{record.empMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empFax != null" >
+        emp_fax = #{record.empFax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empEmail != null" >
+        emp_email = #{record.empEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empBirthday != null" >
+        emp_birthday = #{record.empBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empAddress != null" >
+        emp_address = #{record.empAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empPostcode != null" >
+        emp_postcode = #{record.empPostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empWorkAddress != null" >
+        emp_work_address = #{record.empWorkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empHeadPhoto != null" >
+        emp_head_photo = #{record.empHeadPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empDesc != null" >
+        emp_desc = #{record.empDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empOrder != null" >
+        emp_order = #{record.empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.empEnabled != null" >
+        emp_enabled = #{record.empEnabled,jdbcType=CHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.entryTime != null" >
+        entry_time = #{record.entryTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.operFlag != null" >
+        oper_flag = #{record.operFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.empMobileV != null" >
+        emp_mobile_v = #{record.empMobileV,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empEmailV != null" >
+        emp_email_v = #{record.empEmailV,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empActive != null" >
+        emp_active = #{record.empActive,jdbcType=CHAR},
+      </if>
+      <if test="record.empMessage != null" >
+        emp_message = #{record.empMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empSl != null" >
+        emp_sl = #{record.empSl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empPy != null" >
+        emp_py = #{record.empPy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cerType != null" >
+        cer_type = #{record.cerType,jdbcType=CHAR},
+      </if>
+      <if test="record.cerNo != null" >
+        cer_no = #{record.cerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.synFlag != null" >
+        syn_flag = #{record.synFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.aliasEmpName != null" >
+        alias_emp_name = #{record.aliasEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empOrderMail != null" >
+        emp_order_mail = #{record.empOrderMail,jdbcType=INTEGER},
+      </if>
+      <if test="record.canLoginType != null" >
+        can_login_type = #{record.canLoginType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_sec_emp
+    set emp_id = #{record.empId,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      emp_code = #{record.empCode,jdbcType=VARCHAR},
+      emp_account = #{record.empAccount,jdbcType=VARCHAR},
+      emp_password = #{record.empPassword,jdbcType=VARCHAR},
+      emp_name = #{record.empName,jdbcType=VARCHAR},
+      emp_sex = #{record.empSex,jdbcType=CHAR},
+      emp_phone = #{record.empPhone,jdbcType=VARCHAR},
+      emp_mobile_phone = #{record.empMobilePhone,jdbcType=VARCHAR},
+      emp_fax = #{record.empFax,jdbcType=VARCHAR},
+      emp_email = #{record.empEmail,jdbcType=VARCHAR},
+      emp_birthday = #{record.empBirthday,jdbcType=VARCHAR},
+      emp_address = #{record.empAddress,jdbcType=VARCHAR},
+      emp_postcode = #{record.empPostcode,jdbcType=VARCHAR},
+      emp_work_address = #{record.empWorkAddress,jdbcType=VARCHAR},
+      emp_head_photo = #{record.empHeadPhoto,jdbcType=VARCHAR},
+      emp_desc = #{record.empDesc,jdbcType=VARCHAR},
+      emp_order = #{record.empOrder,jdbcType=INTEGER},
+      emp_enabled = #{record.empEnabled,jdbcType=CHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      entry_time = #{record.entryTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      oper_flag = #{record.operFlag,jdbcType=CHAR},
+      emp_mobile_v = #{record.empMobileV,jdbcType=VARCHAR},
+      emp_email_v = #{record.empEmailV,jdbcType=VARCHAR},
+      emp_active = #{record.empActive,jdbcType=CHAR},
+      emp_message = #{record.empMessage,jdbcType=VARCHAR},
+      emp_sl = #{record.empSl,jdbcType=VARCHAR},
+      emp_py = #{record.empPy,jdbcType=VARCHAR},
+      cer_type = #{record.cerType,jdbcType=CHAR},
+      cer_no = #{record.cerNo,jdbcType=VARCHAR},
+      syn_flag = #{record.synFlag,jdbcType=CHAR},
+      alias_emp_name = #{record.aliasEmpName,jdbcType=VARCHAR},
+      emp_order_mail = #{record.empOrderMail,jdbcType=INTEGER},
+      can_login_type = #{record.canLoginType,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.SysSecEmp" >
+    update sys_sec_emp
+    <set >
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        emp_code = #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empAccount != null" >
+        emp_account = #{empAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="empPassword != null" >
+        emp_password = #{empPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        emp_sex = #{empSex,jdbcType=CHAR},
+      </if>
+      <if test="empPhone != null" >
+        emp_phone = #{empPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="empMobilePhone != null" >
+        emp_mobile_phone = #{empMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="empFax != null" >
+        emp_fax = #{empFax,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmail != null" >
+        emp_email = #{empEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="empBirthday != null" >
+        emp_birthday = #{empBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="empAddress != null" >
+        emp_address = #{empAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="empPostcode != null" >
+        emp_postcode = #{empPostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="empWorkAddress != null" >
+        emp_work_address = #{empWorkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="empHeadPhoto != null" >
+        emp_head_photo = #{empHeadPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="empDesc != null" >
+        emp_desc = #{empDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrder != null" >
+        emp_order = #{empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="empEnabled != null" >
+        emp_enabled = #{empEnabled,jdbcType=CHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="entryTime != null" >
+        entry_time = #{entryTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="operFlag != null" >
+        oper_flag = #{operFlag,jdbcType=CHAR},
+      </if>
+      <if test="empMobileV != null" >
+        emp_mobile_v = #{empMobileV,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmailV != null" >
+        emp_email_v = #{empEmailV,jdbcType=VARCHAR},
+      </if>
+      <if test="empActive != null" >
+        emp_active = #{empActive,jdbcType=CHAR},
+      </if>
+      <if test="empMessage != null" >
+        emp_message = #{empMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="empSl != null" >
+        emp_sl = #{empSl,jdbcType=VARCHAR},
+      </if>
+      <if test="empPy != null" >
+        emp_py = #{empPy,jdbcType=VARCHAR},
+      </if>
+      <if test="cerType != null" >
+        cer_type = #{cerType,jdbcType=CHAR},
+      </if>
+      <if test="cerNo != null" >
+        cer_no = #{cerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="synFlag != null" >
+        syn_flag = #{synFlag,jdbcType=CHAR},
+      </if>
+      <if test="aliasEmpName != null" >
+        alias_emp_name = #{aliasEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrderMail != null" >
+        emp_order_mail = #{empOrderMail,jdbcType=INTEGER},
+      </if>
+      <if test="canLoginType != null" >
+        can_login_type = #{canLoginType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.SysSecEmp" >
+    update sys_sec_emp
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      emp_code = #{empCode,jdbcType=VARCHAR},
+      emp_account = #{empAccount,jdbcType=VARCHAR},
+      emp_password = #{empPassword,jdbcType=VARCHAR},
+      emp_name = #{empName,jdbcType=VARCHAR},
+      emp_sex = #{empSex,jdbcType=CHAR},
+      emp_phone = #{empPhone,jdbcType=VARCHAR},
+      emp_mobile_phone = #{empMobilePhone,jdbcType=VARCHAR},
+      emp_fax = #{empFax,jdbcType=VARCHAR},
+      emp_email = #{empEmail,jdbcType=VARCHAR},
+      emp_birthday = #{empBirthday,jdbcType=VARCHAR},
+      emp_address = #{empAddress,jdbcType=VARCHAR},
+      emp_postcode = #{empPostcode,jdbcType=VARCHAR},
+      emp_work_address = #{empWorkAddress,jdbcType=VARCHAR},
+      emp_head_photo = #{empHeadPhoto,jdbcType=VARCHAR},
+      emp_desc = #{empDesc,jdbcType=VARCHAR},
+      emp_order = #{empOrder,jdbcType=INTEGER},
+      emp_enabled = #{empEnabled,jdbcType=CHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      entry_time = #{entryTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      oper_flag = #{operFlag,jdbcType=CHAR},
+      emp_mobile_v = #{empMobileV,jdbcType=VARCHAR},
+      emp_email_v = #{empEmailV,jdbcType=VARCHAR},
+      emp_active = #{empActive,jdbcType=CHAR},
+      emp_message = #{empMessage,jdbcType=VARCHAR},
+      emp_sl = #{empSl,jdbcType=VARCHAR},
+      emp_py = #{empPy,jdbcType=VARCHAR},
+      cer_type = #{cerType,jdbcType=CHAR},
+      cer_no = #{cerNo,jdbcType=VARCHAR},
+      syn_flag = #{synFlag,jdbcType=CHAR},
+      alias_emp_name = #{aliasEmpName,jdbcType=VARCHAR},
+      emp_order_mail = #{empOrderMail,jdbcType=INTEGER},
+      can_login_type = #{canLoginType,jdbcType=INTEGER}
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+</mapper>

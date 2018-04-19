@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.flow.mapper.act.RoleUserMapper">
+	<!--获取审批角色的所有审批人员-->
+	<select id="roleUserList"  resultType="java.util.HashMap">
+	    SELECT
+			fbur.emp_id ,
+			fbur.role_id
+		FROM
+			fb_bus_role fbr left join fb_bus_user_role fbur
+			on fbr.role_id=fbur.role_id
+			<where>
+				<if  test="idArr != null and idArr !=''">
+					 fbr.role_code IN
+		            <foreach collection="idArr" item="id" open="(" separator="," close=")">
+                     #{id}
+		            </foreach>
+				</if>
+			</where>
+	</select>
+	
+	
+</mapper>

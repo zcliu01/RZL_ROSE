@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.contacts.mapper.friendgroup.FriendGroupCustomMapper">
+
+	<!-- PC端 我的群组列表 -->
+	<select id="selectFriendGroupTree" resultType="map">
+		SELECT  DISTINCT(ecfg.friend_group_id),ecfg.friend_group_name,ecfg.friend_group_type
+		FROM
+		emp_contacts_friend_group ecfg
+		LEFT JOIN emp_contacts_group_member ecgm
+		ON
+		ecfg.friend_group_id=ecgm.friend_group_id
+
+		<where>
+			ecfg.friend_group_status='1'
+			and ecfg.create_emp_id=#{map.emp_id}
+			AND ecgm.member_status='1'
+			<if test="map.friend_group_type != null">
+				AND ecfg.friend_group_type = #{map.friend_group_type}
+			</if>
+			ORDER BY ecfg.create_date_time desc
+		</where>
+	</select>
+
+	<!-- app端组织通讯录 首页查询我的群组个数 -->
+	<select id="friendGroupCount" parameterType="string" resultType="integer">
+		SELECT COUNT(ecfg.friend_group_id) FROM emp_contacts_friend_group ecfg
+		LEFT JOIN emp_contacts_group_member ecgm ON
+		ecfg.friend_group_id=ecgm.friend_group_id
+		<where>
+			ecfg.friend_group_status='1' AND ecgm.member_status='1'
+			<if test="empId != null and empId !=''">
+				AND ecgm.emp_id = #{empId}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- APP端 根据员工ID 查询 我创建 的群组 -->
+	<select id="selectCreateGroupByCreateEmpId" resultType="map">
+		SELECT
+		ecfg.friend_group_id,ecfg.friend_group_name,ecfg.friend_group_head_photo,COUNT(ecgm.emp_id)
+		AS member_quantity,ecfg.friend_group_desc
+		FROM
+		emp_contacts_friend_group ecfg
+		left join emp_contacts_group_member ecgm
+		On
+		ecfg.friend_group_id = ecgm.friend_group_id
+		left join sys_sec_emp sse
+		ON
+		sse.emp_id = ecgm.emp_id
+		<where>
+			ecfg.friend_group_status = '1' and sse.emp_enabled='1'
+
+			<if test="map.emp_id != null and map.emp_id !=''">
+				AND ecfg.create_emp_id = #{map.emp_id}
+			</if>
+			<if test="map.status != null and map.status !=''">
+				AND sse.emp_active = #{map.status}
+			</if>
+			group by ecfg.friend_group_id
+			ORDER BY ecfg.create_date_time desc
+		</where>
+	</select>
+
+	<!-- APP端 根据员工ID 查询 我加入 的群组 -->
+	<select id="selectJoinGroupByEmpId" resultType="map">
+		SELECT
+		ecgm1.friend_group_id,ecfg.friend_group_name,ecfg.friend_group_head_photo,ecfg.friend_group_desc,COUNT(ecgm1.emp_id)
+		AS member_quantity
+		FROM emp_contacts_group_member ecgm1
+		LEFT JOIN
+		emp_contacts_friend_group ecfg ON
+		ecfg.friend_group_id=ecgm1.friend_group_id
+		LEFT JOIN (select * from
+		sys_sec_emp where emp_enabled='1') sse ON
+		sse.emp_id = ecgm1.emp_id
+
+		<where>
+			<if test="map.status!=null and map.status!=''">
+				sse.emp_active = #{map.status}
+			</if>
+			<if test="map.emp_id!=null and map.emp_id!=''">
+				AND ecgm1.friend_group_id IN
+				(SELECT ecgm.friend_group_id
+				FROM emp_contacts_group_member ecgm
+				WHERE ecgm.emp_id= #{map.emp_id}
+				AND
+				ecgm.member_status='1' AND ecgm.member_level IN ('2','3') )
+				GROUP
+				BY ecgm1.friend_group_id
+				ORDER BY ecfg.create_date_time desc
+			</if>
+
+		</where>
+	</select>
+	<!-- APP端/pc端 公司群组列表 -->
+	<select id="selectCompanyGroupList" resultType="map">
+		SELECT
+		ecfg.friend_group_id,ecfg.friend_group_name,ecfg.friend_group_head_photo,ecfg.friend_group_desc,COUNT(ecgm1.emp_id)
+		AS member_quantity
+		FROM emp_contacts_group_member ecgm1
+		LEFT JOIN
+		emp_contacts_friend_group ecfg ON
+		ecfg.friend_group_id=ecgm1.friend_group_id
+		LEFT JOIN sys_sec_emp sse ON
+		sse.emp_id= ecgm1.emp_id
+		<where>
+			ecfg.friend_group_status='1' AND ecfg.friend_group_type='2' and
+			sse.emp_enabled='1'
+			<if test="map.status != null and map.status !=''">
+				AND sse.emp_active = #{map.status}
+			</if>
+			GROUP
+			BY ecfg.friend_group_id
+			ORDER BY ecfg.create_date_time desc
+		</where>
+	</select>
+	<!--APP端 群组搜索 -->
+	<select id="selectGroupBySearch" resultType="map">
+		SELECT ecfg.friend_group_id,ecfg.friend_group_name,COUNT(ecgm.emp_id)
+		as member_quantity,ecfg.friend_group_head_photo,ecfg.friend_group_desc
+		FROM emp_contacts_friend_group ecfg
+		LEFT JOIN emp_contacts_group_member
+		ecgm ON
+		ecgm.friend_group_id = ecfg.friend_group_id
+		LEFT JOIN
+		(select *
+		from sys_sec_emp where emp_enabled='1') sse ON
+		sse.emp_id=ecgm.emp_id
+		<where>
+			<if test="map.status != null and map.status !=''">
+				sse.emp_active = #{map.status}
+			</if>
+			<if test="map.search!=null and map.search!=''">
+				AND friend_group_name LIKE CONCAT('%',#{map.search},'%')
+			</if>
+			GROUP BY ecfg.friend_group_id
+			ORDER BY ecfg.create_date_time desc
+		</where>
+	</select>
+
+	<!-- APP端 获取群组详情 (包括员工头像+员工姓名) -->
+	<select id="selectGroupDetails" parameterType="map" resultType="map">
+		SELECT sse.emp_id,sse.emp_name,sse.emp_head_photo,sse.emp_active from
+		sys_sec_emp sse
+		LEFT JOIN emp_contacts_group_member ecfm ON
+		ecfm.emp_id
+		= sse.emp_id
+
+		<where>
+			<if test="map.friend_group_id!= null and map.friend_group_id!=''">
+				ecfm.friend_group_id = #{map.friend_group_id}
+			</if>
+			<if test="map.status != null and map.status !=''">
+				AND sse.emp_active = #{map.status}
+			</if>
+			AND sse.emp_enabled ='1' order by ecfm.member_level
+
+		</where>
+	</select>
+
+	<!-- 添加群组成员时，成员数量+1 -->
+	<update id="addMemberQuantity">
+		UPDATE emp_contacts_friend_group SET member_quantity =
+		member_quantity+'1'
+		<where>
+			<if test="friendGroupId!=null and friendGroupId!=''">
+				friend_group_id=#{friendGroupId}
+			</if>
+		</where>
+	</update>
+	<update id="addAllMemberQuantity">
+		UPDATE emp_contacts_friend_group SET member_quantity =
+		member_quantity+#{memberCount}
+		<where>
+			<if test="friendGroupId!=null and friendGroupId!=''">
+				friend_group_id=#{friendGroupId}
+			</if>
+		</where>
+	</update>
+
+	<!-- 删除群组成员时，成员数量-1 -->
+	<update id="subtractMemberQuantity">
+		UPDATE emp_contacts_friend_group SET member_quantity =
+		member_quantity-'1'
+		<where>
+			<if test="friendGroupId!=null and friendGroupId!=''">
+				friend_group_id=#{friendGroupId}
+			</if>
+		</where>
+	</update>
+
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.contacts.mapper.role.SysSecRoleCustomMapper">
+
+	<!-- 查询当前用户是否有系统管理员的角色 -->
+	<select id="selectIsNotSysAd" resultType="map">
+		select ssur.role_id,ssr.sec_sys_flag from sys_sec_role ssr
+		left join sys_sec_user_role ssur ON
+		ssur.role_id=ssr.role_id
+		WHERE ssr.sec_sys_flag='1'  and ssur.emp_id IN
+		<foreach collection="empIdArr" item="emp_id" open="("
+			separator="," close=")">
+			#{emp_id}
+		</foreach>
+		
+	</select>
+
+</mapper>

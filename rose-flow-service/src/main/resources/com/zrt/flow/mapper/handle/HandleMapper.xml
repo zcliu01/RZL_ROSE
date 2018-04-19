@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.flow.mapper.handle.HandleMapper">
+	
+	<!--审批详情-->
+	<select id="getFlowDetail" resultMap="flowDetailResultMap">
+		SELECT
+			  fi.id inst_id,
+			  fi.fb_id,
+			  fi.fb_title,
+			  fi.fb_content,
+			  fi.apply_id,
+			  fi.apply_name,
+			  fi.org_id,
+			  fi.org_name,
+			  fi.start_date_time,
+			  fi.inst_status,
+			  fb.t_code,
+			  fb.t_name,
+			  fb.t_desc,
+			  fb.project_flag,
+			  fb.handle_flag,
+			  fm.id fm_id,
+			  fm.t_name fm_name,
+			  fr.check_id rel_check_id,
+			  fr.rel_id rel_id,
+			  fr.rel_name,
+			  fr.rel_type,
+			  fr.fb_type as fr_fb_type,
+			  ff.check_id file_check_id,
+			  ff.file_url,
+			  ff.file_name,
+			  ff.file_type,
+			  ff.node_id,
+			  ff.file_order,
+			  ff.fb_type as ff_fb_type,
+			  pjt.project_code,
+			  pjt.project_name,
+			  pjt.fund_code,
+			  fc.id check_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.old_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.check_emp_id
+			    END
+			  )AS check_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.old_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.check_emp_name
+			    END
+			  )AS check_emp_name,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.check_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.old_emp_id
+			    END
+			  )AS ented_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.check_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.old_emp_name
+			    END
+			  )AS ented_emp_name,
+			  fc.org_id as check_org_id,
+			  fc.org_name as check_org_name,
+			  fc.check_status,
+			  fc.check_type,
+			  fc.check_comment,
+			  fc.arrive_date_time,
+			  fc.read_date_time,
+			  fc.create_date_time,
+			  fc.check_date_time,
+			  fc.inst_tag,
+			  fc.inst_tag_name
+
+		FROM
+			fb_bus_inst fi
+		JOIN fb_bus_template fb ON fi.fb_id = fb.id
+		JOIN fb_bus_fm bm ON fb.id = bm.fb_id
+		JOIN fm_bus_template fm ON bm.fm_id = fm.id
+		LEFT JOIN fb_bus_file ff ON fi.id = ff.inst_id
+		LEFT JOIN fb_bus_relevance fr ON fi.id = fr.inst_id
+		LEFT JOIN fb_bus_project pjt ON fi.id = pjt.inst_id
+		LEFT JOIN (select * from fb_bus_check where check_status is not null) fc ON fi.id = fc.inst_id
+		WHERE fi.id=#{inst_id} 
+		order by fc.arrive_date_time, fc.check_date_time,file_order
+	</select>
+	
+	<select id="doList" resultMap="flowDetailResultMap">
+		SELECT
+			  fi.id inst_id,
+			  fi.fb_id,
+			  fi.fb_title,
+			  fi.fb_content,
+			  fi.apply_id,
+			  fi.apply_name,
+			  fi.org_id,
+			  fi.org_name,
+			  fi.start_date_time,
+			  fi.inst_status,
+			  fb.t_code,
+			  fb.t_name,
+			  fb.t_desc,
+			  fb.project_flag,
+			  fb.handle_flag,
+			  fm.id fm_id,
+			  fm.t_name fm_name,
+			  fr.check_id rel_check_id,
+			  fr.rel_id rel_id,
+			  fr.rel_name,
+			  fr.rel_type,
+			  fr.fb_type as fr_fb_type,
+			  ff.check_id file_check_id,
+			  ff.file_url,
+			  ff.file_name,
+			  ff.file_type,
+			  ff.node_id,
+			  ff.file_order,
+			  ff.fb_type as ff_fb_type,
+			  pjt.project_code,
+			  pjt.project_name,
+			  pjt.fund_code,
+			  fc.id check_id,
+			   (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.old_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.check_emp_id
+			    END
+			  )AS check_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.old_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.check_emp_name
+			    END
+			  )AS check_emp_name,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_id IS  NOT NULL)
+			      THEN fc.check_emp_id
+			      WHEN (fc.old_emp_id IS  NULL )
+			      THEN fc.old_emp_id
+			    END
+			  )AS ented_emp_id,
+			  (
+			    CASE
+			      WHEN (fc.old_emp_name IS  NOT NULL)
+			      THEN fc.check_emp_name
+			      WHEN (fc.old_emp_name IS   NULL )
+			      THEN fc.old_emp_name
+			    END
+			  )AS ented_emp_name,
+			  fc.org_id as check_org_id,
+			  fc.org_name as check_org_name,
+			  fc.check_status,
+			  fc.check_type,
+			  fc.check_comment,
+			  fc.arrive_date_time,
+			  fc.read_date_time,
+			  fc.create_date_time,
+			  fc.check_date_time,
+			  fc.inst_tag,
+			  fc.inst_tag_name,
+			  fc.task_id
+
+		FROM
+			fb_bus_inst fi
+		JOIN fb_bus_template fb ON fi.fb_id = fb.id
+		JOIN fb_bus_fm bm ON fb.id = bm.fb_id
+		JOIN fm_bus_template fm ON bm.fm_id = fm.id
+		LEFT JOIN fb_bus_file ff ON fi.id = ff.inst_id
+		LEFT JOIN fb_bus_relevance fr ON fi.id = fr.inst_id
+		LEFT JOIN fb_bus_project pjt ON fi.id = pjt.inst_id
+		LEFT JOIN (select * from fb_bus_check where check_status is  null) fc ON fi.id = fc.inst_id
+		WHERE fi.id=#{inst_id} 
+		order by fc.arrive_date_time, fc.check_date_time,file_order
+	</select>
+	
+	<!--流程实例设置过的委托 -->
+	<select id="fbEntListByInst" resultType="java.util.HashMap">
+       	SELECT
+			fe.id ent_id,
+			fe.check_emp_id entrust_id,
+			fe.check_emp_name entrust_name,
+			fe.ent_emp_id entrusted_id,
+			fe.ent_emp_name entrusted_name,
+			fe.create_date_time,
+			fb.id fb_id,
+			fb.t_code,
+			fb.t_name,
+			fb.t_desc,
+			t1.id t_type_id,
+			t1.t_name t_type_name,
+			t2.id parent_t_type_id,
+			t2.t_name parent_t_type_name,
+			fm.id fm_id,
+			fm.t_name fm_name
+		FROM fb_bus_inst fbi
+			
+		JOIN fb_bus_template fb ON fbi.fb_id = fb.id
+		join fb_bus_entrust fe ON fe.fb_code = fb.t_code
+		JOIN fb_bus_type t1 ON fb.f_b_t_id = t1.id
+		JOIN fb_bus_type t2 ON fb.parent_id = t2.id
+		 JOIN fb_bus_fm bm ON fb.id = bm.fb_id
+		 JOIN fm_bus_template fm ON fm.id = bm.fm_id
+		WHERE
+			 fb.t_enabled='2' and fe.ent_enabled='1'
+			 and fbi.id=#{inst_id}
+	</select>
+	<resultMap id="flowDetailResultMap" type="com.zrt.flow.domain.InstDomain" >
+		<id column="inst_id" property="id" jdbcType="VARCHAR" />
+		<result column="fb_id" property="fbId" jdbcType="VARCHAR" />
+		<result column="fb_title" property="fbTitle" jdbcType="VARCHAR" />
+		<result column="fb_content" property="fbContent" jdbcType="VARCHAR" />
+		<result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+		<result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+		<result column="org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="start_date_time" property="startDateTime" jdbcType="VARCHAR" />
+		<result column="inst_status" property="instStatus" jdbcType="CHAR" />
+		<association property="fbDomain" javaType="com.zrt.flow.domain.FbBusTemplateDomain">
+			<id column="fb_id" property="id" jdbcType="VARCHAR" />
+			<result column="t_code" property="tCode" jdbcType="VARCHAR" />
+			<result column="t_name" property="tName" jdbcType="VARCHAR" />
+			<result column="t_desc" property="tDesc" jdbcType="VARCHAR" />
+			<result column="project_flag" property="projectFlag" jdbcType="VARCHAR" />
+			<result column="handle_flag" property="handleFlag" jdbcType="VARCHAR" />
+			<association property="bm" javaType="com.zrt.flow.domain.FbBusFmKeyDomain">
+				<association property="fmDomain" javaType="com.zrt.flow.domain.FmBusTemplateDomain">
+					<id column="fm_id" property="id" jdbcType="VARCHAR" />
+					<result column="fm_name" property="tName" jdbcType="VARCHAR" />
+				</association>
+			</association>
+		</association>
+		<collection property="fileList" ofType="com.zrt.flow.domain.FileDomain">
+			<result column="file_check_id" property="checkId" jdbcType="VARCHAR" />
+			<result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+			<result column="file_type" property="fileType" jdbcType="CHAR" />
+			<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+			<result column="ff_fb_type" property="fbType" jdbcType="CHAR" />
+			<result column="node_id" property="nodeId" jdbcType="CHAR" />
+			<result column="file_order" property="fileOrder" jdbcType="INTEGER" />
+		</collection>
+		<collection property="relList" ofType="com.zrt.flow.domain.RelevanceDomain">
+			<result column="rel_check_id" property="checkId" jdbcType="VARCHAR" />
+			<result column="rel_id" property="relId" jdbcType="VARCHAR" />
+			<result column="rel_type" property="relType" jdbcType="CHAR" />
+			<result column="rel_name" property="relName" jdbcType="VARCHAR" />
+			<result column="fr_fb_type" property="fbType" jdbcType="CHAR" />
+		</collection>
+		<collection property="projectList" ofType="com.zrt.flow.domain.ProjectDomain">
+			<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+			<result column="project_name" property="projectName" jdbcType="CHAR" />
+			<result column="fund_code" property="fundCode" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="checkList" ofType="com.zrt.flow.domain.CheckDomain">
+			<id column="check_id" property="id" jdbcType="VARCHAR" />
+			<result column="check_emp_id" property="checkEmpId" jdbcType="VARCHAR" />
+			<result column="check_emp_name" property="checkEmpName" jdbcType="VARCHAR" />
+			<result column="check_org_id" property="orgId" jdbcType="VARCHAR" />
+			<result column="check_org_name" property="orgName" jdbcType="VARCHAR" />
+			<result column="check_status" property="checkStatus" jdbcType="CHAR" />
+			<result column="check_type" property="checkType" jdbcType="CHAR" />
+			<result column="check_comment" property="checkComment" jdbcType="VARCHAR" />
+			<result column="arrive_date_time" property="arriveDateTime" jdbcType="CHAR" />
+			<result column="read_date_time" property="readDateTime" jdbcType="CHAR" />
+			<result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+			<result column="inst_tag" property="instTag" jdbcType="VARCHAR" />
+			<result column="inst_tag_name" property="instTagName" jdbcType="VARCHAR" />
+			<result column="check_date_time" property="checkDateTime" jdbcType="CHAR" />
+			<result column="ented_emp_id" property="entedEmpId" jdbcType="VARCHAR" />
+			<result column="ented_emp_name" property="entedEmpName" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	
+	
+</mapper>

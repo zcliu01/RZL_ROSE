@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FbBusTemplateNotifyMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FbBusTemplateNotify" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="t_code" property="tCode" jdbcType="VARCHAR" />
+    <result column="notify_emp_id" property="notifyEmpId" jdbcType="VARCHAR" />
+    <result column="notify_emp_name" property="notifyEmpName" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, t_code, notify_emp_id, notify_emp_name, create_date_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotifyExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fb_bus_template_notify
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from fb_bus_template_notify
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fb_bus_template_notify
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotifyExample" >
+    delete from fb_bus_template_notify
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotify" >
+    insert into fb_bus_template_notify (id, t_code, notify_emp_id, 
+      notify_emp_name, create_date_time)
+    values (#{id,jdbcType=VARCHAR}, #{tCode,jdbcType=VARCHAR}, #{notifyEmpId,jdbcType=VARCHAR}, 
+      #{notifyEmpName,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotify" >
+    insert into fb_bus_template_notify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tCode != null" >
+        t_code,
+      </if>
+      <if test="notifyEmpId != null" >
+        notify_emp_id,
+      </if>
+      <if test="notifyEmpName != null" >
+        notify_emp_name,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tCode != null" >
+        #{tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyEmpId != null" >
+        #{notifyEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyEmpName != null" >
+        #{notifyEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotifyExample" resultType="java.lang.Integer" >
+    select count(*) from fb_bus_template_notify
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fb_bus_template_notify
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tCode != null" >
+        t_code = #{record.tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notifyEmpId != null" >
+        notify_emp_id = #{record.notifyEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notifyEmpName != null" >
+        notify_emp_name = #{record.notifyEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fb_bus_template_notify
+    set id = #{record.id,jdbcType=VARCHAR},
+      t_code = #{record.tCode,jdbcType=VARCHAR},
+      notify_emp_id = #{record.notifyEmpId,jdbcType=VARCHAR},
+      notify_emp_name = #{record.notifyEmpName,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotify" >
+    update fb_bus_template_notify
+    <set >
+      <if test="tCode != null" >
+        t_code = #{tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyEmpId != null" >
+        notify_emp_id = #{notifyEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyEmpName != null" >
+        notify_emp_name = #{notifyEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FbBusTemplateNotify" >
+    update fb_bus_template_notify
+    set t_code = #{tCode,jdbcType=VARCHAR},
+      notify_emp_id = #{notifyEmpId,jdbcType=VARCHAR},
+      notify_emp_name = #{notifyEmpName,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

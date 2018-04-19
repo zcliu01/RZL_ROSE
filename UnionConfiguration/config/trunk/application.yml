@@ -1,0 +1,15 @@
+#you can config the application in application.properties or application.yml
+spring:
+  cloud:
+    inetutils:
+      ignoredInterfaces:
+        - docker0
+        - veth.*
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      prefix: access_log
+      suffix: .log
+      directory: /var/log/
+      pattern: '%h "%{X-Forwarded-For}i" %t "%r" eTy[%{x-event-type}o] eId[%{x-event-id}o] eCd[%{x-event-code}o] coo[%{userName}c] %s %b "%{Referer}i" "%{User-Agent}i"'

@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FmBusDicMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FmBusDic" >
+    <id column="col_code" property="colCode" jdbcType="VARCHAR" />
+    <result column="col_name" property="colName" jdbcType="VARCHAR" />
+    <result column="col_enabled" property="colEnabled" jdbcType="CHAR" />
+    <result column="col_type" property="colType" jdbcType="VARCHAR" />
+    <result column="col_group" property="colGroup" jdbcType="VARCHAR" />
+    <result column="col_value" property="colValue" jdbcType="VARCHAR" />
+    <result column="cue_value" property="cueValue" jdbcType="VARCHAR" />
+    <result column="req_flag" property="reqFlag" jdbcType="CHAR" />
+    <result column="max_len" property="maxLen" jdbcType="INTEGER" />
+    <result column="min_len" property="minLen" jdbcType="INTEGER" />
+    <result column="col_desc" property="colDesc" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zrt.mybatis.domain.FmBusDic" extends="BaseResultMap" >
+    <result column="key_value" property="keyValue" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    col_code, col_name, col_enabled, col_type, col_group, col_value, cue_value, req_flag, 
+    max_len, min_len, col_desc, create_date_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    key_value
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.zrt.mybatis.domain.FmBusDicExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fm_bus_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FmBusDicExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fm_bus_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fm_bus_dic
+    where col_code = #{colCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fm_bus_dic
+    where col_code = #{colCode,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FmBusDicExample" >
+    delete from fm_bus_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FmBusDic" >
+    insert into fm_bus_dic (col_code, col_name, col_enabled, 
+      col_type, col_group, col_value, 
+      cue_value, req_flag, max_len, 
+      min_len, col_desc, create_date_time, 
+      key_value)
+    values (#{colCode,jdbcType=VARCHAR}, #{colName,jdbcType=VARCHAR}, #{colEnabled,jdbcType=CHAR}, 
+      #{colType,jdbcType=VARCHAR}, #{colGroup,jdbcType=VARCHAR}, #{colValue,jdbcType=VARCHAR}, 
+      #{cueValue,jdbcType=VARCHAR}, #{reqFlag,jdbcType=CHAR}, #{maxLen,jdbcType=INTEGER}, 
+      #{minLen,jdbcType=INTEGER}, #{colDesc,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, 
+      #{keyValue,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FmBusDic" >
+    insert into fm_bus_dic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="colCode != null" >
+        col_code,
+      </if>
+      <if test="colName != null" >
+        col_name,
+      </if>
+      <if test="colEnabled != null" >
+        col_enabled,
+      </if>
+      <if test="colType != null" >
+        col_type,
+      </if>
+      <if test="colGroup != null" >
+        col_group,
+      </if>
+      <if test="colValue != null" >
+        col_value,
+      </if>
+      <if test="cueValue != null" >
+        cue_value,
+      </if>
+      <if test="reqFlag != null" >
+        req_flag,
+      </if>
+      <if test="maxLen != null" >
+        max_len,
+      </if>
+      <if test="minLen != null" >
+        min_len,
+      </if>
+      <if test="colDesc != null" >
+        col_desc,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="keyValue != null" >
+        key_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="colCode != null" >
+        #{colCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colName != null" >
+        #{colName,jdbcType=VARCHAR},
+      </if>
+      <if test="colEnabled != null" >
+        #{colEnabled,jdbcType=CHAR},
+      </if>
+      <if test="colType != null" >
+        #{colType,jdbcType=VARCHAR},
+      </if>
+      <if test="colGroup != null" >
+        #{colGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="colValue != null" >
+        #{colValue,jdbcType=VARCHAR},
+      </if>
+      <if test="cueValue != null" >
+        #{cueValue,jdbcType=VARCHAR},
+      </if>
+      <if test="reqFlag != null" >
+        #{reqFlag,jdbcType=CHAR},
+      </if>
+      <if test="maxLen != null" >
+        #{maxLen,jdbcType=INTEGER},
+      </if>
+      <if test="minLen != null" >
+        #{minLen,jdbcType=INTEGER},
+      </if>
+      <if test="colDesc != null" >
+        #{colDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="keyValue != null" >
+        #{keyValue,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FmBusDicExample" resultType="java.lang.Integer" >
+    select count(*) from fm_bus_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fm_bus_dic
+    <set >
+      <if test="record.colCode != null" >
+        col_code = #{record.colCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colName != null" >
+        col_name = #{record.colName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colEnabled != null" >
+        col_enabled = #{record.colEnabled,jdbcType=CHAR},
+      </if>
+      <if test="record.colType != null" >
+        col_type = #{record.colType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colGroup != null" >
+        col_group = #{record.colGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colValue != null" >
+        col_value = #{record.colValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cueValue != null" >
+        cue_value = #{record.cueValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reqFlag != null" >
+        req_flag = #{record.reqFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.maxLen != null" >
+        max_len = #{record.maxLen,jdbcType=INTEGER},
+      </if>
+      <if test="record.minLen != null" >
+        min_len = #{record.minLen,jdbcType=INTEGER},
+      </if>
+      <if test="record.colDesc != null" >
+        col_desc = #{record.colDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.keyValue != null" >
+        key_value = #{record.keyValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update fm_bus_dic
+    set col_code = #{record.colCode,jdbcType=VARCHAR},
+      col_name = #{record.colName,jdbcType=VARCHAR},
+      col_enabled = #{record.colEnabled,jdbcType=CHAR},
+      col_type = #{record.colType,jdbcType=VARCHAR},
+      col_group = #{record.colGroup,jdbcType=VARCHAR},
+      col_value = #{record.colValue,jdbcType=VARCHAR},
+      cue_value = #{record.cueValue,jdbcType=VARCHAR},
+      req_flag = #{record.reqFlag,jdbcType=CHAR},
+      max_len = #{record.maxLen,jdbcType=INTEGER},
+      min_len = #{record.minLen,jdbcType=INTEGER},
+      col_desc = #{record.colDesc,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      key_value = #{record.keyValue,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fm_bus_dic
+    set col_code = #{record.colCode,jdbcType=VARCHAR},
+      col_name = #{record.colName,jdbcType=VARCHAR},
+      col_enabled = #{record.colEnabled,jdbcType=CHAR},
+      col_type = #{record.colType,jdbcType=VARCHAR},
+      col_group = #{record.colGroup,jdbcType=VARCHAR},
+      col_value = #{record.colValue,jdbcType=VARCHAR},
+      cue_value = #{record.cueValue,jdbcType=VARCHAR},
+      req_flag = #{record.reqFlag,jdbcType=CHAR},
+      max_len = #{record.maxLen,jdbcType=INTEGER},
+      min_len = #{record.minLen,jdbcType=INTEGER},
+      col_desc = #{record.colDesc,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FmBusDic" >
+    update fm_bus_dic
+    <set >
+      <if test="colName != null" >
+        col_name = #{colName,jdbcType=VARCHAR},
+      </if>
+      <if test="colEnabled != null" >
+        col_enabled = #{colEnabled,jdbcType=CHAR},
+      </if>
+      <if test="colType != null" >
+        col_type = #{colType,jdbcType=VARCHAR},
+      </if>
+      <if test="colGroup != null" >
+        col_group = #{colGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="colValue != null" >
+        col_value = #{colValue,jdbcType=VARCHAR},
+      </if>
+      <if test="cueValue != null" >
+        cue_value = #{cueValue,jdbcType=VARCHAR},
+      </if>
+      <if test="reqFlag != null" >
+        req_flag = #{reqFlag,jdbcType=CHAR},
+      </if>
+      <if test="maxLen != null" >
+        max_len = #{maxLen,jdbcType=INTEGER},
+      </if>
+      <if test="minLen != null" >
+        min_len = #{minLen,jdbcType=INTEGER},
+      </if>
+      <if test="colDesc != null" >
+        col_desc = #{colDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="keyValue != null" >
+        key_value = #{keyValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where col_code = #{colCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zrt.mybatis.domain.FmBusDic" >
+    update fm_bus_dic
+    set col_name = #{colName,jdbcType=VARCHAR},
+      col_enabled = #{colEnabled,jdbcType=CHAR},
+      col_type = #{colType,jdbcType=VARCHAR},
+      col_group = #{colGroup,jdbcType=VARCHAR},
+      col_value = #{colValue,jdbcType=VARCHAR},
+      cue_value = #{cueValue,jdbcType=VARCHAR},
+      req_flag = #{reqFlag,jdbcType=CHAR},
+      max_len = #{maxLen,jdbcType=INTEGER},
+      min_len = #{minLen,jdbcType=INTEGER},
+      col_desc = #{colDesc,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      key_value = #{keyValue,jdbcType=LONGVARCHAR}
+    where col_code = #{colCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FmBusDic" >
+    update fm_bus_dic
+    set col_name = #{colName,jdbcType=VARCHAR},
+      col_enabled = #{colEnabled,jdbcType=CHAR},
+      col_type = #{colType,jdbcType=VARCHAR},
+      col_group = #{colGroup,jdbcType=VARCHAR},
+      col_value = #{colValue,jdbcType=VARCHAR},
+      cue_value = #{cueValue,jdbcType=VARCHAR},
+      req_flag = #{reqFlag,jdbcType=CHAR},
+      max_len = #{maxLen,jdbcType=INTEGER},
+      min_len = #{minLen,jdbcType=INTEGER},
+      col_desc = #{colDesc,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR}
+    where col_code = #{colCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

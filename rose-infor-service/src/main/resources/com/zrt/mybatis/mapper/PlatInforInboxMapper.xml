@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.PlatInforInboxMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.PlatInforInbox" >
+    <id column="in_id" property="inId" jdbcType="INTEGER" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="infor_no" property="inforNo" jdbcType="VARCHAR" />
+    <result column="out_id" property="outId" jdbcType="VARCHAR" />
+    <result column="receiver_id" property="receiverId" jdbcType="VARCHAR" />
+    <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+    <result column="emp_order" property="empOrder" jdbcType="INTEGER" />
+    <result column="receiver_type" property="receiverType" jdbcType="CHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="deal_status" property="dealStatus" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    in_id, tenant_id, infor_no, out_id, receiver_id, receiver_name, emp_order, receiver_type, 
+    org_id, org_name, deal_status, is_show
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.PlatInforInboxExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from plat_infor_inbox
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from plat_infor_inbox
+    where in_id = #{inId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plat_infor_inbox
+    where in_id = #{inId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.PlatInforInboxExample" >
+    delete from plat_infor_inbox
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.PlatInforInbox" >
+    insert into plat_infor_inbox (in_id, tenant_id, infor_no, 
+      out_id, receiver_id, receiver_name, 
+      emp_order, receiver_type, org_id, 
+      org_name, deal_status, is_show
+      )
+    values (#{inId,jdbcType=INTEGER}, #{tenantId,jdbcType=VARCHAR}, #{inforNo,jdbcType=VARCHAR}, 
+      #{outId,jdbcType=VARCHAR}, #{receiverId,jdbcType=VARCHAR}, #{receiverName,jdbcType=VARCHAR}, 
+      #{empOrder,jdbcType=INTEGER}, #{receiverType,jdbcType=CHAR}, #{orgId,jdbcType=VARCHAR}, 
+      #{orgName,jdbcType=VARCHAR}, #{dealStatus,jdbcType=VARCHAR}, #{isShow,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.PlatInforInbox" >
+    insert into plat_infor_inbox
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inId != null" >
+        in_id,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="inforNo != null" >
+        infor_no,
+      </if>
+      <if test="outId != null" >
+        out_id,
+      </if>
+      <if test="receiverId != null" >
+        receiver_id,
+      </if>
+      <if test="receiverName != null" >
+        receiver_name,
+      </if>
+      <if test="empOrder != null" >
+        emp_order,
+      </if>
+      <if test="receiverType != null" >
+        receiver_type,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="orgName != null" >
+        org_name,
+      </if>
+      <if test="dealStatus != null" >
+        deal_status,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inId != null" >
+        #{inId,jdbcType=INTEGER},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="inforNo != null" >
+        #{inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outId != null" >
+        #{outId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrder != null" >
+        #{empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="receiverType != null" >
+        #{receiverType,jdbcType=CHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="dealStatus != null" >
+        #{dealStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.PlatInforInboxExample" resultType="java.lang.Integer" >
+    select count(*) from plat_infor_inbox
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update plat_infor_inbox
+    <set >
+      <if test="record.inId != null" >
+        in_id = #{record.inId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inforNo != null" >
+        infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outId != null" >
+        out_id = #{record.outId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverId != null" >
+        receiver_id = #{record.receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverName != null" >
+        receiver_name = #{record.receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empOrder != null" >
+        emp_order = #{record.empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.receiverType != null" >
+        receiver_type = #{record.receiverType,jdbcType=CHAR},
+      </if>
+      <if test="record.orgId != null" >
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgName != null" >
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealStatus != null" >
+        deal_status = #{record.dealStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isShow != null" >
+        is_show = #{record.isShow,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update plat_infor_inbox
+    set in_id = #{record.inId,jdbcType=INTEGER},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      infor_no = #{record.inforNo,jdbcType=VARCHAR},
+      out_id = #{record.outId,jdbcType=VARCHAR},
+      receiver_id = #{record.receiverId,jdbcType=VARCHAR},
+      receiver_name = #{record.receiverName,jdbcType=VARCHAR},
+      emp_order = #{record.empOrder,jdbcType=INTEGER},
+      receiver_type = #{record.receiverType,jdbcType=CHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      deal_status = #{record.dealStatus,jdbcType=VARCHAR},
+      is_show = #{record.isShow,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.PlatInforInbox" >
+    update plat_infor_inbox
+    <set >
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="inforNo != null" >
+        infor_no = #{inforNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outId != null" >
+        out_id = #{outId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        receiver_id = #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="empOrder != null" >
+        emp_order = #{empOrder,jdbcType=INTEGER},
+      </if>
+      <if test="receiverType != null" >
+        receiver_type = #{receiverType,jdbcType=CHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="dealStatus != null" >
+        deal_status = #{dealStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=CHAR},
+      </if>
+    </set>
+    where in_id = #{inId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.PlatInforInbox" >
+    update plat_infor_inbox
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      infor_no = #{inforNo,jdbcType=VARCHAR},
+      out_id = #{outId,jdbcType=VARCHAR},
+      receiver_id = #{receiverId,jdbcType=VARCHAR},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      emp_order = #{empOrder,jdbcType=INTEGER},
+      receiver_type = #{receiverType,jdbcType=CHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      deal_status = #{dealStatus,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=CHAR}
+    where in_id = #{inId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.contacts.mapper.sys.SysSecOrgCustomMapper">
+
+	<!-- app端查询 部门列表 ,包括部门名称+部门人数 -->
+	<!-- <select id="orgList" resultType="map"> SELECT org.org_id,org.org_name,org.sec_order,COUNT(emp.emp_id) 
+		AS orgMemCount FROM sys_sec_emp emp,sys_sec_org org <where> emp.org_id = 
+		org.org_id and org.sec_enabled='1' and emp.is_first_org='1' AND emp.emp_enabled 
+		='1' <if test="map.status != null and map.status!=''"> AND emp.emp_active 
+		= #{map.status} </if> <if test="map.search != null and map.search!=''"> AND 
+		org.org_name LIKE CONCAT('%',#{map.search},'%') </if> GROUP BY org.org_id 
+		ORDER BY org.sec_order </where> </select> -->
+
+	<!-- APP端 部门列表+部门人数 (翻版) -->
+	<select id="orgList" resultType="map">
+		(SELECT	sse.emp_id AS id,'' as sec_order, sse.emp_name AS name,0 AS type,'' as orgMemCount,sse.emp_head_photo,	spp.p_name,sse.emp_active,sse.emp_order
+		FROM	sys_sec_emp sse
+		JOIN sys_sec_emp_position ssep ON (ssep.emp_id = sse.emp_id and ssep.is_first_org=1)
+		LEFT JOIN sys_plat_rank spr ON spr.r_id = ssep.r_id
+		LEFT JOIN sys_plat_position spp ON spp.p_s_p_id = ssep.emp_position_id
+		WHERE	sse.emp_enabled = '1'
+		<if test="map.parent_org_id == null or map.parent_org_id==''">
+			AND ssep.team_id=(SELECT org_id FROM sys_sec_org WHERE org_code='ZRT')
+		</if>
+		<if test="map.parent_org_id != null and map.parent_org_id!=''">
+			AND ssep.team_id=#{map.parent_org_id}
+		</if>
+		ORDER BY sse.emp_order
+		) UNION
+		(SELECT	sso.org_id AS id,sso.sec_order,sso.org_name AS name,1 AS type,COUNT(sse.ssepid)*1 AS orgMemCount,NULL AS emp_head_photo,'' AS p_name,'' AS emp_active,sse.emp_order
+		FROM sys_sec_org sso
+		LEFT JOIN (SELECT	ssep.id AS ssepid,ssep.team_id,sse.emp_order
+		FROM sys_sec_emp sse JOIN sys_sec_emp_position ssep ON (ssep.emp_id = sse.emp_id and ssep.is_first_org=1)
+		WHERE	sse.emp_enabled = '1'
+		<if test="map.status != null and map.status!=''">
+			AND sse.emp_active = #{map.status}
+		</if>
+		) sse ON SUBSTR(sse.team_id,1	,LENGTH(sso.org_id)) = sso.org_id
+		<where>
+			sso.sec_enabled='1'
+			<!--<if test="map.search != null and map.search!=''">
+					AND sso.org_name LIKE CONCAT('%',#{map.search},'%')
+				</if>-->
+			<if test="map.parent_org_id == null or map.parent_org_id==''">
+				AND sso.parent_org_id=(SELECT org_id FROM sys_sec_org WHERE org_code='ZRT')
+			</if>
+			<if test="map.parent_org_id != null and map.parent_org_id!=''">
+				AND sso.parent_org_id=#{map.parent_org_id}
+			</if>
+			GROUP BY sso.org_id,sso.org_name
+			ORDER BY sso.sec_order
+		</where>)
+		ORDER BY sec_order,emp_order
+	</select>
+
+
+
+	<!-- 查询待撤销部门列表 -->
+	<select id="preCancelOrgList" resultType="map">
+		select
+		org_id,org_name,parent_org_id from sys_sec_org
+		where group_type ='0'
+		and sec_enabled='1' ORDER BY sec_order
+	</select>
+
+	<!--IM通讯录同步 查询部门列表 -->
+	<select id="selectDeptList" resultType="map">
+		SELECT sso.org_id AS
+		did,sso.org_name AS dnm,'' AS dshortName,sso.parent_org_id AS
+		dpid,sso.sec_order AS `order`,sso.org_name_view dna,
+		'sec_order' AS orderFiled FROM sys_sec_org sso where sso.org_id LIKE '00010001%' and sso.sec_enabled='1' and sso.group_type='1' GROUP BY sso.org_id
+	</select>
+	<select id="orgNewList" resultType="map">
+		SELECT  * FROM sys_sec_org sso where sso.org_id LIKE '00010001%' and sso.sec_enabled='1' and sso.group_type='1' GROUP BY sso.org_id ORDER BY org_level
+	</select>
+
+	<!-- app端查询 部门列表：部门ID+部门名称 -->
+	<!-- <select id="orgList" resultType="sysSecOrg" > select org_id,org_name 
+		from sys_sec_org where org_id !='1' </select> -->
+</mapper>

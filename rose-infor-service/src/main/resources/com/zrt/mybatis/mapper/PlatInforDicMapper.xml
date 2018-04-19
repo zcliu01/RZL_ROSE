@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.PlatInforDicMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.PlatInforDic" >
+    <id column="dic_id" property="dicId" jdbcType="VARCHAR" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+    <result column="dic_code" property="dicCode" jdbcType="VARCHAR" />
+    <result column="dic_name" property="dicName" jdbcType="VARCHAR" />
+    <result column="create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_emp_id" property="updateEmpId" jdbcType="VARCHAR" />
+    <result column="update_emp_name" property="updateEmpName" jdbcType="VARCHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    dic_id, emp_id, parent_code, dic_code, dic_name, create_emp_id, create_emp_name, 
+    create_date_time, update_emp_id, update_emp_name, update_date_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.PlatInforDicExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from plat_infor_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from plat_infor_dic
+    where dic_id = #{dicId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from plat_infor_dic
+    where dic_id = #{dicId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.PlatInforDicExample" >
+    delete from plat_infor_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.PlatInforDic" >
+    insert into plat_infor_dic (dic_id, emp_id, parent_code, 
+      dic_code, dic_name, create_emp_id, 
+      create_emp_name, create_date_time, update_emp_id, 
+      update_emp_name, update_date_time)
+    values (#{dicId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}, 
+      #{dicCode,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, #{createEmpId,jdbcType=VARCHAR}, 
+      #{createEmpName,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, #{updateEmpId,jdbcType=VARCHAR}, 
+      #{updateEmpName,jdbcType=VARCHAR}, #{updateDateTime,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.PlatInforDic" >
+    insert into plat_infor_dic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dicId != null" >
+        dic_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="parentCode != null" >
+        parent_code,
+      </if>
+      <if test="dicCode != null" >
+        dic_code,
+      </if>
+      <if test="dicName != null" >
+        dic_name,
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id,
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dicId != null" >
+        #{dicId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null" >
+        #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.PlatInforDicExample" resultType="java.lang.Integer" >
+    select count(*) from plat_infor_dic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update plat_infor_dic
+    <set >
+      <if test="record.dicId != null" >
+        dic_id = #{record.dicId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empId != null" >
+        emp_id = #{record.empId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentCode != null" >
+        parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dicCode != null" >
+        dic_code = #{record.dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dicName != null" >
+        dic_name = #{record.dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpId != null" >
+        create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpName != null" >
+        create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateEmpId != null" >
+        update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateEmpName != null" >
+        update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update plat_infor_dic
+    set dic_id = #{record.dicId,jdbcType=VARCHAR},
+      emp_id = #{record.empId,jdbcType=VARCHAR},
+      parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      dic_code = #{record.dicCode,jdbcType=VARCHAR},
+      dic_name = #{record.dicName,jdbcType=VARCHAR},
+      create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.PlatInforDic" >
+    update plat_infor_dic
+    <set >
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        dic_code = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null" >
+        dic_name = #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+    </set>
+    where dic_id = #{dicId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.PlatInforDic" >
+    update plat_infor_dic
+    set emp_id = #{empId,jdbcType=VARCHAR},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
+      dic_code = #{dicCode,jdbcType=VARCHAR},
+      dic_name = #{dicName,jdbcType=VARCHAR},
+      create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR}
+    where dic_id = #{dicId,jdbcType=VARCHAR}
+  </update>
+</mapper>

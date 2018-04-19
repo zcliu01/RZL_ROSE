@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.FbBusTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.FbBusTemplate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="t_code" property="tCode" jdbcType="VARCHAR" />
+    <result column="t_name" property="tName" jdbcType="VARCHAR" />
+    <result column="t_desc" property="tDesc" jdbcType="VARCHAR" />
+    <result column="pro_date_time" property="proDateTime" jdbcType="CHAR" />
+    <result column="t_enabled" property="tEnabled" jdbcType="CHAR" />
+    <result column="f_b_t_id" property="fBTId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+    <result column="create_date_time" property="createDateTime" jdbcType="CHAR" />
+    <result column="update_date_time" property="updateDateTime" jdbcType="CHAR" />
+    <result column="create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="update_emp_id" property="updateEmpId" jdbcType="VARCHAR" />
+    <result column="update_emp_name" property="updateEmpName" jdbcType="VARCHAR" />
+    <result column="deployment_id" property="deploymentId" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="VARCHAR" />
+    <result column="project_flag" property="projectFlag" jdbcType="CHAR" />
+    <result column="handle_flag" property="handleFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, t_code, t_name, t_desc, pro_date_time, t_enabled, f_b_t_id, parent_id, version, 
+    tenant_id, create_date_time, update_date_time, create_emp_id, create_emp_name, update_emp_id, 
+    update_emp_name, deployment_id, model_id, project_flag, handle_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.FbBusTemplateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from fb_bus_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from fb_bus_template
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fb_bus_template
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.FbBusTemplateExample" >
+    delete from fb_bus_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.FbBusTemplate" >
+    insert into fb_bus_template (id, t_code, t_name, 
+      t_desc, pro_date_time, t_enabled, 
+      f_b_t_id, parent_id, version, 
+      tenant_id, create_date_time, update_date_time, 
+      create_emp_id, create_emp_name, update_emp_id, 
+      update_emp_name, deployment_id, model_id, 
+      project_flag, handle_flag)
+    values (#{id,jdbcType=VARCHAR}, #{tCode,jdbcType=VARCHAR}, #{tName,jdbcType=VARCHAR}, 
+      #{tDesc,jdbcType=VARCHAR}, #{proDateTime,jdbcType=CHAR}, #{tEnabled,jdbcType=CHAR}, 
+      #{fBTId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, 
+      #{tenantId,jdbcType=VARCHAR}, #{createDateTime,jdbcType=CHAR}, #{updateDateTime,jdbcType=CHAR}, 
+      #{createEmpId,jdbcType=VARCHAR}, #{createEmpName,jdbcType=VARCHAR}, #{updateEmpId,jdbcType=VARCHAR}, 
+      #{updateEmpName,jdbcType=VARCHAR}, #{deploymentId,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, 
+      #{projectFlag,jdbcType=CHAR}, #{handleFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.FbBusTemplate" >
+    insert into fb_bus_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tCode != null" >
+        t_code,
+      </if>
+      <if test="tName != null" >
+        t_name,
+      </if>
+      <if test="tDesc != null" >
+        t_desc,
+      </if>
+      <if test="proDateTime != null" >
+        pro_date_time,
+      </if>
+      <if test="tEnabled != null" >
+        t_enabled,
+      </if>
+      <if test="fBTId != null" >
+        f_b_t_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time,
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time,
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id,
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name,
+      </if>
+      <if test="deploymentId != null" >
+        deployment_id,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="projectFlag != null" >
+        project_flag,
+      </if>
+      <if test="handleFlag != null" >
+        handle_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tCode != null" >
+        #{tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tName != null" >
+        #{tName,jdbcType=VARCHAR},
+      </if>
+      <if test="tDesc != null" >
+        #{tDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="proDateTime != null" >
+        #{proDateTime,jdbcType=CHAR},
+      </if>
+      <if test="tEnabled != null" >
+        #{tEnabled,jdbcType=CHAR},
+      </if>
+      <if test="fBTId != null" >
+        #{fBTId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="createEmpId != null" >
+        #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="deploymentId != null" >
+        #{deploymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectFlag != null" >
+        #{projectFlag,jdbcType=CHAR},
+      </if>
+      <if test="handleFlag != null" >
+        #{handleFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.FbBusTemplateExample" resultType="java.lang.Integer" >
+    select count(*) from fb_bus_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update fb_bus_template
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tCode != null" >
+        t_code = #{record.tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tName != null" >
+        t_name = #{record.tName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tDesc != null" >
+        t_desc = #{record.tDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.proDateTime != null" >
+        pro_date_time = #{record.proDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.tEnabled != null" >
+        t_enabled = #{record.tEnabled,jdbcType=CHAR},
+      </if>
+      <if test="record.fBTId != null" >
+        f_b_t_id = #{record.fBTId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null" >
+        parent_id = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenantId != null" >
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDateTime != null" >
+        create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.updateDateTime != null" >
+        update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="record.createEmpId != null" >
+        create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createEmpName != null" >
+        create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateEmpId != null" >
+        update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateEmpName != null" >
+        update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deploymentId != null" >
+        deployment_id = #{record.deploymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modelId != null" >
+        model_id = #{record.modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectFlag != null" >
+        project_flag = #{record.projectFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.handleFlag != null" >
+        handle_flag = #{record.handleFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update fb_bus_template
+    set id = #{record.id,jdbcType=VARCHAR},
+      t_code = #{record.tCode,jdbcType=VARCHAR},
+      t_name = #{record.tName,jdbcType=VARCHAR},
+      t_desc = #{record.tDesc,jdbcType=VARCHAR},
+      pro_date_time = #{record.proDateTime,jdbcType=CHAR},
+      t_enabled = #{record.tEnabled,jdbcType=CHAR},
+      f_b_t_id = #{record.fBTId,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=INTEGER},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      create_date_time = #{record.createDateTime,jdbcType=CHAR},
+      update_date_time = #{record.updateDateTime,jdbcType=CHAR},
+      create_emp_id = #{record.createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{record.createEmpName,jdbcType=VARCHAR},
+      update_emp_id = #{record.updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{record.updateEmpName,jdbcType=VARCHAR},
+      deployment_id = #{record.deploymentId,jdbcType=VARCHAR},
+      model_id = #{record.modelId,jdbcType=VARCHAR},
+      project_flag = #{record.projectFlag,jdbcType=CHAR},
+      handle_flag = #{record.handleFlag,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.FbBusTemplate" >
+    update fb_bus_template
+    <set >
+      <if test="tCode != null" >
+        t_code = #{tCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tName != null" >
+        t_name = #{tName,jdbcType=VARCHAR},
+      </if>
+      <if test="tDesc != null" >
+        t_desc = #{tDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="proDateTime != null" >
+        pro_date_time = #{proDateTime,jdbcType=CHAR},
+      </if>
+      <if test="tEnabled != null" >
+        t_enabled = #{tEnabled,jdbcType=CHAR},
+      </if>
+      <if test="fBTId != null" >
+        f_b_t_id = #{fBTId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="tenantId != null" >
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDateTime != null" >
+        create_date_time = #{createDateTime,jdbcType=CHAR},
+      </if>
+      <if test="updateDateTime != null" >
+        update_date_time = #{updateDateTime,jdbcType=CHAR},
+      </if>
+      <if test="createEmpId != null" >
+        create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpId != null" >
+        update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateEmpName != null" >
+        update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="deploymentId != null" >
+        deployment_id = #{deploymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectFlag != null" >
+        project_flag = #{projectFlag,jdbcType=CHAR},
+      </if>
+      <if test="handleFlag != null" >
+        handle_flag = #{handleFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.FbBusTemplate" >
+    update fb_bus_template
+    set t_code = #{tCode,jdbcType=VARCHAR},
+      t_name = #{tName,jdbcType=VARCHAR},
+      t_desc = #{tDesc,jdbcType=VARCHAR},
+      pro_date_time = #{proDateTime,jdbcType=CHAR},
+      t_enabled = #{tEnabled,jdbcType=CHAR},
+      f_b_t_id = #{fBTId,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      tenant_id = #{tenantId,jdbcType=VARCHAR},
+      create_date_time = #{createDateTime,jdbcType=CHAR},
+      update_date_time = #{updateDateTime,jdbcType=CHAR},
+      create_emp_id = #{createEmpId,jdbcType=VARCHAR},
+      create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      update_emp_id = #{updateEmpId,jdbcType=VARCHAR},
+      update_emp_name = #{updateEmpName,jdbcType=VARCHAR},
+      deployment_id = #{deploymentId,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      project_flag = #{projectFlag,jdbcType=CHAR},
+      handle_flag = #{handleFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

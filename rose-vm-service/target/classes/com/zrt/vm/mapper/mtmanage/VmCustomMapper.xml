@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.vm.mapper.mtmanage.VmCustomMapper">
+	<sql id="query_meeting_where">
+
+		<if test="mt_titile != null and mt_titile !=''">
+			AND vbr.mt_titile LIKE CONCAT('%',#{mt_titile},'%')
+		</if>
+		<!-- 进行中会议查询参数 -->
+		<if
+			test="real_begin_date_time_start != null and real_begin_date_time_start !=''">
+		<![CDATA[and vbr.real_begin_date_time >= #{real_begin_date_time_start}]]>
+		</if>
+		<if
+			test="real_begin_date_time_end != null and real_begin_date_time_end !=''">
+		<![CDATA[and vbr.real_begin_date_time <= #{real_begin_date_time_end}]]>
+		</if>
+		<!-- 历史会议列表的参数 -->
+		<if test="history_real_begin_date_time != null and history_real_begin_date_time !=''">
+		<![CDATA[ and vbr.real_begin_date_time >= #{history_real_begin_date_time} ]]>
+		</if>
+		<if test="history_real_end_date_time != null and history_real_end_date_time!=''">
+		<![CDATA[  and vbr.real_end_date_time<= #{history_real_end_date_time}  ]]>
+		</if>
+		<!-- 我的会议列表的参数 -->
+		<if test="begin_date_time_start != null and begin_date_time_start !=''">
+		<![CDATA[ and vbr.begin_date_time >= #{begin_date_time_start}]]>
+		</if>
+		<if test="begin_date_time_end != null and begin_date_time_end !=''">
+		<![CDATA[  and vbr.end_date_time<= #{begin_date_time_end}]]>
+		</if>
+
+	</sql>
+
+	<!-- web端进行中会议列表 -->
+	<select id="ongoingMeetingList" resultType="java.util.HashMap">
+		<!-- select vbr.id,vbr.host_emp_id,vbr.host_emp_name,vbr.host_org_name,vbr.mt_titile,vbr.mt_address,vbr.real_begin_date_time, 
+			vbp.rec_emp_id,vbp.rec_emp_name,vbp.org_name from vm_bus_record vbr left 
+			join vm_bus_partin vbp ON vbp.record_id=vbr.id where vbr.mt_status='1' and 
+			vbr.id in (SELECT record_id FROM vm_bus_partin WHERE rec_emp_id=#{emp_id}) -->
+		SELECT
+		DISTINCT vbp.record_id,vbr.host_emp_id,vbr.host_emp_name,vbr.host_org_name,vbr.mt_titile,vbr.mt_address,vbr.room_url,vbr.real_begin_date_time,
+		vbr.mt_pwd_flag,vbr.mt_pwd
+		FROM vm_bus_partin vbp
+		LEFT JOIN vm_bus_record vbr ON
+		vbp.record_id=vbr.id
+		WHERE vbp.rec_emp_id=#{emp_id} AND
+		vbr.mt_status='1' and vbr.mt_type='1'
+		<include refid="query_meeting_where" />
+		order by real_begin_date_time
+	</select>
+
+	<!-- web端历史会议列表 -->
+	<select id="historicalMeetingList" resultType="java.util.HashMap">
+		SELECT
+		DISTINCT vbp.record_id,vbr.host_emp_id,vbr.host_emp_name,vbr.host_org_name,vbr.mt_titile,vbr.mt_address,vbr.real_begin_date_time,
+		vbr.real_end_date_time,vbr.mt_pwd_flag,vbr.mt_pwd,vbp.mt_status AS
+		join_mt_status,vbr.video_flag,vbr.video_url
+		FROM vm_bus_partin vbp
+		LEFT
+		JOIN vm_bus_record vbr ON
+		vbp.record_id=vbr.id
+		WHERE
+		vbp.rec_emp_id=#{emp_id} AND
+		vbr.mt_status='2' and vbr.mt_type='1'
+		<include refid="query_meeting_where" />
+		order by vbr.real_end_date_time
+	</select>
+
+	<!-- web端我的会议室会议列表 -->
+	<select id="myMeetingList" resultType="java.util.HashMap">
+
+			SELECT DISTINCT
+			vbp.record_id,vbr.host_emp_id,vbr.host_emp_name,vbr.host_org_name,vbr.mt_titile,vbr.mt_address,vbr.begin_date_time,
+			vbr.end_date_time,vbr.notify_type,vbr.mt_pwd_flag,vbr.mt_pwd
+			FROM vm_bus_partin vbp
+
+			LEFT JOIN vm_bus_record vbr ON
+			vbp.record_id=vbr.id 
+
+			WHERE vbp.rec_emp_id=#{emp_id} AND
+			vbr.mt_status='0' and vbr.mt_type='1'
+		<include refid="query_meeting_where" />
+		order by create_date_time
+	</select>
+	<select id="myAppMeetingList" resultMap="myMeetingResultMap">
+		SELECT
+			vr.id record_id,
+			vr.mt_titile,
+			vr.host_emp_id,
+			vr.host_emp_name,
+			vr.host_org_id,
+			vr.host_org_name,
+			vr.begin_date_time,
+			vr.end_date_time,
+			vr.mt_pwd_flag,
+			vr.mt_pwd,
+			vr.notify_type,
+			(CASE WHEN vr.host_emp_id = #{emp_id} THEN '0' ELSE '1' END ) emp_mt_status,
+			
+			vp.rec_emp_id,
+			vp.rec_emp_name
+		FROM
+			vm_bus_record vr
+		JOIN vm_bus_partin vp ON vr.id = vp.record_id
+		WHERE
+			vr.id in 
+		<foreach collection="recIdArr" item="inId" open="(" separator="," close=")">
+                #{inId}
+		</foreach>
+			AND vr.mt_status = '0'
+			AND vr.mt_type = '1'
+	</select>
+	
+	<select id="singleVmGroup" resultType="java.util.HashMap">
+		SELECT
+			DISTINCT(vr.id) record_id
+		FROM
+			vm_bus_record vr
+		JOIN vm_bus_partin vp ON vr.id = vp.record_id
+		WHERE
+			vp.rec_emp_id =  #{emp_id}
+			AND vr.mt_status = '0'
+			AND vr.mt_type = '1'
+		<if test="firstresult != null">
+             limit #{firstresult},#{maxResult}
+		</if>     
+	</select>
+	<select id="myAppMeetingCount" resultType="java.util.HashMap">
+		SELECT
+			count(DISTINCT vr.id) count
+		FROM
+			vm_bus_record vr
+		JOIN vm_bus_partin vp ON vr.id = vp.record_id
+		WHERE
+			vr.id in(SELECT DISTINCT(record_id) FROM vm_bus_partin vp where vp.rec_emp_id = #{emp_id})
+			AND vr.mt_status = '0'
+			AND vr.mt_type = '1'
+	</select>
+	
+	<resultMap id="myMeetingResultMap" type="com.zrt.vm.domain.VmBusRecordDomain" >
+		<id column="record_id" property="id" jdbcType="VARCHAR" />
+		<result column="mt_titile" property="mtTitile" jdbcType="VARCHAR" />
+		<result column="host_emp_id" property="hostEmpId" jdbcType="VARCHAR" />
+		<result column="host_emp_name" property="hostEmpName" jdbcType="VARCHAR" />
+		<result column="host_org_id" property="hostOrgId" jdbcType="VARCHAR" />
+		<result column="host_org_name" property="hostOrgName" jdbcType="CHAR" />
+		<result column="begin_date_time" property="beginDateTime" jdbcType="CHAR" />
+		<result column="end_date_time" property="endDateTime" jdbcType="VARCHAR" />
+		<result column="mt_pwd_flag" property="mtPwdFlag" jdbcType="VARCHAR" />
+		<result column="mt_pwd" property="mtPwd" jdbcType="VARCHAR" />
+		<result column="notify_type" property="notifyType" jdbcType="VARCHAR" />
+		<result column="emp_mt_status" property="empMtStatus" jdbcType="VARCHAR" />
+		<collection property="partinList" ofType="com.zrt.mybatis.domain.VmBusPartin">
+			
+			<result column="rec_emp_id" property="recEmpId" jdbcType="VARCHAR" />
+			<result column="rec_emp_name" property="recEmpName" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+
+</mapper>

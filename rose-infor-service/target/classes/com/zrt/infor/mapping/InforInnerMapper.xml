@@ -1,0 +1,1262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zrt.infor.mapper.inforinner.InforInnerMapper">
+
+	<resultMap id="inforSendListResultMap" type="com.zrt.infor.domain.InforOutbox" >
+		<id column="pio_out_id" property="outId" jdbcType="INTEGER" />
+		<result column="pio_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+		<result column="pio_infor_no" property="inforNo" jdbcType="VARCHAR" />
+		<result column="pio_sender_id" property="senderId" jdbcType="VARCHAR" />
+		<result column="pio_sender_name" property="senderName" jdbcType="VARCHAR" />
+		<result column="pio_org_id" property="orgId" jdbcType="VARCHAR" />
+		<result column="pio_org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="pio_send_status" property="sendStatus" jdbcType="CHAR" />
+		<result column="pio_trans_type" property="transType" jdbcType="CHAR" />
+		<result column="pio_is_show" property="isShow" jdbcType="CHAR" />
+		<result column="pio_create_date_time" property="createDateTime" jdbcType="CHAR" />
+		<result column="pio_send_date_time" property="sendDateTime" jdbcType="CHAR" />
+		<result column="pio_update_date_time" property="updateDateTime" jdbcType="CHAR" />
+		<association property="inforRecord" javaType="com.zrt.infor.domain.InforRecord">
+			<id column="pir_infor_id" property="inforId" jdbcType="VARCHAR" />
+			<result column="pir_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+			<result column="pir_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pir_parent_no" property="parentNo" jdbcType="VARCHAR" />
+			<result column="pir_infor_code" property="inforCode" jdbcType="VARCHAR" />
+			<result column="pir_title" property="title" jdbcType="VARCHAR" />
+			<result column="pir_content" property="content" jdbcType="VARCHAR" />
+			<result column="pir_category" property="category" jdbcType="VARCHAR" />
+			<result column="pir_type" property="type" jdbcType="VARCHAR" />
+			<result column="pir_busId" property="busId" jdbcType="VARCHAR" />
+			<result column="pir_busType" property="busType" jdbcType="VARCHAR" />
+			<result column="pir_busDomain" property="busDomain" jdbcType="VARCHAR" />
+			<result column="pir_create_emp_id" property="createEmpId" jdbcType="VARCHAR" />
+			<result column="pir_create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+			<result column="pir_create_date_time" property="createDateTime" jdbcType="CHAR" />
+			<result column="pir_update_emp_id" property="updateEmpId" jdbcType="VARCHAR" />
+			<result column="pir_update_emp_name" property="updateEmpName" jdbcType="VARCHAR" />
+			<result column="pir_update_date_time" property="updateDateTime" jdbcType="CHAR" />
+			<result column="pir_infor_version" property="inforVersion" jdbcType="CHAR" />
+		</association>
+		<collection property="inboxList" ofType="com.zrt.infor.domain.InforInbox">
+			<id column="pii_in_id" property="inId" jdbcType="INTEGER" />
+			<result column="pii_tenant_id" property="tenantId" jdbcType="VARCHAR" />
+			<result column="pii_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pii_out_id" property="outId" jdbcType="INTEGER" />
+			<result column="pii_receiver_id" property="receiverId" jdbcType="VARCHAR" />
+			<result column="pii_receiver_name" property="receiverName" jdbcType="VARCHAR" />
+			<result column="pii_emp_order" property="empOrder" jdbcType="INTEGER" />
+			<result column="pii_receiver_type" property="receiverType" jdbcType="CHAR" />
+			<result column="pii_org_id" property="orgId" jdbcType="VARCHAR" />
+			<result column="pii_org_name" property="orgName" jdbcType="VARCHAR" />
+			<result column="pii_deal_status" property="dealStatus" jdbcType="VARCHAR" />
+			<result column="pii_is_show" property="isShow" jdbcType="CHAR" />
+		</collection>
+		<collection property="accessoryList" ofType="com.zrt.infor.domain.InforAccessory">
+			<id column="pia_acc_id" property="accId" jdbcType="VARCHAR" />
+			<result column="pia_acc_address" property="accAddress" jdbcType="VARCHAR" />
+			<result column="pia_infor_no" property="inforNo" jdbcType="VARCHAR" />
+			<result column="pia_acc_name" property="accName" jdbcType="VARCHAR" />
+			<result column="pia_acc_type" property="accType" jdbcType="VARCHAR" />
+			<result column="pia_node_id" property="nodeId" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+  	
+	<select id="inforSendList" resultMap="inforSendListResultMap">
+        SELECT pio.out_id AS pio_out_id,pio.infor_no AS pio_infor_no,
+        pio.sender_id AS pio_sender_id,pir.title AS pir_title,
+        pir.bus_id AS pir_busId,pir.bus_type AS pir_busType,pir.bus_domain AS pir_busDomain,
+        pir.content AS pir_content,pir.category as pir_category,
+        pii.in_id as pii_in_id,pii.emp_order pii_emp_order,
+        pii.receiver_name AS pii_receiver_name,pio.org_name AS pio_org_name,
+        pio.send_date_time AS pio_send_date_time, pio.create_date_time AS pio_create_date_time,
+        pio.send_status AS pio_send_status,pio.trans_type AS pio_trans_type,
+        pia.acc_id AS pia_acc_id,pia.node_id AS pia_node_id
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        left JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        LEFT JOIN
+        plat_infor_accessory pia ON pia.infor_no = pii.infor_no
+        where 
+            pio.out_id IN
+		<foreach collection="mapParam.outIdArr" item="outId" open="(" separator="," close=")">
+                #{outId}
+		</foreach>
+		order by pio.out_id desc
+	</select>
+    
+	<!-- 我发送的列表group -->
+	<select id="inforSendListGroup" resultType="java.util.HashMap">
+        SELECT distinct pio.out_id,pio.send_date_time
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        left JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        where  pio.sender_id = #{mapParam.sender_emp_id} 
+		<if test="mapParam.receiverIdArr != null and mapParam.receiverIdArr !=''">
+                /*接收人*/
+                AND pii.receiver_id IN
+			<foreach collection="mapParam.receiverIdArr" item="receiverId" open="(" separator="," close=")">
+                    #{receiverId}
+			</foreach>
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+            
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.search_content != null and mapParam.search_content !=''">
+                /*讯息标题或内容*/
+                AND ( pir.title LIKE CONCAT('%',#{mapParam.search_content},'%') or pir.content LIKE CONCAT('%',#{mapParam.search_content},'%') )
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*接收部门*/
+                AND pii.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.send_status != null and mapParam.send_status !=''">
+                /*发送的讯息的状态*/
+                AND pio.send_status = #{mapParam.send_status}
+		</if>
+		<if test="mapParam.trans_type != null and mapParam.trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{mapParam.trans_type}
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+          order by pio.out_id desc
+		<if test="mapParam.firstresult != null">
+             limit #{mapParam.firstresult},#{mapParam.maxResult}
+		</if>
+	</select>
+    
+	<!-- 我发送的count -->
+	<select id="inforSendListCount" resultType="java.util.HashMap">
+        SELECT count(distinct pio.out_id) as count
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        where pio.sender_id = #{mapParam.sender_emp_id} 
+		<if test="mapParam.receiverIdArr != null and mapParam.receiverIdArr !=''">
+                /*接收人*/
+                AND pii.receiver_id IN
+			<foreach collection="mapParam.receiverIdArr" item="receiverId" open="(" separator="," close=")">
+                    #{receiverId}
+			</foreach>
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+            
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.search_content != null and mapParam.search_content !=''">
+                /*讯息标题或内容*/
+                AND ( pir.title LIKE CONCAT('%',#{mapParam.search_content},'%') or pir.content LIKE CONCAT('%',#{mapParam.search_content},'%') )
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*接收部门*/
+                AND pii.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.send_status != null and mapParam.send_status !=''">
+                /*发送的讯息的状态*/
+                AND pio.send_status = #{mapParam.send_status}
+		</if>
+		<if test="mapParam.trans_type != null and mapParam.trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{mapParam.trans_type}
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		         
+	</select>
+    
+	<!-- 我发送的关注列表 -->
+	<select id="inforSendCareList" resultMap="inforSendListResultMap">
+        SELECT pio.out_id AS pio_out_id,pir.bus_id AS pir_busId,pir.bus_type AS pir_busType,pir.bus_domain AS pir_busDomain,pio.infor_no AS pio_infor_no,pio.sender_id AS pio_sender_id,pir.title AS pir_title,pir.content AS pir_content,pir.category as pir_category,pii.receiver_name AS pii_receiver_name,pio.org_name AS pio_org_name,pio.send_date_time AS pio_create_date_time,pio.send_status AS pio_send_status,pio.trans_type AS pio_trans_type
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        where 
+            pio.out_id IN
+		<foreach collection="mapParam.outIdArr" item="outId" open="(" separator="," close=")">
+                #{outId}
+		</foreach>
+
+	</select>
+    
+	<!-- 我发送的关注的列表group -->
+	<select id="inforSendCareListGroup" resultType="java.util.HashMap">
+        SELECT distinct pio.out_id,pio.send_date_time 
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        join plat_infor_concern pin on pin.infor_no=pir.infor_no
+        JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        where  pio.sender_id = #{mapParam.sender_emp_id} 
+		<if test="mapParam.receiverIdArr != null and mapParam.receiverIdArr !=''">
+                /*接收人*/
+                AND pii.receiver_id IN
+			<foreach collection="mapParam.receiverIdArr" item="receiverId" open="(" separator="," close=")">
+                    #{receiverId}
+			</foreach>
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+            
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*接收部门*/
+                AND pii.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.send_status != null and mapParam.send_status !=''">
+                /*发送的讯息的状态*/
+                AND pio.send_status = #{mapParam.send_status}
+		</if>
+		<if test="mapParam.trans_type != null and mapParam.trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{mapParam.trans_type}
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+          order by pio.out_id desc
+		<if test="mapParam.firstresult != null">
+             limit #{mapParam.firstresult},#{mapParam.maxResult}
+		</if>
+	</select>
+    
+	<!-- 我发送的关注的count -->
+	<select id="inforSendCareListCount" resultType="java.util.HashMap">
+        SELECT count(distinct pio.out_id ,pio.send_date_time) as count
+        FROM plat_infor_outbox pio
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        join plat_infor_concern pin on pin.infor_no=pir.infor_no
+        JOIN
+        plat_infor_inbox pii ON pio.out_id = pii.out_id
+        where pio.sender_id = #{mapParam.sender_emp_id} 
+		<if test="mapParam.receiverIdArr != null and mapParam.receiverIdArr !=''">
+                /*接收人*/
+                AND pii.receiver_id IN
+			<foreach collection="mapParam.receiverIdArr" item="receiverId" open="(" separator="," close=")">
+                    #{receiverId}
+			</foreach>
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+            
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*接收部门*/
+                AND pii.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.send_status != null and mapParam.send_status !=''">
+                /*发送的讯息的状态*/
+                AND pio.send_status = #{mapParam.send_status}
+		</if>
+		<if test="mapParam.trans_type != null and mapParam.trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{mapParam.trans_type}
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+         
+	</select>
+
+	<select id="inforReceiveList" resultType="java.util.HashMap">
+        SELECT
+			pii.in_id,
+			pii.infor_no,
+			pii.out_id,
+			pir.title,
+			pir.bus_id AS pir_busId,
+			pir.bus_type AS pir_busType,
+			pir.bus_domain AS pir_busDomain,
+			pir.content,
+			pir.category,
+			pio.sender_name AS sender_name,
+			pio.org_name,
+			pio.create_date_time,
+			pio.send_date_time,
+			pii.deal_status AS deal_status
+		FROM
+			plat_infor_outbox pio
+			JOIN plat_infor_inbox pii ON pio.out_id = pii.out_id
+			JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+		WHERE
+			pii.receiver_id = #{mapParam.receiver_emp_id} 
+		AND pii.deal_status BETWEEN '0'
+		AND '3'
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*接收到的讯息是否显示*/
+                AND pii.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+            order by  out_id desc
+	</select>    
+	<!-- 我接收的关注列表 -->
+	<select id="inforReceiveCareList" resultType="java.util.HashMap">
+        SELECT pii.in_id,pii.infor_no,pii.out_id,
+        pir.bus_id AS pir_busId,pir.bus_type AS pir_busType,pir.bus_domain AS pir_busDomain,pir.title,pir.content,pir.category,pio.sender_name AS sender_name,pio.org_name,pio.create_date_time,pio.send_date_time,pii.deal_status as deal_status
+        FROM plat_infor_outbox pio 
+         JOIN
+            plat_infor_inbox  pii
+        ON pio.out_id = pii.out_id
+         JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+         join plat_infor_concern pin on pin.infor_no=pir.infor_no
+		where pii.receiver_id = #{mapParam.receiver_emp_id} 
+		AND pii.deal_status BETWEEN '0' AND '3'
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*接收到的讯息是否显示*/
+                AND pii.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+            order by out_id desc
+	</select>
+    
+    
+	<!-- 查询所有讯息列表 -->
+	<select id="inforList" resultType="java.util.HashMap">
+      	  SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '1' AS send_flag,
+			 '已发送' AS deal_status,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pir.category
+			FROM
+			 	plat_infor_outbox pio
+			JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+			WHERE pio.sender_id = #{mapParam.sender_emp_id}
+			    AND pio.send_status = '1' 
+			   
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pio.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*发送人部门*/
+                AND pio.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+			UNION
+			ALL 
+			SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pii.deal_status,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pir.category
+			FROM
+			  	plat_infor_outbox pio
+			JOIN plat_infor_inbox pii ON pio.out_id = pii.out_id
+			JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+			WHERE
+				pii.receiver_id = #{mapParam.receiver_emp_id}
+			AND pii.deal_status BETWEEN '0' and '3'
+			   
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pii.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*发送人部门*/
+                AND pio.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+                order by out_id desc
+	</select>
+	
+	<select id="inforStatusList" resultType="java.util.HashMap">
+		SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pii.deal_status,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pir.category
+			FROM
+			 	plat_infor_outbox pio
+			JOIN plat_infor_inbox pii ON pio.out_id = pii.out_id
+			JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+			WHERE pii.receiver_id = #{mapParam.receiver_emp_id}
+			AND pii.deal_status BETWEEN '0' and '3'
+			AND pio.send_status = '1' 
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pii.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+                order by out_id desc
+		
+	</select>
+      
+	<!-- 全部讯息自己关注的  -->
+	<select id="inforListCares" resultType="java.util.HashMap">
+      	 SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '1' AS send_flag,
+			 '已发送' AS deal_status,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pir.category
+			FROM
+			 plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_concern pic
+			  WHERE pio.infor_no = pir.infor_no 
+			  AND pic.infor_no=pir.infor_no 
+			  AND pio.send_status = '1' 
+			  AND pio.sender_id = #{mapParam.sender_emp_id}
+			  AND pic.emp_id=#{mapParam.sender_emp_id}
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pio.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+			UNION
+			ALL 
+			SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pii.deal_status,
+			  pir.title,
+			  pir.content,
+			  pir.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pir.category
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii,
+			  plat_infor_concern pic,
+	    	  plat_infor_dic pid
+			WHERE pii.receiver_id = #{mapParam.receiver_emp_id}
+			AND pii.deal_status BETWEEN '0' and '3'
+			AND pii.out_id = pio.out_id 
+			AND pio.send_status = '1' 
+			AND pio.infor_no = pir.infor_no
+			AND pic.infor_no = pir.infor_no
+			AND pic.concern_type = pid.dic_id 
+			AND pic.emp_id=#{mapParam.receiver_emp_id}
+			
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pii.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+               
+               order by out_id desc
+	</select>
+	
+      
+	<!-- 草稿 -->
+	<select id="inforDraftList" resultMap="inforSendListResultMap">
+        SELECT pio.out_id AS pio_out_id,pio.infor_no AS pio_infor_no,pio.sender_id AS pio_sender_id,pir.title AS pir_title,pir.content AS pir_content,pir.category,pii.receiver_name AS pii_receiver_name,pii.org_name AS org_name,pio.create_date_time AS pio_create_date_time,pio.send_status AS pio_send_status,pio.trans_type AS pio_trans_type
+        FROM plat_infor_outbox pio
+        LEFT JOIN
+        plat_infor_inbox pii
+        ON pio.out_id = pii.out_id
+        JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        where
+           pio.send_status='0'
+            AND pio.sender_id = #{mapParam.sender_emp_id}
+		<if test="mapParam.receiverIdArr != null and mapParam.receiverIdArr !=''">
+                /*接收人*/
+                AND pii.receiver_id IN
+			<foreach collection="mapParam.receiverIdArr" item="receiverId" open="(" separator="," close=")">
+                    #{receiverId}
+			</foreach>
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人*/
+                AND pio.sender_id = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯息标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.send_status != null and mapParam.send_status !=''">
+                /*发送的讯息的状态*/
+                AND pio.send_status = #{mapParam.send_status}
+		</if>
+		<if test="mapParam.trans_type != null and mapParam.trans_type !=''">
+                /*发送的类型*/
+                AND pio.trans_type = #{mapParam.trans_type}
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*接收部门*/
+                AND pii.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*发送的讯息是否显示*/
+                AND pio.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+            order by pio_out_id desc 
+	</select>
+	<!-- 关注列表 -->
+	<select id="inforCareList" resultType="java.util.HashMap">
+    	 SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '1' AS send_flag,
+			 '已发送' AS deal_status,
+			  pir.title,
+			  pir.content,
+			  pic.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pid.dic_name
+			FROM
+			   plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_concern pic,
+			  plat_infor_dic pid
+			  WHERE pio.infor_no = pir.infor_no 
+			  AND pic.infor_no=pir.infor_no 
+			  and pic.concern_type=pid.dic_id
+			  AND pio.send_status = '1' 
+			  AND pio.sender_id = #{mapParam.sender_emp_id}
+			  AND pic.emp_id=#{mapParam.emp_id}
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pio.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.dic_name != null and mapParam.dic_name !=''">
+                /*关注分类*/
+                AND pid.dic_name  LIKE CONCAT ('%',#{mapParam.dic_name},'%')
+		</if>
+			UNION
+			ALL 
+			SELECT 
+			  pio.infor_no,
+			  pio.out_id,
+			  pio.sender_id,
+			  pio.sender_name,
+			  pio.send_date_time,
+			  pio.org_name,
+			  '0' AS send_flag,
+			  pii.deal_status,
+			  pir.title,
+			  pir.content,
+			  pic.create_date_time ,
+			  pir.bus_id,
+			  pir.bus_type,
+			  pir.bus_domain,
+			  pid.dic_name
+			FROM
+			  plat_infor_record pir,
+			  plat_infor_outbox pio,
+			  plat_infor_inbox pii,
+			  plat_infor_concern pic,
+			  plat_infor_dic pid
+			WHERE
+			pii.receiver_id = #{mapParam.receiver_emp_id}
+			AND pii.deal_status BETWEEN '0' and '3'
+			AND pii.out_id = pio.out_id 
+			and pio.send_status = '1' 
+			AND pio.infor_no = pir.infor_no 
+			  and pic.infor_no=pir.infor_no
+			  and pic.concern_type=pid.dic_id
+			  AND pic.emp_id=#{mapParam.receiver_emp_id}
+			  
+			   
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+	                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+	                and pii.is_show=#{mapParam.is_show}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+		<if test="mapParam.dic_name != null and mapParam.dic_name !=''">
+                /*关注分类*/
+                AND pid.dic_name LIKE CONCAT ('%',#{mapParam.dic_name},'%')
+		</if>
+               
+               order by out_id desc
+	</select>
+	<!-- 未阅，已阅，已办结 -->
+	<select id="inforDealList" resultType="java.util.HashMap">
+        SELECT
+			pii.in_id,
+			pii.infor_no,
+			pii.out_id,
+			pir.title,
+			pir.content,
+			pir.category,
+			pio.sender_id AS sender_id,
+			pio.sender_name AS sender_name,
+			pio.send_date_time,
+			pio.org_name,
+			pio.create_date_time,
+			pir.bus_id,
+			pir.bus_type,
+			pir.bus_domain,
+			pii.deal_status AS deal_status
+		FROM
+			plat_infor_outbox pio
+		JOIN plat_infor_inbox pii ON pio.out_id = pii.out_id
+		JOIN plat_infor_record pir ON pir.infor_no = pio.infor_no
+        where 
+     		 pii.receiver_id = #{mapParam.receiver_emp_id}
+		<if test="mapParam.senderIdArr != null and mapParam.senderIdArr !=''">
+                /*发送人*/
+                AND pio.sender_id IN
+			<foreach collection="mapParam.senderIdArr" item="senderId" open="(" separator="," close=")">
+                    #{senderId}
+			</foreach>
+		</if>
+		<if test="mapParam.start_time != null and mapParam.start_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time >= #{mapParam.start_time}]]>
+		</if>
+		<if test="mapParam.end_time != null and mapParam.end_time !=''">
+                /*讯息发送时间和接收时间是统一时间*/
+		<![CDATA[AND pio.create_date_time <= #{mapParam.end_time}]]>
+		</if>
+		<if test="mapParam.deal_status != null and mapParam.deal_status !=''">
+                /*接收到的讯息的状态*/
+			<if test="mapParam.deal_status != 2 ">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status = #{mapParam.deal_status}
+			</if>
+			<if test="mapParam.deal_status == 2">
+                /*接收到的讯息的状态*/
+                AND pii.deal_status in ('0','1')
+			</if>
+		</if>
+		<if test="mapParam.org_name != null and mapParam.org_name !=''">
+                /*发送部门*/
+                AND pio.org_name LIKE CONCAT('%',#{mapParam.org_name},'%')
+		</if>
+		<if test="mapParam.category != null and mapParam.category !=''">
+                /*讯息类别*/
+                AND pir.category = #{mapParam.category}
+		</if>
+		<if test="mapParam.title != null and mapParam.title !=''">
+                /*讯系统标题*/
+                AND pir.title LIKE CONCAT('%',#{mapParam.title},'%')
+		</if>
+		<if test="mapParam.content != null and mapParam.content !=''">
+                /*讯息内容*/
+                AND pir.content LIKE CONCAT('%',#{mapParam.content},'%')
+		</if>
+		<if test="mapParam.is_show != null and mapParam.is_show !=''">
+                /*接收到的讯息是否显示*/
+                AND pii.is_show = #{mapParam.is_show}
+		</if>
+		<if test="mapParam.receiver_id != null and mapParam.receiver_id !=''">
+                /*收件人id*/
+                AND pii.receiver_id = #{mapParam.receiver_id}
+		</if>
+		<if test="mapParam.receiver_name != null and mapParam.receiver_name !=''">
+                /*收件人名称*/
+                AND pii.receiver_name LIKE CONCAT('%',#{mapParam.receiver_name},'%')
+		</if>
+		<if test="mapParam.sender_id != null and mapParam.sender_id !=''">
+                /*发送人id*/
+                AND pio.sender_id  = #{mapParam.sender_id}
+		</if>
+		<if test="mapParam.sender_name != null and mapParam.sender_name !=''">
+                /*发送人名称*/
+                AND pio.sender_name LIKE CONCAT('%',#{mapParam.sender_name},'%')
+		</if>
+            order by out_id desc
+	</select>
+</mapper>
