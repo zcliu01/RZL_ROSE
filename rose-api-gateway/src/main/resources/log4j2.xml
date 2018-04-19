@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+	<Properties>
+		<!-- <Property name="log-path">D:\logs</Property> -->
+		<Property name="log-path">/var/log</Property>
+		<Property name="BIGlOGFileName">${catalina.home:-${log-path}}/feignClient.log</Property>
+		<Property name="fileName">${catalina.home:-${log-path}}/zrt-api-gateway-rollfile.log</Property>
+		<Property name="filePattern" >${catalina.home:-${log-path}}/$${date:yyyy-MM}/zrt-api-gateway-rollfile-%d{yyyy-MM-dd}-%i.log</Property> <!-- 不压缩 -->
+		<Property name="filePattern2">${catalina.home:-${log-path}}/$${date:yyyy-MM}/zrt-api-gateway-rollfile-%d{MM-dd-yyyy}-%i.log.gz</Property>
+		
+		<Property name="fileName2">${catalina.home:-${log-path}}/zrt-api-gateway.log</Property>
+		<Property name="filePattern3">${catalina.home:-${log-path}}/$${date:yyyy-MM}/feignClient-%d{MM-dd-yyyy}-%i.log.gz</Property>
+	</Properties>
+	
+	<Appenders>
+		<RollingFile name="ROLLFILE" fileName="${fileName}" filePattern="${filePattern2}">
+			
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] %C{1}.%M():%L - %m%n" charset="UTF-8" />
+			<DefaultRolloverStrategy fileIndex="max" max="9"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="500MB" />
+			</Policies>
+		</RollingFile>	
+		<RollingFile name="BIGLOG" fileName="${BIGlOGFileName}" filePattern="${filePattern3}">
+			
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] %C{1}.%M():%L - %m%n" charset="UTF-8" />
+			<DefaultRolloverStrategy fileIndex="max" max="10"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>	
+		
+		<!-- <File name="FILE" fileName="${fileName2}" append="false">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %class{36}.%M():%L - %msg%xEx%n" charset="UTF-8" />
+		</File> -->
+		
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d [%-5p] [%t] (%F:%L) - %m%n" charset="UTF-8" />
+		</Console>
+		
+	</Appenders>
+	
+	<Loggers>	
+	    <Logger name="com.zrt" level="WARN" additivity="true" />
+		<Root level="ERROR">
+			<AppenderRef ref="STDOUT"/>
+		</Root>
+	</Loggers>
+	
+</Configuration>

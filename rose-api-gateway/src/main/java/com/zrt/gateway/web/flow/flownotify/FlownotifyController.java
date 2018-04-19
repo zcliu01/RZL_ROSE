@@ -1,0 +1,80 @@
+package com.zrt.gateway.web.flow.flownotify;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zrt.gateway.api.ApiConstant;
+import com.zrt.gateway.api.client.flow.IFlowClient;
+import com.zrt.gateway.web.base.BaseController;
+
+/**
+ * 知会
+ * 
+ * @author:dwliu
+ * @date:2017年3月22日下午8:14:02
+ * @description TODO
+ */
+@RestController
+@RequestMapping(value="/v1.0/flownotify", produces = { "application/json;charset=UTF-8" })
+public class FlownotifyController extends BaseController{
+    private static final Logger log = LoggerFactory.getLogger(FlownotifyController.class);
+	@Resource(name = "HystrixFlowClient")
+	private IFlowClient flowClient;
+
+	/**
+	 * 知会我的
+	 * @param requestMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/notifyList",method = RequestMethod.POST,consumes=ApiConstant.CONSUMES,headers = ApiConstant.HEADERS)
+	@ResponseBody
+	public ResponseEntity<String> notifyList(@RequestBody Map<String, Object> requestMap, @CookieValue String emp_id) throws Exception {
+        log.info("Server端的FlownotifyController中notifyList方法");
+        setEmpId(emp_id, requestMap);
+		Map<String,Object>  resultMap = flowClient.notifyList(requestMap);
+		return response(resultMap);
+	}
+
+	/**
+	 * 我知会的
+	 * @param requestMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selfList",method = RequestMethod.POST,consumes=ApiConstant.CONSUMES,headers = ApiConstant.HEADERS)
+	@ResponseBody
+	public ResponseEntity<String> selfList(@RequestBody Map<String, Object> requestMap, @CookieValue String emp_id) throws Exception {
+        log.info("Server端的FlownotifyController中selfList方法");
+	    setEmpId(emp_id, requestMap);
+		Map<String,Object>  resultMap = flowClient.selfList(requestMap);
+		return response(resultMap);
+	}
+	
+	
+	/**
+	 * 我知会的
+	 * @param requestMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/notify",method = RequestMethod.POST,consumes=ApiConstant.CONSUMES,headers = ApiConstant.HEADERS)
+	@ResponseBody
+	public ResponseEntity<String> notify(@RequestBody Map<String, Object> requestMap, @CookieValue String emp_id) throws Exception {
+        log.info("Server端的FlownotifyController中notify方法");
+	    setEmpId(emp_id, requestMap);
+		Map<String,Object>  resultMap = flowClient.notify(requestMap);
+		return response(resultMap);
+	}
+}
