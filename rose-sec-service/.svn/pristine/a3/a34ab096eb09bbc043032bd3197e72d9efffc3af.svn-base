@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.sec.mapper.user.UserMapper">
+
+	<select id="empList" resultType="java.util.HashMap">
+        SELECT
+        a.org_id,
+        a.org_name_view org_name,
+        emp.emp_code,
+        emp.emp_id,
+        emp.emp_name,
+        spp.p_name,
+        emp.create_date_time,
+        emp.entry_time,
+        emp.emp_work_address,
+        emp.emp_sex ,
+        emp.emp_enabled as sec_enabled,
+        emp.emp_order,
+        emp.can_login_type,
+        emp.syn_flag
+        FROM  sys_sec_emp emp
+        left join (SELECT team_id,emp_id,emp_position_id FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=emp.emp_id
+        left join sys_sec_org a on a.org_id = ssep.team_id
+        left join sys_plat_position spp on ssep.emp_position_id = spp.p_s_p_id
+        WHERE 1=1
+
+		<if test="org_name!=null and org_name!=''">
+            and a.org_name like CONCAT('%',#{org_name},'%')
+		</if>
+		<if test="org_id!=null and org_id!=''">
+            and a.org_id = #{org_id}
+		</if>
+		<if test="emp_name!=null and emp_name!=''">
+            and emp.emp_name like CONCAT('%',#{emp_name},'%')
+		</if>
+		<if test="emp_code!=null and emp_code!=''">
+            and emp.emp_code like CONCAT('%',#{emp_code},'%')
+		</if>
+		<if test="sys_plat_position!=null and sys_plat_position!=''">
+            and spp.p_name like CONCAT('%',#{sys_plat_position},'%')
+		</if>
+		<if test="emp_email!=null and emp_email!=''">
+            and emp.emp_email like CONCAT('%',#{emp_email},'%')
+		</if>
+		<if test="emp_mobile!=null and emp_mobile!=''">
+            and ( emp.emp_phone like CONCAT('%',#{emp_mobile},'%') or emp.emp_mobile_phone like
+            CONCAT('%',#{emp_mobile},'%') )
+		</if>
+		<if test="emp_active!= null and emp_active!=''">
+      AND emp.emp_active = #{emp_active}
+		</if>
+		<if test="emp_enabled != null and emp_enabled!=''">
+      AND emp.emp_enabled =#{emp_enabled}
+		</if> 
+		<!--  <if test="emp_work_address!=null and emp_work_address!=''">
+				 and emp.emp_work_address like CONCAT('%',#{emp_work_address},'%')
+			 </if> -->
+		<if test="emp_sex!=null and emp_sex!=''">
+            and emp.emp_sex = #{emp_sex}
+		</if>
+		<if test="syn_flag!=null and syn_flag!=''">
+            and emp.syn_flag = #{syn_flag}
+		</if>
+		<if test="begin_entry_time!=null and begin_entry_time!=''">
+		<![CDATA[and emp.entry_time >= #{begin_entry_time}]]>
+		</if>
+		<if test="end_entry_time!=null and end_entry_time!=''">
+		<![CDATA[and emp.entry_time <= #{end_entry_time}]]>
+		</if>
+		<if test="begin_create_date_time!=null and begin_create_date_time!=''">
+		<![CDATA[and emp.create_date_time >= #{begin_create_date_time}]]>
+		</if>
+		<if test="end_create_date_time!=null and end_create_date_time!=''">
+		<![CDATA[and emp.create_date_time <= #{end_create_date_time}]]>
+		</if>
+      order by emp.emp_order
+	</select>
+	<select id="userSearch" resultType="java.util.HashMap">
+        SELECT
+        emp.emp_code,
+        emp.emp_id,
+        emp.emp_name,
+        emp.create_date_time,
+        emp.entry_time,
+        emp.emp_address,
+        emp.emp_work_address,
+        emp.emp_sex,
+        sso.manage_emp_id,sso.manage_emp_name,sso.charge_emp_id,sso.charge_emp_name,
+        emp.emp_email,
+        emp.emp_birthday,
+        emp.emp_phone,
+        emp.emp_mobile_phone,
+        emp.emp_order,
+        emp.emp_postcode,
+        emp.cer_type,
+        emp.emp_fax,
+        emp.cer_no,
+        emp.emp_enabled,
+        emp.emp_head_photo,
+        emp.emp_message,
+        ssep.up_emp_id,
+        sso.org_name
+        FROM sys_sec_emp emp
+        left join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=emp.emp_id
+        left join sys_sec_org sso on sso.org_id=ssep.org_id
+		<where>
+			<if test="emp_id!=null and emp_id!=''">
+                emp.emp_id = #{emp_id}
+			</if>
+			<if test="org_id!=null and org_id!=''">
+                and a.org_id = #{org_id}
+			</if>
+			<if test="emp_name!=null and emp_name!=''">
+                and emp.emp_name like #{emp_name}
+			</if>
+			<if test="emp_code!=null and emp_code!=''">
+                and emp.emp_code = #{emp_code}
+			</if>
+			<if test="emp_id!=null and emp_id!=''">
+                and emp.emp_id like #{emp_id}
+			</if>
+			<if test="sys_plat_position!=null and sys_plat_position!=''">
+                and emp.sys_plat_position = #{sys_plat_position}
+			</if>
+			<if test="emp_email!=null and emp_email!=''">
+                and emp.emp_email = #{emp_email}
+			</if>
+			<if test="emp_phone!=null and emp_phone!=''">
+                and emp.emp_phone = #{emp_phone} or emp.emp_mobile_phone=#{emp_phone}
+			</if>
+			<if test="emp_work_address!=null and emp_work_address!=''">
+                and emp.emp_work_address like #{emp_work_address}
+			</if>
+
+			<if test="begin_entry_time!=null and begin_entry_time!=''">
+			<![CDATA[AND and emp.entry_time >= #{begin_entry_time}]]>
+			</if>
+			<if test="end_entry_time!=null and end_entry_time!=''">
+			<![CDATA[AND and emp.end_entry_time <= #{end_entry_time}]]>
+			</if>
+			<if test="begin_create_date_time!=null and begin_create_date_time!=''">
+			<![CDATA[AND and emp.create_date_time >= #{begin_create_date_time}]]>
+			</if>
+			<if test="end_create_date_time!=null and end_create_date_time!=''">
+			<![CDATA[AND and emp.create_date_time <= #{end_create_date_time}]]>
+			</if>
+			<if test="emp_sex!=null and emp_sex!=''">
+                and emp.emp_sex = #{emp_sex}
+			</if>
+			<if test="up_emp_name!=null and up_emp_name!=''">
+                and emp.emp_name like #{up_emp_name}
+			</if>
+			<if test="emp_email!=null and emp_email!=''">
+                and emp.emp_email like #{emp_email}
+			</if>
+			<if test="emp_birthday!=null and emp_birthday!=''">
+                and emp.emp_birthday like #{emp_birthday}
+			</if>
+			<if test="emp_phone!=null and emp_phone!=''">
+                and emp.emp_phone like #{emp_phone}
+			</if>
+			<if test="emp_mobile_phone!=null and emp_mobile_phone!=''">
+                and emp.emp_mobile_phone like #{emp_mobile_phone}
+			</if>
+			<if test="emp_order!=null and emp_order!=''">
+                and emp.emp_order = #{emp_order}
+			</if>
+			<if test="emp_address!=null and emp_address!=''">
+                and emp.emp_address like #{emp_address}
+			</if>
+			<if test="emp_postcode!=null and emp_postcode!=''">
+                and emp.emp_postcode like #{emp_postcode}
+			</if>
+			<if test="cer_type!=null and cer_type!=''">
+                and emp.cer_type like #{cer_type}
+			</if>
+			<if test="emp_fax!=null and emp_fax!=''">
+                and emp.emp_fax like #{emp_fax}
+			</if>
+			<if test="cer_no!=null and cer_no!=''">
+                and emp.cer_no like #{cer_no}
+			</if>
+		</where>
+	</select>
+	<select id="userSearchorgspp" resultType="java.util.HashMap">
+		<!-- SELECT
+				  emp.emp_id,
+				  a.org_name,
+				  spp.p_name,
+			  sse.emp_name as up_emp_name
+				FROM
+				  sys_sec_org a,
+				  sys_sec_emp emp,
+				  sys_plat_position spp,
+			  sys_work_relation swr,
+			  sys_sec_emp sse
+				WHERE
+				  a.org_id = emp.org_id
+				 AND  spp.p_s_p_id	= emp.emp_position_id
+			and emp.emp_id=swr.emp_id
+			and swr.up_emp_id = sse.emp_id 
+			and emp.emp_id in (#{emp_id}) -->
+
+		<!--select sse.emp_id,sse.emp_name,sse.org_id,sse.emp_position_id,
+			sso.org_name,swr.up_emp_id,spp.p_name,sse2.emp_name as up_emp_name
+			from sys_sec_emp sse
+			left join (SELECT * FROM sys_sec_emp_position WHERE is_first_org='1') ssep on ssep.emp_id=sse.emp_id
+			Left JOIN sys_sec_org sso ON
+			sso.org_id=ssep.org_id
+			left join
+			sys_plat_position spp ON
+			spp.p_s_p_id = ssep.emp_position_id
+			left join
+			sys_sec_emp sse2 ON
+			sse2.emp_id=ssep.up_emp_id-->
+        SELECT
+        sse.emp_id,
+        sse.emp_name,
+        sse.emp_order,
+        ssep.org_id,
+        ssep.emp_position_id,
+        ssep.is_first_org,
+        sso.org_name_view org_name,
+        spp.p_name,
+        sso.manage_emp_id AS manage_emp_id,
+        sso.manage_emp_name AS manage_emp_name,
+        sso.charge_emp_id AS charge_emp_id,
+        sso.charge_emp_name AS charge_emp_name
+        FROM
+        sys_sec_emp sse
+        LEFT JOIN (SELECT * FROM sys_sec_emp_position WHERE is_first_org = '1') ssep ON ssep.emp_id = sse.emp_id
+        LEFT JOIN sys_sec_org sso ON sso.org_id = ssep.team_id
+        LEFT JOIN sys_plat_position spp ON spp.p_s_p_id = ssep.emp_position_id
+		<where>
+			<if test="emp_id != null and emp_id!=''">
+                sse.emp_id = #{emp_id}
+			</if>
+			<if test="org_name!=null and org_name!=''">
+                and sso.org_name like #{org_name}
+			</if>
+			<if test="p_name!=null and p_name!=''">
+                and spp.p_name like #{p_name}
+			</if>
+			<if test="manage_emp_name!=null and manage_emp_name!=''">
+                and sso.manage_emp_name like #{manage_emp_name}
+			</if>
+			<if test="charge_emp_name!=null and charge_emp_name!=''">
+                and sso.charge_emp_name like #{charge_emp_name}
+			</if>
+		</where>
+		order by sse.emp_order,sso.org_name
+	</select>
+	<select id="userSearredeploy" resultType="java.util.HashMap">
+        SELECT
+        red.work_redeploy_id,
+        a.org_name,
+        spp.p_name,
+        red.create_date_time,
+        red.end_date_time,
+        red.redeploy_content
+        FROM
+        sys_sec_org a,
+        sys_sec_emp emp,
+        sys_plat_position spp,
+        sys_work_redeploy red
+        WHERE
+        a.org_id =red.org_id
+        AND spp.p_s_p_id = red.emp_position_id
+        and emp.emp_id=red.emp_id
+        and emp.emp_id = #{emp_id}
+		<where>
+			<if test="redeploy_content!=null and redeploy_content!=''">
+                and red.redeploy_content like #{redeploy_content}
+			</if>
+			<if test="org_name!=null and org_name!=''">
+                and a.org_name like #{org_name}
+			</if>
+			<if test="p_name!=null and p_name!=''">
+                and spp.p_name like #{p_name}
+			</if>
+			<if test="begin_end_date_time!=null and begin_end_date_time!=''">
+			<![CDATA[AND and red.end_date_time >= #{begin_end_date_time}]]>
+			</if>
+			<if test="end_end_date_time!=null and end_end_date_time!=''">
+			<![CDATA[AND and red.end_date_time <= #{end_end_date_time}]]>
+			</if>
+			<if test="begin_create_date_time!=null and begin_create_date_time!=''">
+			<![CDATA[AND and red.create_date_time >= #{begin_create_date_time}]]>
+			</if>
+			<if test="end_create_date_time!=null and end_create_date_time!=''">
+			<![CDATA[AND and red.create_date_time <= #{end_create_date_time}]]>
+			</if>
+		</where>
+		order by emp.emp_order,org_name
+	</select>
+    
+	<!--查询员工上级领导-->
+	<select id="manageSearch" resultType="java.util.HashMap">
+		SELECT
+			sp.emp_id,
+			so.charge_emp_id,
+			so.charge_emp_name,
+			so.manage_emp_id,
+			so.manage_emp_name
+		FROM
+			sys_sec_org so
+		LEFT JOIN (SELECT * FROM sys_sec_emp_position WHERE is_first_org = '1') sp ON so.org_id = sp.org_id
+		WHERE
+			sp.emp_id = #{emp_id}
+			AND sp.is_first_org='1'
+	</select>
+	
+	<!--查询员工上级领导-->
+	<select id="orgSearch" resultType="java.util.HashMap">
+		SELECT
+			sp.org_id,
+		FROM
+			sys_sec_emp_position sp 
+		WHERE
+			sp.emp_id = #{emp_id}
+			AND sp.is_first_org='1'
+	</select>
+
+	<!--查询员工所在机构上级领导-->
+	<select id="upManageSearch" resultType="java.util.HashMap">
+		SELECT
+			sp.emp_id,
+			so.charge_emp_id,
+			so.charge_emp_name,
+			so.manage_emp_id,
+			so.manage_emp_name
+		FROM
+			sys_sec_org so
+		LEFT JOIN sys_sec_emp_position sp ON so.org_id = sp.team_id
+		WHERE
+			sp.emp_id = #{emp_id}
+			AND sp.team_id=#{org_id}
+		limit 0,1	
+	</select>
+	
+	<!--查询员工所在机构上级领导-->
+	<delete id="deletePosition" parameterType="java.util.Map" >
+	    DELETE FROM sys_sec_emp_position WHERE emp_id	 = #{emp_id} ;
+	  </delete>
+	
+	
+	<!--查询员工直接上级-->
+	<select id="upSearch" resultType="string">
+		SELECT
+			emp_name upEmpName
+		FROM
+			sys_sec_emp
+		WHERE
+			emp_id = #{up_emp_id}
+	</select>
+	
+	<!--修改员工直接上级-->
+	<update id="updateManager" parameterType="java.util.HashMap">
+		UPDATE sys_sec_emp_position 
+		SET up_emp_id = #{up_emp_id} 
+		WHERE emp_id = #{emp_id} ; 
+	</update>
+	
+	
+	<!--修改员工是否同步数据-->
+	<update id="userSync" parameterType="java.util.HashMap">
+	UPDATE sys_sec_emp 
+	SET syn_flag = #{syn_flag} 
+	WHERE emp_id = #{emp_id}
+	</update>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.sec.mapper.org.OrgMapper" >
+	<!--
+    <select id="orgAllList" resultType="java.util.HashMap">
+    	SELECT d.org_id,d.org_name FROM sys_sec_org a 
+		LEFT JOIN sys_sec_org b ON (b.parent_org_id=a.org_id OR b.parent_org_id=a.org_id)
+		LEFT JOIN sys_sec_org c ON (c.parent_org_id=b.org_id OR c.parent_org_id=b.org_id)
+		LEFT JOIN sys_sec_org d ON (d.parent_org_id=c.org_id OR d.parent_org_id=c.org_id)
+		
+        <where>
+        	 <if test="org_parent_id!=null and org_parent_id!=''">
+	             a.org_id = #{org_parent_id}
+	         </if>
+        	
+        </where>
+    	
+    </select>-->
+    <select id="orgAllList" resultType="java.util.HashMap">
+    	SELECT a.org_id,a.org_name FROM sys_sec_org a 
+        <where>
+        	 <if test="org_level!=null and org_level!=''">
+	             and a.org_level = #{org_level}
+	         </if>
+        	<if test="org_parent_id!=null and org_parent_id!=''">
+	             and a.parent_org_id = #{org_parent_id}
+	         </if>
+        </where>
+    	order by a.sec_order 
+    </select>
+   
+   <select id="selectOrgListBySearch" resultType="map">
+    	SELECT org_id,org_name,parent_org_id,org_code FROM sys_sec_org 
+        <where>
+        	sec_enabled='1'
+        	<if test="search!=null and search!=''">
+	         and(  org_name LIKE CONCAT('%',#{search},'%') 
+	           or org_code Like CONCAT('%',#{search},'%')
+	           )
+	         </if>
+        </where>
+    	order by sec_order 
+    </select>
+   
+</mapper>

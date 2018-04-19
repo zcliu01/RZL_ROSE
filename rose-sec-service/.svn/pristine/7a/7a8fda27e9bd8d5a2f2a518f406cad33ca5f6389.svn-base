@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrt.mybatis.mapper.SysBizSerialMapper" >
+  <resultMap id="BaseResultMap" type="com.zrt.mybatis.domain.SysBizSerial" >
+    <id column="biz_key" property="bizKey" jdbcType="VARCHAR" />
+    <result column="biz_name" property="bizName" jdbcType="VARCHAR" />
+    <result column="biz_serial_no" property="bizSerialNo" jdbcType="INTEGER" />
+    <result column="biz_prefix" property="bizPrefix" jdbcType="VARCHAR" />
+    <result column="biz_date" property="bizDate" jdbcType="CHAR" />
+    <result column="is_append" property="isAppend" jdbcType="CHAR" />
+    <result column="serial_num" property="serialNum" jdbcType="INTEGER" />
+    <result column="biz_remark" property="bizRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    biz_key, biz_name, biz_serial_no, biz_prefix, biz_date, is_append, serial_num, biz_remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zrt.mybatis.domain.SysBizSerialExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from sys_biz_serial
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_serial
+    where biz_key = #{bizKey,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_biz_serial
+    where biz_key = #{bizKey,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zrt.mybatis.domain.SysBizSerialExample" >
+    delete from sys_biz_serial
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zrt.mybatis.domain.SysBizSerial" >
+    insert into sys_biz_serial (biz_key, biz_name, biz_serial_no, 
+      biz_prefix, biz_date, is_append, 
+      serial_num, biz_remark)
+    values (#{bizKey,jdbcType=VARCHAR}, #{bizName,jdbcType=VARCHAR}, #{bizSerialNo,jdbcType=INTEGER}, 
+      #{bizPrefix,jdbcType=VARCHAR}, #{bizDate,jdbcType=CHAR}, #{isAppend,jdbcType=CHAR}, 
+      #{serialNum,jdbcType=INTEGER}, #{bizRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zrt.mybatis.domain.SysBizSerial" >
+    insert into sys_biz_serial
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bizKey != null" >
+        biz_key,
+      </if>
+      <if test="bizName != null" >
+        biz_name,
+      </if>
+      <if test="bizSerialNo != null" >
+        biz_serial_no,
+      </if>
+      <if test="bizPrefix != null" >
+        biz_prefix,
+      </if>
+      <if test="bizDate != null" >
+        biz_date,
+      </if>
+      <if test="isAppend != null" >
+        is_append,
+      </if>
+      <if test="serialNum != null" >
+        serial_num,
+      </if>
+      <if test="bizRemark != null" >
+        biz_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bizKey != null" >
+        #{bizKey,jdbcType=VARCHAR},
+      </if>
+      <if test="bizName != null" >
+        #{bizName,jdbcType=VARCHAR},
+      </if>
+      <if test="bizSerialNo != null" >
+        #{bizSerialNo,jdbcType=INTEGER},
+      </if>
+      <if test="bizPrefix != null" >
+        #{bizPrefix,jdbcType=VARCHAR},
+      </if>
+      <if test="bizDate != null" >
+        #{bizDate,jdbcType=CHAR},
+      </if>
+      <if test="isAppend != null" >
+        #{isAppend,jdbcType=CHAR},
+      </if>
+      <if test="serialNum != null" >
+        #{serialNum,jdbcType=INTEGER},
+      </if>
+      <if test="bizRemark != null" >
+        #{bizRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zrt.mybatis.domain.SysBizSerialExample" resultType="java.lang.Integer" >
+    select count(*) from sys_biz_serial
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_biz_serial
+    <set >
+      <if test="record.bizKey != null" >
+        biz_key = #{record.bizKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizName != null" >
+        biz_name = #{record.bizName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizSerialNo != null" >
+        biz_serial_no = #{record.bizSerialNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.bizPrefix != null" >
+        biz_prefix = #{record.bizPrefix,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizDate != null" >
+        biz_date = #{record.bizDate,jdbcType=CHAR},
+      </if>
+      <if test="record.isAppend != null" >
+        is_append = #{record.isAppend,jdbcType=CHAR},
+      </if>
+      <if test="record.serialNum != null" >
+        serial_num = #{record.serialNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.bizRemark != null" >
+        biz_remark = #{record.bizRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_biz_serial
+    set biz_key = #{record.bizKey,jdbcType=VARCHAR},
+      biz_name = #{record.bizName,jdbcType=VARCHAR},
+      biz_serial_no = #{record.bizSerialNo,jdbcType=INTEGER},
+      biz_prefix = #{record.bizPrefix,jdbcType=VARCHAR},
+      biz_date = #{record.bizDate,jdbcType=CHAR},
+      is_append = #{record.isAppend,jdbcType=CHAR},
+      serial_num = #{record.serialNum,jdbcType=INTEGER},
+      biz_remark = #{record.bizRemark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrt.mybatis.domain.SysBizSerial" >
+    update sys_biz_serial
+    <set >
+      <if test="bizName != null" >
+        biz_name = #{bizName,jdbcType=VARCHAR},
+      </if>
+      <if test="bizSerialNo != null" >
+        biz_serial_no = #{bizSerialNo,jdbcType=INTEGER},
+      </if>
+      <if test="bizPrefix != null" >
+        biz_prefix = #{bizPrefix,jdbcType=VARCHAR},
+      </if>
+      <if test="bizDate != null" >
+        biz_date = #{bizDate,jdbcType=CHAR},
+      </if>
+      <if test="isAppend != null" >
+        is_append = #{isAppend,jdbcType=CHAR},
+      </if>
+      <if test="serialNum != null" >
+        serial_num = #{serialNum,jdbcType=INTEGER},
+      </if>
+      <if test="bizRemark != null" >
+        biz_remark = #{bizRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where biz_key = #{bizKey,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zrt.mybatis.domain.SysBizSerial" >
+    update sys_biz_serial
+    set biz_name = #{bizName,jdbcType=VARCHAR},
+      biz_serial_no = #{bizSerialNo,jdbcType=INTEGER},
+      biz_prefix = #{bizPrefix,jdbcType=VARCHAR},
+      biz_date = #{bizDate,jdbcType=CHAR},
+      is_append = #{isAppend,jdbcType=CHAR},
+      serial_num = #{serialNum,jdbcType=INTEGER},
+      biz_remark = #{bizRemark,jdbcType=VARCHAR}
+    where biz_key = #{bizKey,jdbcType=VARCHAR}
+  </update>
+</mapper>

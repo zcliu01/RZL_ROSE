@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.zrt</groupId>
+	<artifactId>zrt-sec-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+ 	<packaging>jar</packaging>	 
+
+	<!--spring boot parent version-->
+	<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.4.5.RELEASE</version>
+	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring-boot.version>1.4.5.RELEASE</spring-boot.version>
+		<spring-cloud.version>Camden.SR1</spring-cloud.version>
+		<spring-admin.version>1.3.2</spring-admin.version>
+		<spring-etcd.version>1.0.0.BUILD-SNAPSHOT</spring-etcd.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>zrt</id>
+			<name>zrt</name>
+			<url>http://172.30.142.163:8900/nexus/content/groups/zrt/</url>
+		</repository>
+	</repositories>
+	
+	 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-parent</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<!-- 若使用log4j2就要配置以上2个dependency -->
+		
+		<!-- config client -->
+		 <dependency> 
+			 <groupId>org.springframework.cloud</groupId> 
+			 <artifactId>spring-cloud-config-client</artifactId> 
+	     </dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<!-- etcd discovery -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-etcd-discovery</artifactId>
+			<version>${spring-etcd.version}</version>
+		</dependency>
+		<!-- monitor client -->
+		<dependency> 
+			<groupId>de.codecentric</groupId> 
+			<artifactId>spring-boot-admin-starter-client</artifactId> 
+			<version>${spring-admin.version}</version> 
+		</dependency>
+		<!-- health check(monitor) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- MBean jmx(monitor) -->
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
+		</dependency>
+
+		<!-- jdbc -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<!-- mysql driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+			<version>5.1.10</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		
+		<!-- mybatis.. -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.mybatis</groupId> -->
+<!-- 			<artifactId>mybatis-spring</artifactId> -->
+<!-- 			<version>1.2.4</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.mybatis</groupId> -->
+<!-- 			<artifactId>mybatis</artifactId> -->
+<!-- 			<version>3.3.1</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.mybatis.generator</groupId>
+			<artifactId>mybatis-generator-core</artifactId>
+			<version>1.3.2</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+        <dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+	        <groupId>tk.mybatis</groupId>
+	        <artifactId>mapper</artifactId>
+            <version>3.3.2</version>
+	        <exclusions>
+			 <exclusion>
+			 <groupId>javax.persistence</groupId>
+			 <artifactId>persistence-api</artifactId>
+			 </exclusion>
+			</exclusions>
+        </dependency>
+        <dependency>
+		    <groupId>org.mybatis.spring.boot</groupId>
+		    <artifactId>mybatis-spring-boot-starter</artifactId>
+		    <version>1.3.0</version>
+		</dependency>
+	    <dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<!-- <version>3.2.2</version> -->
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.0</version>
+		</dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+       <!-- 	    feign clietn -->
+	    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+		</dependency>
+		<!-- fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+        <dependency>
+		    <groupId>com.belerweb</groupId>
+		    <artifactId>pinyin4j</artifactId>
+		    <version>2.5.0</version>
+		</dependency>
+	</dependencies>
+
+	<!-- package -->
+	<build>
+		<!-- <finalName>${project.artifactId}</finalName> -->
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	
+   
+   
+</project>
